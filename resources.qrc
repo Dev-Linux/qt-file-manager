@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>root.png</file>
+        <file>style.css</file>
+        <file>secview.png</file>
+    </qresource>
+</RCC>
