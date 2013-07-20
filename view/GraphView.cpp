@@ -70,7 +70,7 @@ GraphView::GraphView(DirModel *model, DockModel *dockModel) :
     setScene(scene);
 
     //setResizeAnchor(QGraphicsView::AnchorViewCenter);
-    setAlignment(Qt::AlignHCenter | Qt::AlignTop);
+    setAlignment(Qt::AlignLeft | Qt::AlignTop);
     //setRubberBandSelectionMode(Qt::ContainsItemShape);
     setDragMode(QGraphicsView::RubberBandDrag);
     //connect(&resizeTimer, &QTimer::timeout,
@@ -88,48 +88,14 @@ GraphView::GraphView(DirModel *model, DockModel *dockModel) :
 
 void GraphView::resizeEvent(QResizeEvent *evt)
 {
-    //auto sh = sizeHint2();
-    //scene->setSceneRect(QRect(0, 0, sh.width(), sh.height()));
     //scene->setSceneRect(scene->itemsBoundingRect());
-
     //resizeTimer.start(25);
+
     rootItem->viewResized();
-    setSceneRect(rootItem->boundingRect());
     QGraphicsView::resizeEvent(evt);
 }
 
-// calculates the sizeHint (which through a SizePolicy set in the ctor is also
-// the minimum size of the widget)
-/*QSize GraphView::sizeHint2() const
-{
-    int c = fileNodes.count();
-
-    //if there are no file nodes, the sizeHint/minimum size is (0,0)
-    if (c == 0) {
-        return QSize(0, 0);
-    }
-
-    // by going through every file node and making comparisons, get the bigges x
-    // and y of the file nodes which are the coords which would be a big enough
-    // size to fit all the nodes
-    int maxx = 0, maxy = 0;
-    for (int i = 0; i < c; i++) {
-        if (fileNodes[i]->x() > maxx) {
-            maxx = fileNodes[i]->x();
-        }
-        if (fileNodes[i]->y() > maxy) {
-            maxy = fileNodes[i]->y();
-        }
-    }
-    // ?
-    qDebug() << "width" << width() << "maxx + 100" << maxx + 100;
-    qDebug() << "height" << height() << "maxy + 100" << maxy + 100;
-    QSize hint(qMax(width(), maxx + 100),
-               qMax(height(), maxy + 100));
-    return hint;
-}
-
-bool GraphView::randomTry(int &x, int &y)
+/*bool GraphView::randomTry(int &x, int &y)
 {
     // the thing from which we get random numbers (used for repeaded trying
     // of random coordinates)

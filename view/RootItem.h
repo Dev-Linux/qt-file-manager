@@ -19,33 +19,32 @@ public:
                       GraphView *view,
                       DockModel *dockModel);
     ~RootItem();
-    DirModel *model;
+    DirModel *m_model;
+    //! The GraphView which contains this RootItem.
     GraphView *view;
+    //! The file nodes in this RootItem.
     QList<FileNode *> fileNodes;
-    QScopedPointer<BoostGraph> g;
+    //! The DockModel which stores the items marked as important.
     DockModel *dockModel;
-    QMenu *menu = nullptr;
 
     /** RootItem and FileNode layout types */
     enum Layout {
-        LIST, /**< List layout */
-        GRAPH /**< Graph-like (auto) layout */
+        //! List layout
+        LIST,
+        //! Graph-like (auto) layout
+        GRAPH
     };
-    void setLayout(Layout l);
 
     QRectF boundingRect() const;
     void paint(QPainter *painter,
                const QStyleOptionGraphicsItem *option,
                QWidget *widget = 0);
     void viewResized();
+    void setLayout(Layout l);
     
 signals:
     
 public slots:
-    void refreshPos();
-    //void loadAllFilesInModel();
-    void connectNode(const FileNode *node);
-
     void itemDoubleClicked();
     void nodeLeftClicked(const Qt::KeyboardModifiers &modifiers);
     void nodeRightClicked(const Qt::KeyboardModifiers &modifiers);
@@ -53,7 +52,6 @@ public slots:
     void selRectChanged(QRect rubberBandRect, QPointF fromScenePoint,
                         QPointF toScenePoint);
     void selModelChanged(QSet<int> added, QSet<int> removed);
-    void refresh();
 
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
@@ -62,13 +60,36 @@ private slots:
     void clearView();
     void addNode(const FileInfo &info);
     void pathChanged(const QString &path);
+    void connectNode(const FileNode *node);
 
+    void importantAdded(FileInfo &info);
+    void importantRemoved(FileInfo &info);
+    void refresh();
 private:
     void initGraph();
     void refreshTags();
+
+    void refresh_list_pos_and_sizes();
+    void refresh_graph_positions();
+
+    void setWidth(qreal w);
+    void setHeight(qreal h);
+    qreal width() const;
+    qreal height() const;
+
+    //void loadAllFilesInModel();
+
+    //! Caches for bounding rect calculation.
     qreal m_width, m_height, m_viewport_height, m_y;
-    mutable QRectF m_bounding_rect; // cache
+    //! Cache.
+    mutable QRectF m_bounding_rect;
+    //! The initial layout is GRAPH.
     Layout layout = GRAPH;
+    //! The context menu.
+    QMenu *menu = nullptr;
+    //! The graph for GRAPH layout.
+    QScopedPointer<BoostGraph> g;
+    void update_layout();
 };
 
 #endif // ROOTITEM_H

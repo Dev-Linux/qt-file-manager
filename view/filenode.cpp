@@ -153,7 +153,7 @@ void FileNode::paint(QPainter *p,
     if (!isSelected()) {
         if (!property("hovered").toBool()) {
             if (!isHighlighted()) {
-                bg_brush = option->palette.background();
+                bg_brush = option->palette.light();
             } else {
                 bg_brush = QBrush("lightyellow");
             }

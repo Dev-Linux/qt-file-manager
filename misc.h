@@ -9,7 +9,7 @@
 #define debugType(x) std::cerr << #x << ": " << \
     typeid(x).name() << std::endl
 
-#define metaDebug(x) qDebug() << #x << ":" << x
+#define metaDebug(x) qDebug() << #x << "=" << x
 
 #ifdef Q_OS_WIN32
 class COMError {
