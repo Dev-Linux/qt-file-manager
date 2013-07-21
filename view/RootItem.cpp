@@ -29,6 +29,8 @@
   * that intersected the sel rect) remains selected although you reduce the sel
   * rect to 0 covered nodes
   * @todo right click on Breadcrumb => FileNode context menu
+  * @todo When going "up" in the breadcrumb, scroll to the last position and
+  * highlight for a few seconds the folder from which the user comes.
   */
 RootItem::RootItem(DirModel* model,
                    GraphView *view,
