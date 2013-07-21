@@ -32,6 +32,14 @@
  * Programming tricks
  * ------------------
  * - Unblocks GUI: @q{core,QApplication}::%processEvents().
+ *
+ * Bugs
+ * ----
+ * @bug In RootItem::LIST layout,
+ *  - Scroll until the first FileNode is partially hidden.
+ *  - Resize the MainWindow or the Dock.
+ *  - Try to scroll back to see the whole first FileNode.
+ *
  */
 
 /**
