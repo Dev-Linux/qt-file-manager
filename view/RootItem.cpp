@@ -414,9 +414,8 @@ void RootItem::itemDoubleClicked()
  */
 void RootItem::nodeLeftClicked(const Qt::KeyboardModifiers &modifiers)
 { Q_UNUSED(modifiers)
-    qDebug() << "";
-
-    auto clickedItem = qobject_cast<FileNode*>(sender());
+    FileNode *clickedItem = qobject_cast<FileNode*>(sender());
+    metaDebug(clickedItem->fileInfo.absoluteFilePath());
 
     int index = fileNodes.indexOf(clickedItem);
 

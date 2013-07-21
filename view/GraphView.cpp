@@ -220,7 +220,9 @@ void GraphView::mouseReleaseEvent(QMouseEvent *event)
     if (draggedNode != nullptr) {
         if (!movedWhileDragPossible) {
             if (mousePressEvt != nullptr) {
+                qDebug() << "before mousePressEvent call";
                 QGraphicsView::mousePressEvent(mousePressEvt);
+                qDebug() << "after mousePressEvent call";
             } else {
                 qDebug() << "nullptr mousePressEvt";
             }

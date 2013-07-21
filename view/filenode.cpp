@@ -14,6 +14,7 @@ FileNode::FileNode(const FileInfo &info,
 {
     this->layout = layout;
     this->list_size.setHeight(list_height);
+    this->fileInfo = info;
     setProperty("selected", false);
     setProperty("hovered", false);
 
@@ -23,7 +24,6 @@ FileNode::FileNode(const FileInfo &info,
 
     setAcceptHoverEvents(true);
 
-    this->fileInfo = info;
 
     update_icon_size();
 }
@@ -31,7 +31,6 @@ FileNode::FileNode(const FileInfo &info,
 void FileNode::setSelected(bool selected)
 {
     setProperty("selected", selected);
-
     qDebug() << "update";
     update();
 }
@@ -234,13 +233,21 @@ void FileNode::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *evt)
 
 void FileNode::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    event->ignore();
+    //! @note The event is by default accepted.
+
+    // this call sets the event as ignored and this makes the event
+    // signal all FileNodes under the cursor about the click so
+    // I put it at the beginning:
+    QGraphicsObject::mousePressEvent(event);
+
+    // and accept it if one of the handled buttons is pressed
     if (event->button() == Qt::LeftButton) {
         emit leftClicked(event->modifiers());
+        event->accept();
     } else if (event->button() == Qt::RightButton) {
         emit rightClicked(event->modifiers());
+        event->accept();
     }
-    QGraphicsObject::mousePressEvent(event);
 }
 
 void FileNode::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
