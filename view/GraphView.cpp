@@ -30,6 +30,19 @@
 #include "misc.h"
 #include "TabBarItem.h"
 
+/**
+ * @class GraphView
+ * @todo check zoom out behavior on RootItem space
+ * @todo idea: moving/copying shows progress on file node (background
+ * eventually green, just like a progress bar). when moving, the source and the
+ * target have different progress direction (source, left; target, right).
+ * @todo When there is not enough space to show the whole name of a file, the
+ * FileNode should put '...' at the end.
+ * @bug In LIST layout, I'm not sure if it's visible that if the user clicks
+ * on the tab bar, the selection is cleared. This is the only way the user can
+ * clear the selection, I think, and this is a problem.
+ */
+
 GraphView::GraphView(DirModel *model, DockModel *dockModel) :
     QGraphicsView()
 {
@@ -207,14 +220,6 @@ void GraphView::mousePressEvent(QMouseEvent *event)
     }
 }
 
-//! @bug clicking on the itersection of two nodes selects the node behind
-//! @todo check zoom out behavior on RootItem space
-/**
- * @todo idea: moving/copying shows progress on file node (background
- * eventually green, just like a progress bar). when moving, the source and the
- * target have different progress direction (source, left; target, right).
- */
-
 void GraphView::mouseReleaseEvent(QMouseEvent *event)
 {
     if (draggedNode != nullptr) {
@@ -378,11 +383,6 @@ void GraphView::mouseMoveEvent(QMouseEvent *event)
     setDragMode(QGraphicsView::RubberBandDrag);
 
     event->accept();
-
-    /**
-     * @todo If mouse press is followed by a dragging move and the node is selected
-     * don't unselect in the slots called by FileNode signal leftClicked().
-     */
 
     Q_UNUSED(dropAction);
     // draggedNode->icon->pixmap(64, 64)

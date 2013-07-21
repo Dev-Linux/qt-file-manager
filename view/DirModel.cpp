@@ -18,6 +18,7 @@ DirModel::DirModel(QObject *parent) :
         //! @todo if { dir | parent dir } { deleted | renamed } then ...
         dir.refresh();
         loadEntries();
+        emit file_system_change();
     });
 }
 
@@ -142,5 +143,4 @@ void DirModel::loadEntries()
             emit added(info);
         }
     }
-
 }

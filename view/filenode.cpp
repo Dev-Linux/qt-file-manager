@@ -172,9 +172,8 @@ void FileNode::paint(QPainter *p,
     if (is_graph) {
         pen_width = 1;
     } else {
-        pen_width = 0.3; //! @todo borders only on top/bottom
+        pen_width = 0.3;
     }
-    //! @todo scrolling in LIST layout
 
     p->setPen(QPen(pen_brush, pen_width));
     if (!is_graph) {

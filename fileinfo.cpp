@@ -44,7 +44,6 @@ const QString &FileInfo::fileName() const
 {
     //! @todo other options in the context menu
     //! @todo re-do d&d
-    //! @todo draw graph only if needed (the same for the listview)
 
     init();
     return m_fileName;

@@ -232,7 +232,6 @@ QString misc::escapeQDirNameFilter(const QString &nf)
 QList<QGraphicsItem *> misc::filterByAncestor(
         const QList<QGraphicsItem *> items, const QGraphicsItem *anc)
 {
-    /** \todo search the Web: inline lambda */
     QList<QGraphicsItem *> list;
     for (int i = 0; i < items.size(); i++) {
         if (anc->isAncestorOf(items[i])) {

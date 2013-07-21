@@ -53,6 +53,8 @@ RootItem::RootItem(DirModel* model,
             this, &RootItem::clearView);
     connect(model, &DirModel::added,
             this, &RootItem::addNode);
+    connect(model, &DirModel::file_system_change,
+            this, &RootItem::file_system_change);
 
     connect(model, &DirModel::tagAdded,
             [this] (int index, const QString &tag) {
@@ -546,8 +548,6 @@ void RootItem::contextMenuTriggered(QAction *action)
         // separator is the one provided by TrashModel anyway.
         auto s = pathList.join(",<br>");
 
-        //! @bug View doesn't update on folder change (file recycled).
-
         item->setLabel("<strong>" + s + "</strong>.");
         mw->fileOperationsMenu->addItem(item);
         mw->dirCtrl->view->op->doAsync(data, item);
@@ -688,6 +688,14 @@ void RootItem::refresh()
                "not sure I should call loadAllFilesInModel");
     view->setSceneRect(view->scene->itemsBoundingRect());
     refreshTags();
+}
+
+/**
+ * @brief Called when the model encounters a file system change.
+ */
+void RootItem::file_system_change()
+{
+    update_layout();
 }
 
 /**

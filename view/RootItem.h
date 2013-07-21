@@ -65,6 +65,7 @@ private slots:
     void importantAdded(FileInfo &info);
     void importantRemoved(FileInfo &info);
     void refresh();
+    void file_system_change();
 private:
     void initGraph();
     void refreshTags();

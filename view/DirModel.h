@@ -41,6 +41,11 @@ signals:
     void cleared();
     void pathChanged(const QString &path);
     void nameFiltersChanged(const QStringList &nf);
+
+    /**
+     * @brief Emitted after the cleared() and added() signals.
+     */
+    void file_system_change();
 public slots:
 
 private:
