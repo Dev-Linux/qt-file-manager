@@ -44,6 +44,7 @@ protected:
     virtual void dragLeaveEvent(QDragLeaveEvent *event);
     virtual void dropEvent(QDropEvent *event);
     virtual void keyPressEvent(QKeyEvent *event);
+    virtual void scrollContentsBy(int dx, int dy);
 
 private:
     bool movedWhileDragPossible;

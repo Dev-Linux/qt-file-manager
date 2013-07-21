@@ -50,6 +50,15 @@ GraphView::GraphView(DirModel *model, DockModel *dockModel) :
     //resizeTimer.setSingleShot(true);
 
     tabBarItem = new TabBarItem(this);
+
+    /**
+     * @bug I think that when the current directory contains more than ~999999
+     * files, some files could cover the TabBarItem. As the z value is changed
+     * in the Graph layout while dragging and after.
+     */
+    // It's a hack but otherwise, when scrolling, RootItem covers TabBarItem.
+    tabBarItem->setZValue(999999);
+
     tabBarItem->setPos(0, 0);
 
     connect(model, &DirModel::pathChanged,
@@ -442,4 +451,12 @@ void GraphView::keyPressEvent(QKeyEvent *event)
         event->accept();
     }
     QGraphicsView::keyPressEvent(event);
+}
+
+void GraphView::scrollContentsBy(int dx, int dy)
+{
+    QGraphicsView::scrollContentsBy(dx, dy);
+    QPointF p = this->mapToScene(0, 0);
+    //metaDebug(p);
+    tabBarItem->setPos(p);
 }
