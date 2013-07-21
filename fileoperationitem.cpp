@@ -54,7 +54,10 @@ FileOperationItem::FileOperationItem(FileOperationData* data,
     updateView();
 }
 
-// TODO: FileOperationItem static method to build friendly date-time strings (e.g. 2 minutes ago)
+/**
+ * @todo FileOperationItem static method to build friendly date-time strings
+ * (e.g. 2 minutes ago)
+ */
 
 void FileOperationItem::setLabel(QString str)
 {
@@ -84,9 +87,12 @@ void FileOperationItem::updateView()
 
 void FileOperationItem::paintEvent(QPaintEvent *event)
 {
-    // NOTE: mai pot sa folosesc QProgressBar pentru a arata progresul operatiunii:
-    // http://qt-project.org/doc/qt-5.0/qtwidgets/qprogressbar.html
-    // Ma inspir si din Firefox
+    /**
+     * @note mai pot sa folosesc @q{widgets,QProgressBar} pentru a arata
+     * progresul operatiunii:
+     * http://qt-project.org/doc/qt-5.0/qtwidgets/qprogressbar.html . Ma inspir
+     * si din Firefox
+     */
 
     this->parentWidget()->adjustSize();
 

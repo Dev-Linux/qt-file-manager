@@ -172,9 +172,8 @@ MainWindow::MainWindow(const QString& initialPath) :
     locationEditChanged();
 }
 
-// NOTE: show general progress on File tasks menu button
-// NOTE: fix bugs
-// FIXME: keep selection when changing name filters
+//! @todo show general progress on File tasks menu button
+//! @todo keep selection when changing name filters
 
 /**
  * @brief Signals the asyncFileOperation thread that the it must quit, and waits

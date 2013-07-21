@@ -20,7 +20,7 @@ void ViewScrollArea::scrollTo(int index)
 
 void ViewScrollArea::keyReleaseEvent(QKeyEvent *)
 {
-    // TODO: modifier key(s) holded => detail view
+    //! @todo modifier key(s) holded => detail view
 }
 
 void ViewScrollArea::focusInEvent(QFocusEvent *)

@@ -72,7 +72,7 @@ int main (int argc, char *argv[])
 
     auto args = a.arguments();
     if (args.size() > 1) {
-        // TODO: open more than one folders (tabs, please) if size more than 2
+        //! @todo open more than one folders (tabs, please) if size more than 2
         w = MainWindow::getInstance(args[1]);
     } else {
         w = MainWindow::getInstance();

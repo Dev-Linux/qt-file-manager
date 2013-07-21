@@ -2,6 +2,11 @@
 
 #include "mainwindow.h"
 
+/**
+ * @class DockModel
+ * @note Does not allow duplicate paths.
+ */
+
 DockModel::DockModel(QObject *parent) :
     QObject(parent)
 {
@@ -56,9 +61,6 @@ bool DockModel::addPath(const QString &path)
 
 void DockModel::removePath(const QString &path)
 {
-    qDebug() << "path" << path;
-
-    // NOTE: not allowing duplicates
     FileInfo info;
     int index = -1;
     for (int i = 0; i < list.size(); i++) {
@@ -78,7 +80,6 @@ void DockModel::removePath(const QString &path)
     writeSettings();
 
     emit removed(info);
-    qDebug() << "end";
 }
 
 bool DockModel::containsPath(const QString &path)

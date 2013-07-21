@@ -490,8 +490,10 @@ void RootItem::nodeRightClicked(const Qt::KeyboardModifiers &modifiers)
     // node while the context menu for another node is open
     // doesn't change the selection and the new menu opened is for
     // the last selection, not for the current one
-    // TODO: search the web for "mouse move [while] popup menu
-    // [open]" or similar...
+    /**
+     * @todo search the web for "mouse move [while] popup menu [open]" or
+     * similar...
+     */
 
     /*if (!init) {
         item->setHighlighted(init);
@@ -545,7 +547,7 @@ void RootItem::contextMenuTriggered(QAction *action)
         // separator is the one provided by TrashModel anyway.
         auto s = pathList.join(",<br>");
 
-        // FIXME: view doesn't update on folder change (file recycled)
+        //! @bug View doesn't update on folder change (file recycled).
 
         item->setLabel("<strong>" + s + "</strong>.");
         mw->fileOperationsMenu->addItem(item);

@@ -29,8 +29,10 @@ ListViewItem::ListViewItem(const FileInfo &info) :
 
     // would be ok for drives too, but floppy disk makes great noise on counting entries
     // and on Win 7 I also have some strange "disk not available" error boxes for all disks
-    // TODO: if drive (floppy, especially), don't count directly, but check if
-    // available first, somehow
+    /**
+     * @todo if drive (floppy, especially), don't count directly, but check if
+     * available first, somehow
+     */
     if (fileInfo.isDir() && !fileInfo.isDrive()) {
         int c = fileInfo.fileInfo.absoluteDir()
                 .entryList(QDir::AllEntries |

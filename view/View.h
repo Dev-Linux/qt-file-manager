@@ -4,9 +4,10 @@
 
 #include <QtWidgets>
 
-// TODO: MSVC ( cl.exe ) high CPU usage (over 50%)
-// (disabled jom because it was running 2 instances
-// of cl.exe at the same time .. bad)
+/**
+ * @bug MSVC (cl.exe) high CPU usage (over 50%) (disabled jom because it was
+ * running 2 instances of cl.exe at the same time ... bad)
+ */
 
 class DirController;
 class ViewWidget;

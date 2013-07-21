@@ -15,7 +15,7 @@ DirModel::DirModel(QObject *parent) :
     connect(watcher, &QFileSystemWatcher::directoryChanged,
             [this] (const QString &path) {
         Q_UNUSED(path)
-        // TODO: if { dir | parent dir } { deleted | renamed } then ...
+        //! @todo if { dir | parent dir } { deleted | renamed } then ...
         dir.refresh();
         loadEntries();
     });
@@ -51,7 +51,7 @@ void DirModel::setPath(const QString &path)
     emit pathChanged(p);
 }
 
-// TODO: „accelerated” drag
+//! @todo "accelerated" drag, just like the bug I had in the past.
 
 void DirModel::setNameFilters(const QStringList &nf)
 {

@@ -18,10 +18,11 @@ AsyncFileOperationWorker::AsyncFileOperationWorker(QObject *parent) :
 
 void AsyncFileOperationWorker::operate(FileOperationData *data)
 {
-    // NOTE: it would probably be better to work with FileInfo's
-    // pointers, somehow, don't know ...
-    // advantage: I wouldn't have to work with path differences
-    // as much as I do now
+    /**
+     * @note it would probably be better to work with FileInfo's pointers,
+     * somehow, don't know ... Advantage: I wouldn't have to work with path
+     * differences as much as I do now
+     */
     QString type = data->type();
     if (type == "copy") {
         QPair<qint64, qint64> size = scan(data->sourceList());
@@ -95,8 +96,10 @@ void AsyncFileOperationWorker::operate(FileOperationData *data)
             // here and do the operations in a recursive method, not by
             // calling operate (again..)
 
-            // TODO: notify progress here... it's all about moving files, folders
-            // so I shouldn't ignore this thing
+            /**
+             * @todo notify progress here... it's all about moving files,
+             * folders so I shouldn't ignore this thing.
+             */
         }
 #endif
     } else if (type == "delete") {

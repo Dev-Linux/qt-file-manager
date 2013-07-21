@@ -36,7 +36,7 @@ FileOperationData* TrashModel::moveToTrash(const QString &path)
     if (!info.fileInfo.isWritable()) { // if (can't write) then (can't delete)
         // should I also check for execute (explore) permission for folders?
         // should I check for permissions recursively?
-        // TODO: read more about these things
+        //! @todo read more about these things
         qDebug() << "Can't trash/recycle this file/folder:" << path
                  << ". No write permission on this file/folder.";
         return nullptr;

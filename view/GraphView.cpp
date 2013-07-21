@@ -198,13 +198,13 @@ void GraphView::mousePressEvent(QMouseEvent *event)
     }
 }
 
-// FIXME: clicking on the itersection of two nodes selects the
-// node behind
-// NOTE: check zoom out behavior on RootItem space
-// NOTE: idea: moving/copying shows progress on file node (background
-// eventually green, just like a progress bar). when moving, the source
-// and the target have different progress direction (source, left;
-// target, right).
+//! @bug clicking on the itersection of two nodes selects the node behind
+//! @todo check zoom out behavior on RootItem space
+/**
+ * @todo idea: moving/copying shows progress on file node (background
+ * eventually green, just like a progress bar). when moving, the source and the
+ * target have different progress direction (source, left; target, right).
+ */
 
 void GraphView::mouseReleaseEvent(QMouseEvent *event)
 {
@@ -306,7 +306,7 @@ void GraphView::mouseMoveEvent(QMouseEvent *event)
     while (it.hasNext()) {
         it.next();
         //qDebug() << "z value" << z;
-        // TODO: Buggy Z, Buggy.
+        //! @bug Buggy Z, Buggy.
         rootItem->fileNodes[it.key()]->setZValue(z);
     }
 
@@ -368,8 +368,10 @@ void GraphView::mouseMoveEvent(QMouseEvent *event)
 
     event->accept();
 
-    // TODO: if mouse press is followed by a dragging move and the node is selected
-    // don't unselect in the slots called by FileNode signal leftClicked(modifiers)
+    /**
+     * @todo If mouse press is followed by a dragging move and the node is selected
+     * don't unselect in the slots called by FileNode signal leftClicked().
+     */
 
     Q_UNUSED(dropAction);
     // draggedNode->icon->pixmap(64, 64)

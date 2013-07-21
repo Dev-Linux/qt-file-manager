@@ -26,7 +26,7 @@ Dock::Dock(QWidget *parent) :
     menu = buildMenu();
 
     // this->setFeatures(QDockWidget::DockWidgetMovable); ? needed?
-    // TODO: „routines” list (macros + places + favourites + ...)
+    //! @todo "routines" list (macros + places + favourites + ...)
 }
 
 QMenu *Dock::buildMenu()

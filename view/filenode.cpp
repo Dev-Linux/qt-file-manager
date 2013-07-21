@@ -103,8 +103,10 @@ void FileNode::paint(QPainter *p,
         icon = fileInfo.icon().pixmap(icon_size).scaled(icon_size);
         // would be ok for drives too, but floppy disk makes great noise on counting entries
         // and on Win 7 I also have some strange "disk not available" error boxes for all disks
-        // TODO: if drive (floppy, especially), don't count directly, but check if
-        // available first, somehow
+        /**
+         * @todo if drive (floppy, especially), don't count directly, but check if
+         * available first, somehow
+         */
         if (fileInfo.isDir() && !fileInfo.isDrive()) {
             const int c = QDir(fileInfo.absoluteFilePath())
                     .entryList(QDir::AllEntries |
@@ -171,9 +173,9 @@ void FileNode::paint(QPainter *p,
     if (is_graph) {
         pen_width = 1;
     } else {
-        pen_width = 0.3; // TODO: borders only on top/bottom
+        pen_width = 0.3; //! @todo borders only on top/bottom
     }
-    // TODO: scrolling in LIST layout
+    //! @todo scrolling in LIST layout
 
     p->setPen(QPen(pen_brush, pen_width));
     if (!is_graph) {

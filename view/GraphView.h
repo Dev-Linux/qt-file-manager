@@ -26,7 +26,6 @@ public:
     DirModel *model;
 
     //bool randomTry(int &x, int &y);
-    // TODO: if item is marked important, highlight it in some way
 
 signals:
 

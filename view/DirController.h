@@ -36,8 +36,10 @@ signals:
 
 protected:
 
-    // NOTE: keyboard smooth scrolling (with a secondary cursor to which
-    // I can switch... that would help me (search the web)
+    /**
+     * @todo keyboard smooth scrolling (with a secondary cursor to which I can
+     * switch... that would help me (search the web)
+     */
 public slots:
     void itemClicked(const Qt::KeyboardModifiers &modifiers);
     void itemRightClicked();

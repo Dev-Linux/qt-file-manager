@@ -42,9 +42,9 @@ bool FileInfo::isDrive() const
 
 const QString &FileInfo::fileName() const
 {
-    // TODO: other options in the context menu
-    // TODO: re-do d&d
-    // TODO: draw graph only if needed (the same for the listview)
+    //! @todo other options in the context menu
+    //! @todo re-do d&d
+    //! @todo draw graph only if needed (the same for the listview)
 
     init();
     return m_fileName;

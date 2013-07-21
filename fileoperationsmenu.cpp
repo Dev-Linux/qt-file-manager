@@ -29,7 +29,10 @@ QSize FileOperationsMenu::sizeHint() const
 
 void FileOperationsMenu::showEvent(QShowEvent *event)
 {
-    // NOTE: If it isn't able to completely show up right aligned, then show it left aligned
+    /**
+     * @todo If it isn't able to completely show up right aligned, then show it
+     * left aligned.
+     */
     QPushButton *button = MainWindow::getInstance()->fileOperationsButton;
     move(button->mapToGlobal(QPoint(0, 0)).x() + button->width() - width(), this->pos().y());
     QMenu::showEvent(event);

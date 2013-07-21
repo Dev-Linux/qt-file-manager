@@ -7,7 +7,7 @@
 class TrashModel;
 class FileOperationData;
 
-// TODO: pinned files/folders in every path (even in root)
+//! @todo pinned files/folders in every path (even in root)
 
 class AsyncFileOperationWorker : public QObject
 {

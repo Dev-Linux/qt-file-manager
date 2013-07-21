@@ -65,8 +65,10 @@ void DirController::setModel(DirModel *m)
     if (re) {
         refreshView();
     }
-    // FIXME: View bug: selecting an item scrolls the scroll area
-    // vertically too and this is a problem..
+    /**
+     * @bug View: selecting an item scrolls the scroll area vertically too, and
+     * this is a problem..
+     */
 }
 
 bool DirController::hasModel()
@@ -135,8 +137,10 @@ void DirController::itemRightClicked()
         item->setHighlighted(true);
     }*/
 
-    // TODO: clicking on the View but not on any item should
-    // clear the selection
+    /**
+     * @todo clicking on the View but not on any item should clear the
+     * selection
+     */
 
     QMenu menu;
     menu.addAction("It's important");

@@ -1,4 +1,5 @@
 #include "View.h"
+
 #include "mainwindow.h"
 #include "ViewScrollArea.h"
 #include "ViewWidget.h"
@@ -61,9 +62,7 @@ void View::addItem(ListViewItem *item)
 
 void View::removeItem(int index)
 {
-    qDebug() << "index" << index;
     delete w->layout()->takeAt(index)->widget();
-    qDebug() << "deleted";
 }
 
 int View::itemCount() const
@@ -95,8 +94,10 @@ QSize View::sizeHint() const
 void View::keyPressEvent(QKeyEvent *event)
 {
     if (ctrl != 0) {
-        // info: QWidget::keyPressEvent(event) only closes popup windows if key
-        // is Esc
+        /**
+         * @note QWidget::keyPressEvent(event) only closes popup windows if key
+         * is Esc
+         */
 
         auto sel = ctrl->model->sel;
         event->ignore();
@@ -161,7 +162,7 @@ void View::keyPressEvent(QKeyEvent *event)
                 }
             } else {
                 //qDebug() << "QKeyEvent::text() empty...?!";
-                // nu înțeleg.
+                // I don't understand.
             }
             QApplication::postEvent(s, new QKeyEvent(event->type(),
                                                      event->key(),
@@ -169,10 +170,10 @@ void View::keyPressEvent(QKeyEvent *event)
             event->accept();
             QWidget::keyPressEvent(event);
         }
-        // TODO: ctrl, shift multi-select
-        // TODO: the shift in shift-page-up/down to also move selection
+        //! @todo ctrl, shift multi-select
+        //! @todo the shift in shift-page-up/down to also move selection
 
-        // TODO: alt alphanumeric shortcuts to displayed files (a8 or 9v or 11..)
-        // TODO: alt + ctrl: selection of above
+        //! @todo alt alphanumeric shortcuts to displayed files (a8 or 9v or 11..)
+        //! @todo alt + ctrl: selection of above
     }
 }
