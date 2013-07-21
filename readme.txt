@@ -1,9 +1,13 @@
-Imaginea flag_in_hole, pictograma radacina in breadcrumb, este
-luata de aici http://www.fileformat.info/info/unicode/char/26f3/browsertest.htm
-si modificata sa aiba culoarea albastru (inainte avea negru) apoi redimensionata
-sa se observe mai bine in buton
+**flag_in_hole** image, used as the root icon in the breadcrumb, is took from
+here: http://www.fileformat.info/info/unicode/char/26f3/browsertest.htm and
+modified to be blue (before, it was black) and then resized to be easily
+observed in the button.
 
-Pe Windows nu am folosit MinGW deoarece nu suporta Windows API suficient de bine pentru nevoile proiectului.
-Nici macar varianta de construire din codul sursa cu ultima versiune, chiar instabila, de w32api, de pe pagina
-sourceforge a proiectului mingw nu merge, deoarece pur si simplu nu contine fisierul header shlobj.h si shobjidl.h complete. Ceea ce le lipsea mai exact, la momentul evaluarii lor (13 aprilie 2013) era interfata
-IFileOperation.
+== 13.04.2013 ==
+
+On Windows I didn't use MinGW because it didn't support the Windows API well
+enough for the necessities of the project. Not even the idea of building the
+source code of the last version, even unstable, of w32api, from the SourceForge
+page of the MinGW project doesn't work, because it doesn't contain the complete
+header files *shlobj.h* and *shobjidl.h*. What they miss, more precisely, at
+the moment when I analyzed them was the interface *IFileOperation*.
