@@ -21,7 +21,7 @@
 /**
  * @brief The singleton instance of MainWindow.
  */
-MainWindow* MainWindow::instance; // NOTE: doxygen comment not detected
+MainWindow* MainWindow::instance;
 
 /**
  * \brief Connects signals to other signals/slots.
@@ -68,42 +68,31 @@ void MainWindow::connectSlots()
 MainWindow::MainWindow(const QString& initialPath) :
     QMainWindow()
 {
-    // NOTE: Aplic ideile, nu mai caut altele noi până nu le am pe astea aplicate.
-    // TODO: clipboard view, workspace view
-    // TODO: see Customizing QDockWidget in Qt Style Sheet Examples (doc)
+    //! @todo clipboard view, workspace view
+    //! @todo see Customizing QDockWidget in Qt Style Sheet Examples (Qt docs)
 
-    // TODO: sort files according to access count in a time span (e.g. last X days)
-    // TODO: clipboard with drag & drop
-    // TODO: accesare meniu standard la fisiere, foldere (not x-platform)
+    //! @todo sort files according to access count in a time span (e.g. last X days)
+    //! @todo clipboard with drag & drop
+    //! @todo accesare meniu standard la fisiere, foldere (not x-platform)
 
     /**
      * \bug ask for confirmation on delete/overwrite in the
      * fileOperationsMenu which should be instantly shown with the relevant
      * file operation highlighted and with action buttons and text clearly
      * explaining what's happening
+     *
+     * @bug when dragging a file from the app to Windows File Explorer, the
+     * file operation works well, but appearantly and surprisingly (because the
+     * file operation happens in another thread/process) the app is somehow
+     * broken, it hangs, it doesn't work until the file operation finishes. By
+     * moving the mouse cursor over my app I can see the file being dragged
+     * although I don't press any mouse button.
      */
-
-    // BUG: when dragging a file from the app to Windows File Explorer, the file operation works
-    // well, but appearantly and surprisingly (because the file operation happens in another thread/process)
-    // the app is somehow broken, it hangs, it doesn't work
-    // until the file operation finishes. By moving the mouse cursor over my app I can see the
-    // file being dragged although I don't press any mouse button.*/
 
     settings = new QSettings("settings.ini", QSettings::IniFormat);
 
     asyncFileOperation = new AsyncFileOperation();
     fileOperations = new QHash<const FileOperationData *, FileOperationItem *>();
-    /*model = new FileSystemModel();
-    //fileGraphView = new FileGraphView();
-
-    //QSplitter *splitter = new QSplitter(Qt::Horizontal);
-    //splitter->setOpaqueResize(false);
-    //splitter->addWidget(view);
-    //splitter->addWidget(fileGraphView);
-
-    //listView->setModel(model);
-
-    //verticalLayout->addWidget(splitter);*/
 
     setWindowTitle("Linky Explorer");
     resize(800, 600);
@@ -221,7 +210,7 @@ MainWindow *MainWindow::getInstance(const QString &initialPath)
 }
 
 /**
- * \brief Trims the locationEdit text, handles the drives list possibility on
+ * @brief Trims the locationEdit text, handles the drives list possibility on
  * Windows, shows an error if the file/folder does not exist, otherwise opens
  * the file or folder.
  */
@@ -257,18 +246,6 @@ void MainWindow::locationEditChanged()
         locationEdit->selectAll();
     }
 }
-
-/*void MainWindow::modelDirectoryLoaded(const QString &path)
-{
-    locationEdit->setText(path);
-    breadcrumb->setPath(path);
-
-    if (path.isEmpty()) {
-        qDebug() << path << "directory loaded";
-    }
-
-    //fileGraphView->setPath(path);
-}*/
 
 /**
  * @brief Hides breadcrumb by stacking locationEdit over it and focusing the
@@ -309,7 +286,7 @@ void MainWindow::breadcrumbPathChanged(QString path)
  */
 void MainWindow::doneAsync(FileOperationData *data)
 {
-    // TODO: bring to top in menu, when done (copy, move & all others)
+    //! @todo bring to top in menu, when done (copy, move & all others)
     if (!fileOperations->contains(data)) {
         // internal file operation (currently recycle does this,
         // the future implementation shouldn't do this anymore,
@@ -391,7 +368,7 @@ void MainWindow::viewCheckBoxChanged()
     QPushButton *b = qobject_cast<QPushButton*>(sender());
 
     if (b->text() == " list") {
-        b->setText(" auto"); // FIXME: ?
+        b->setText(" auto"); //! @todo Find a better name for 'auto'
         //dirCtrl->view->hide();
         //graphView->show();
         graphView->rootItem->setLayout(RootItem::GRAPH);
@@ -411,7 +388,7 @@ void MainWindow::viewCheckBoxChanged()
  */
 void MainWindow::doSearch()
 {
-    // backspace => the same text => useless computation
+    // why this if? backspace => the same text => useless computation
     if (searchBuf == searchLineEdit->text()) {
         qDebug() << "doSearch," << searchBuf;
 

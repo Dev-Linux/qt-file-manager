@@ -40,7 +40,6 @@ public:
     //std::random_device randomDevice;
 public slots:
     void locationEditChanged();
-    //void modelDirectoryLoaded(const QString & path);
     void toggleBreadcrumb();
     void locationEditFocused(bool focused);
     void breadcrumbPathChanged(QString path);
