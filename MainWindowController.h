@@ -6,6 +6,7 @@
 
 class MainWindow;
 class FileOperationData;
+class AsyncFileOperation;
 
 class MainWindowController : public QObject
 {
@@ -13,6 +14,8 @@ class MainWindowController : public QObject
 public:
     static MainWindowController *instance(const QString &initial_path = QString());
     explicit MainWindowController(const QString &initial_path);
+    ~MainWindowController();
+    AsyncFileOperation *async_file_op;
     MainWindow *view;
     
 signals:

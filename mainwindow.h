@@ -27,10 +27,8 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 public:
     MainWindow(const QString &initialPath);
-    ~MainWindow();
     FileOperationsMenu *fileOperationsMenu;
     QPushButton *fileOperationsButton;
-    AsyncFileOperation *asyncFileOperation;
     Dock *dock;
     QPushButton *layout_button;
     LocationEdit *locationEdit;
@@ -57,8 +55,6 @@ signals:
     void location_edit_return_pressed();
     void location_edit_button_clicked();
     void search_text_edited(const QString &text);
-    void file_op_done(FileOperationData *data);
-    void file_op_progressed(FileOperationData *data);
 
 public slots:
 

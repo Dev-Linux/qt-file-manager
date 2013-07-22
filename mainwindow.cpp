@@ -47,11 +47,6 @@ void MainWindow::connect_slots()
 
     connect(searchLineEdit, &SearchLineEdit::textEdited,
             this, &MainWindow::search_text_edited);
-
-    connect(asyncFileOperation, &AsyncFileOperation::done,
-            this, &MainWindow::file_op_done);
-    connect(asyncFileOperation, &AsyncFileOperation::progress,
-            this, &MainWindow::file_op_progressed);
 }
 
 /**
@@ -81,7 +76,6 @@ MainWindow::MainWindow(const QString& initialPath) :
 {
     settings = new QSettings("settings.ini", QSettings::IniFormat);
 
-    asyncFileOperation = new AsyncFileOperation();
     fileOperations = new QHash<const FileOperationData *,
                                 FileOperationItem *>();
 
@@ -154,15 +148,4 @@ MainWindow::MainWindow(const QString& initialPath) :
     verticalLayout->addWidget(searchToolBar);
 
     connect_slots();
-}
-
-/**
- * @brief Signals the asyncFileOperation thread that the it must quit, and waits
- * for it to react, then it deleted asyncFileOperation.
- */
-MainWindow::~MainWindow()
-{
-    asyncFileOperation->quit();
-    asyncFileOperation->wait();
-    delete asyncFileOperation;
 }

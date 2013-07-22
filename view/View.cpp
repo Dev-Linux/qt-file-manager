@@ -15,7 +15,7 @@
 View::View(QWidget *parent) :
     QWidget(parent)
 {
-    op = MainWindowController::instance()->view->asyncFileOperation;
+    op = MainWindowController::instance()->async_file_op;
 
     ctrl = 0;
     l = new QVBoxLayout();

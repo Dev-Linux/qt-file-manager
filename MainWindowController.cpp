@@ -13,6 +13,7 @@
 #include "fileoperationdata.h"
 #include "fileoperationitem.h"
 #include "view/DirModel.h"
+#include "asyncfileoperation.h"
 
 /**
  * @brief The singleton instance of MainWindowController.
@@ -54,6 +55,7 @@ MainWindowController::MainWindowController(const QString &initial_path) :
     new (view) MainWindow(initial_path);
 
     m_layout = RootItem::GRAPH;
+    async_file_op = new AsyncFileOperation();
     m_search_timer.setSingleShot(true);
 
     connect(view, &MainWindow::layout_button_clicked,
@@ -80,12 +82,23 @@ MainWindowController::MainWindowController(const QString &initial_path) :
     connect(&m_search_timer, &QTimer::timeout,
             this, &MainWindowController::search_timeout);
 
-    connect(view, &MainWindow::file_op_progressed,
+    connect(async_file_op, &AsyncFileOperation::progress,
             this, &MainWindowController::file_op_progressed);
-    connect(view, &MainWindow::file_op_done,
+    connect(async_file_op, &AsyncFileOperation::done,
             this, &MainWindowController::file_op_done);
 
     location_edit_changed();
+}
+
+/**
+ * @brief Signals the asyncFileOperation thread that the it must quit, and waits
+ * for it to react, then it deleted asyncFileOperation.
+ */
+MainWindowController::~MainWindowController()
+{
+    async_file_op->quit();
+    async_file_op->wait();
+    delete async_file_op;
 }
 
 /**
