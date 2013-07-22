@@ -33,15 +33,13 @@ public:
     QPushButton *layout_button;
     LocationEdit *locationEdit;
     QStackedWidget *stackedWidget;
+    Breadcrumb *breadcrumb;
+    SearchLineEdit *searchLineEdit;
 
     DirController *dirCtrl;
     WorkspaceController *workspace_ctrl;
 
     QSettings *settings;
-    QString savedSearchBuf;
-    QDateTime lastSearchKey;
-    Breadcrumb *breadcrumb;
-    SearchLineEdit *searchLineEdit;
     //std::random_device randomDevice;
 
 signals:
