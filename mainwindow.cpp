@@ -1,20 +1,16 @@
 #include "mainwindow.h"
 
 #include "view/WorkspaceView.h"
+#include "view/WorkspaceController.h"
 #include "breadcrumb.h"
 #include "Dock.h"
 #include "SearchLineEdit.h"
 #include "locationedit.h"
 #include "fileoperationsmenu.h"
 #include "view/DirController.h"
-#include "asyncfileoperation.h"
 #include "view/View.h"
-#include "view/DirModel.h"
-#include "fileoperationdata.h"
-#include "fileoperationitem.h"
 #include "misc.h"
 #include "view/RootItem.h"
-#include "view/WorkspaceController.h"
 //#include <random>
 
 /**
