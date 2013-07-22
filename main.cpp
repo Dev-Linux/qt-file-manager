@@ -1,4 +1,5 @@
 #include <QtWidgets>
+#include "MainWindowController.h"
 #include "mainwindow.h"
 #include "misc.h"
 //#include <ctime>
@@ -57,8 +58,7 @@ int main (int argc, char *argv[])
     QApplication a(argc, argv);
     QFile styleSheetFile(":/style.css");
     QString styleSheet;
-    MainWindow *w;
-    int rv;
+    MainWindowController *main_win_ctrl;
 
     // cross-platform style (used because I develop for many platforms and I
     // don't have time for testing the tiny UI changes I make on all platforms)
@@ -81,14 +81,11 @@ int main (int argc, char *argv[])
     auto args = a.arguments();
     if (args.size() > 1) {
         //! @todo open more than one folders (tabs, please) if size more than 2
-        w = MainWindow::getInstance(args[1]);
+        main_win_ctrl = new MainWindowController(args[1]);
     } else {
-        w = MainWindow::getInstance();
+        main_win_ctrl = new MainWindowController();
     }
-    w->show();
+    main_win_ctrl->view->show();
 
-    rv = a.exec();
-
-    delete w;
-    return rv;
+    return a.exec();
 }

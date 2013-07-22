@@ -20,6 +20,7 @@ class FileOperationData;
 class FileOperationItem;
 class AsyncFileOperation;
 class DirController;
+class WorkspaceController;
 
 class MainWindow : public QMainWindow
 {
@@ -31,16 +32,26 @@ public:
     QPushButton *fileOperationsButton;
     AsyncFileOperation *asyncFileOperation;
     Dock *dock;
+    QPushButton *layout_button;
+    LocationEdit *locationEdit;
+    QStackedWidget *stackedWidget;
+
     DirController *dirCtrl;
+    WorkspaceController *workspace_ctrl;
+
     QSettings *settings;
     QTimer searchTimer;
     QString searchBuf, savedSearchBuf;
     QDateTime lastSearchKey;
     QHash<const FileOperationData *, FileOperationItem *> *fileOperations;
     //std::random_device randomDevice;
+
+signals:
+    void layout_button_clicked();
+    void breadcrumb_clicked();
+
 public slots:
     void locationEditChanged();
-    void toggleBreadcrumb();
     void locationEditFocused(bool focused);
     void breadcrumbPathChanged(QString path);
 
@@ -52,20 +63,15 @@ public slots:
     void dirSearchStarted(const QString &str);
     void searchTextEdited(const QString &str);
 
-    void viewCheckBoxChanged();
-
     void doSearch();
 private:
     static MainWindow* instance;
-    Breadcrumb *breadcrumb;
-    LocationEdit *locationEdit;
-    QStackedWidget *stackedWidget;
     QWidget *centralWidget;
     QVBoxLayout *verticalLayout;
     QToolBar *toolBar, *searchToolBar;
     SearchLineEdit *searchLineEdit;
-    WorkspaceView *graphView;
     void connectSlots();
+    Breadcrumb *breadcrumb;
     MainWindow(const QString &initialPath); // it's a singleton so it's private
 };
 

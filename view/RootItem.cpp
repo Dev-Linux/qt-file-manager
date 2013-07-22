@@ -2,7 +2,7 @@
 
 #include "mainwindow.h"
 #include "DirModel.h"
-#include "GraphView.h"
+#include "WorkspaceView.h"
 #include "BoostGraph.h"
 #include "filenode.h"
 #include "ViewSelectionModel.h"

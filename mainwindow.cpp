@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 
 #include <new>
-#include "view/GraphView.h"
+#include "view/WorkspaceView.h"
 #include "breadcrumb.h"
 #include "Dock.h"
 #include "SearchLineEdit.h"
@@ -15,7 +15,7 @@
 #include "fileoperationitem.h"
 #include "misc.h"
 #include "view/RootItem.h"
-//#include "filesystemmodel.h"
+#include "view/WorkspaceController.h"
 //#include <random>
 
 /**
@@ -29,7 +29,7 @@ MainWindow* MainWindow::instance;
 void MainWindow::connectSlots()
 {
     connect(breadcrumb, &Breadcrumb::clicked,
-            this,       &MainWindow::toggleBreadcrumb);
+            this,       &MainWindow::breadcrumb_clicked);
     connect(breadcrumb, &Breadcrumb::pathChanged,
             this,       &MainWindow::breadcrumbPathChanged);
 
@@ -101,6 +101,7 @@ MainWindow::MainWindow(const QString& initialPath) :
     dirCtrl = new DirController();
     dirCtrl->view->hide();
 
+
     verticalLayout = new QVBoxLayout();
     verticalLayout->setContentsMargins(0, 0, 0, 0);
     verticalLayout->setSpacing(0);
@@ -124,13 +125,14 @@ MainWindow::MainWindow(const QString& initialPath) :
     dock = new Dock();
     breadcrumb = new Breadcrumb(dock->model);
 
-    graphView = new WorkspaceView(dirCtrl->model, dock->model);
+    workspace_ctrl = new WorkspaceController(dirCtrl->model,
+                                             dock->model);
 
-    auto viewCheckBox = new QPushButton(" auto");
-    viewCheckBox->setObjectName("viewButton");
-    viewCheckBox->setIcon(QIcon(":/secview.png"));
-    connect(viewCheckBox, &QPushButton::clicked,
-            this, &MainWindow::viewCheckBoxChanged);
+    layout_button = new QPushButton(" auto");
+    layout_button->setObjectName("viewButton");
+    layout_button->setIcon(QIcon(":/secview.png"));
+    connect(layout_button, &QPushButton::clicked,
+            this, &MainWindow::layout_button_clicked);
 
     auto zoomInButton = new QPushButton("zoom +");
     zoomInButton->setAutoRepeat(true);
@@ -139,13 +141,9 @@ MainWindow::MainWindow(const QString& initialPath) :
     zoomOutButton->setAutoRepeat(true);
 
     connect(zoomInButton, &QPushButton::clicked,
-            [this] () {
-        graphView->zoomIn();
-    });
+            workspace_ctrl, &WorkspaceController::zoom_in);
     connect(zoomOutButton, &QPushButton::clicked,
-            [this] () {
-        graphView->zoomOut();
-    });
+            workspace_ctrl, &WorkspaceController::zoom_out);
 
     searchTimer.setSingleShot(true);
 
@@ -158,12 +156,12 @@ MainWindow::MainWindow(const QString& initialPath) :
     stackedWidget->addWidget(locationEdit);
     toolBar->addWidget(stackedWidget);
     toolBar->addWidget(fileOperationsButton);
-    toolBar->addWidget(viewCheckBox);
+    toolBar->addWidget(layout_button);
     searchToolBar->addWidget(searchLineEdit);
     searchToolBar->addWidget(zoomInButton);
     searchToolBar->addWidget(zoomOutButton);
     //verticalLayout->addWidget(toolBar);
-    verticalLayout->addWidget(graphView);
+    verticalLayout->addWidget(workspace_ctrl->view);
     verticalLayout->addWidget(dirCtrl->view);
     verticalLayout->addWidget(searchToolBar);
 
@@ -244,16 +242,6 @@ void MainWindow::locationEditChanged()
             "\"" + path + "\" does not exist.");
         locationEdit->selectAll();
     }
-}
-
-/**
- * @brief Hides breadcrumb by stacking locationEdit over it and focusing the
- * locationEdit.
- */
-void MainWindow::toggleBreadcrumb()
-{
-    stackedWidget->setCurrentWidget(locationEdit);
-    locationEdit->setFocus();
 }
 
 /**
@@ -355,28 +343,6 @@ void MainWindow::searchTextEdited(const QString &str)
 {
     searchBuf = str;
     searchTimer.start(300);
-}
-
-/**
- * @brief Changes the layout of the view and updates the viewCheckBox to help
- * reflect that.
- * @see RootItem::setLayout
- */
-void MainWindow::viewCheckBoxChanged()
-{
-    QPushButton *b = qobject_cast<QPushButton*>(sender());
-
-    if (b->text() == " list") {
-        b->setText(" auto"); //! @todo Find a better name for 'auto'
-        //dirCtrl->view->hide();
-        //graphView->show();
-        graphView->rootItem->setLayout(RootItem::GRAPH);
-    } else { // == " space"
-        b->setText(" list");
-        //graphView->hide();
-        //dirCtrl->view->show();
-        graphView->rootItem->setLayout(RootItem::LIST);
-    }
 }
 
 /**

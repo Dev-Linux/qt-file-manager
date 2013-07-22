@@ -37,7 +37,9 @@ SOURCES += main.cpp \
     view/BoostGraph.cpp \
     TabBarItem.cpp \
     TabLabelItem.cpp \
-    view/WorkspaceView.cpp
+    view/WorkspaceView.cpp \
+    view/WorkspaceController.cpp \
+    MainWindowController.cpp
 
 PRECOMPILED_DIR = pch # otherwise, with clang: conflict with TARGET
 PRECOMPILED_HEADER = stable.h
@@ -74,7 +76,9 @@ HEADERS += \
     view/BoostGraph.h \
     TabBarItem.h \
     TabLabelItem.h \
-    view/WorkspaceView.h
+    view/WorkspaceView.h \
+    view/WorkspaceController.h \
+    MainWindowController.h
 
 # FORMS =
 
