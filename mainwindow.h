@@ -10,7 +10,7 @@
 #define ROOT_PATH ("/")
 #endif
 
-class GraphView;
+class WorkspaceView;
 class Breadcrumb;
 class Dock;
 class SearchLineEdit;
@@ -64,7 +64,7 @@ private:
     QVBoxLayout *verticalLayout;
     QToolBar *toolBar, *searchToolBar;
     SearchLineEdit *searchLineEdit;
-    GraphView *graphView;
+    WorkspaceView *graphView;
     void connectSlots();
     MainWindow(const QString &initialPath); // it's a singleton so it's private
 };

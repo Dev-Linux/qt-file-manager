@@ -33,7 +33,7 @@
   * highlight for a few seconds the folder from which the user comes.
   */
 RootItem::RootItem(DirModel* model,
-                   GraphView *view,
+                   WorkspaceView *view,
                    DockModel *dockModel) :
     QGraphicsObject()
 {

@@ -28,7 +28,6 @@ SOURCES += main.cpp \
     Dock.cpp \
     view/DirController.cpp \
     SearchLineEdit.cpp \
-    view/GraphView.cpp \
     #_filesystemmodel.cpp \
     #view/_listview.cpp
     #view/_GraphViewWidget.cpp
@@ -37,7 +36,8 @@ SOURCES += main.cpp \
     view/ZoneItem.cpp \
     view/BoostGraph.cpp \
     TabBarItem.cpp \
-    TabLabelItem.cpp
+    TabLabelItem.cpp \
+    view/WorkspaceView.cpp
 
 PRECOMPILED_DIR = pch # otherwise, with clang: conflict with TARGET
 PRECOMPILED_HEADER = stable.h
@@ -65,7 +65,6 @@ HEADERS += \
     Dock.h \
     view/DirController.h \
     SearchLineEdit.h \
-    view/GraphView.h \
     #_filesystemmodel.h \
     #view/_listview.h
     #view/_GraphViewWidget.h
@@ -74,7 +73,8 @@ HEADERS += \
     view/ZoneItem.h \
     view/BoostGraph.h \
     TabBarItem.h \
-    TabLabelItem.h
+    TabLabelItem.h \
+    view/WorkspaceView.h
 
 # FORMS =
 

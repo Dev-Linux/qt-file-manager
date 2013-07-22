@@ -4,14 +4,14 @@
 
 #include <QGraphicsObject>
 
-class GraphView;
+class WorkspaceView;
 class TabLabelItem;
 
 class TabBarItem : public QGraphicsObject
 {
     Q_OBJECT
 public:
-    explicit TabBarItem(GraphView *view);
+    explicit TabBarItem(WorkspaceView *view);
     ~TabBarItem();
     void paint(QPainter *painter,
                const QStyleOptionGraphicsItem *option,
@@ -26,7 +26,7 @@ signals:
 public slots:
     void modelPathChanged(const QString &path);
 private:
-    GraphView *view;
+    WorkspaceView *view;
     QList<TabLabelItem*> tabLabels;
     int activeIndex = -1;
     int padding = 5;

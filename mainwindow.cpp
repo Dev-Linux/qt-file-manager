@@ -124,7 +124,7 @@ MainWindow::MainWindow(const QString& initialPath) :
     dock = new Dock();
     breadcrumb = new Breadcrumb(dock->model);
 
-    graphView = new GraphView(dirCtrl->model, dock->model);
+    graphView = new WorkspaceView(dirCtrl->model, dock->model);
 
     auto viewCheckBox = new QPushButton(" auto");
     viewCheckBox->setObjectName("viewButton");

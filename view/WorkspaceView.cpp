@@ -1,4 +1,4 @@
-#include "GraphView.h"
+#include "WorkspaceView.h"
 
 #include "mainwindow.h"
 #include "DirModel.h"
@@ -23,7 +23,7 @@
  * clear the selection, I think, and this is a problem.
  */
 
-GraphView::GraphView(DirModel *model, DockModel *dockModel) :
+WorkspaceView::WorkspaceView(DirModel *model, DockModel *dockModel) :
     QGraphicsView()
 {
     scene = new QGraphicsScene();
@@ -78,7 +78,7 @@ GraphView::GraphView(DirModel *model, DockModel *dockModel) :
     //connect(&resizeTimer, &QTimer::timeout,
     //        this, &GraphView::resizeTimeout);
 
-    connect(this, &GraphView::rubberBandChanged,
+    connect(this, &WorkspaceView::rubberBandChanged,
             rootItem, &RootItem::selRectChanged);
 }
 
@@ -88,7 +88,7 @@ GraphView::GraphView(DirModel *model, DockModel *dockModel) :
     setSceneRect(scene->itemsBoundingRect());
 }*/
 
-void GraphView::resizeEvent(QResizeEvent *evt)
+void WorkspaceView::resizeEvent(QResizeEvent *evt)
 {
     //scene->setSceneRect(scene->itemsBoundingRect());
     //resizeTimer.start(25);
@@ -142,7 +142,7 @@ void GraphView::resizeEvent(QResizeEvent *evt)
     return true;
 }*/
 
-void GraphView::mousePressEvent(QMouseEvent *event)
+void WorkspaceView::mousePressEvent(QMouseEvent *event)
 {
     event->ignore();
     if (event->button() == Qt::LeftButton) {
@@ -200,7 +200,7 @@ void GraphView::mousePressEvent(QMouseEvent *event)
     }
 }
 
-void GraphView::mouseReleaseEvent(QMouseEvent *event)
+void WorkspaceView::mouseReleaseEvent(QMouseEvent *event)
 {
     if (draggedNode != nullptr) {
         if (!movedWhileDragPossible) {
@@ -230,7 +230,7 @@ void GraphView::mouseReleaseEvent(QMouseEvent *event)
     QGraphicsView::mouseReleaseEvent(event);
 }
 
-void GraphView::mouseMoveEvent(QMouseEvent *event)
+void WorkspaceView::mouseMoveEvent(QMouseEvent *event)
 {
     event->ignore();
 
@@ -368,7 +368,7 @@ void GraphView::mouseMoveEvent(QMouseEvent *event)
     // draggedNode->icon->pixmap(64, 64)
 }
 
-void GraphView::dragEnterEvent(QDragEnterEvent *event)
+void WorkspaceView::dragEnterEvent(QDragEnterEvent *event)
 {
     if (event->mimeData()->hasUrls()) {
         drag->setDragCursor(QPixmap(), event->proposedAction());
@@ -376,7 +376,7 @@ void GraphView::dragEnterEvent(QDragEnterEvent *event)
     }
 }
 
-void GraphView::dragMoveEvent(QDragMoveEvent *event)
+void WorkspaceView::dragMoveEvent(QDragMoveEvent *event)
 {
     QPointF p = event->pos();
     QPointF scenep = mapToScene(p.x(), p.y());
@@ -393,12 +393,12 @@ void GraphView::dragMoveEvent(QDragMoveEvent *event)
     }
 }
 
-void GraphView::dragLeaveEvent(QDragLeaveEvent *event)
+void WorkspaceView::dragLeaveEvent(QDragLeaveEvent *event)
 {
     Q_UNUSED(event);
 }
 
-void GraphView::dropEvent(QDropEvent *event)
+void WorkspaceView::dropEvent(QDropEvent *event)
 {
     QPointF p = event->pos();
     auto scenep = mapToScene(p.x(), p.y());
@@ -423,7 +423,7 @@ void GraphView::dropEvent(QDropEvent *event)
     event->acceptProposedAction();
 }
 
-void GraphView::keyPressEvent(QKeyEvent *event)
+void WorkspaceView::keyPressEvent(QKeyEvent *event)
 {
     event->ignore();
     if (event->modifiers().testFlag(Qt::NoModifier) &&
@@ -435,7 +435,7 @@ void GraphView::keyPressEvent(QKeyEvent *event)
     QGraphicsView::keyPressEvent(event);
 }
 
-void GraphView::scrollContentsBy(int dx, int dy)
+void WorkspaceView::scrollContentsBy(int dx, int dy)
 {
     QGraphicsView::scrollContentsBy(dx, dy);
     QPointF p = this->mapToScene(0, 0);

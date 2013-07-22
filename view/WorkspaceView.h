@@ -1,6 +1,6 @@
 #pragma once
-#ifndef GRAPHVIEW_H
-#define GRAPHVIEW_H
+#ifndef WORKSPACEVIEW_H
+#define WORKSPACEVIEW_H
 
 #include <QtWidgets>
 
@@ -10,11 +10,11 @@ class FileNode;
 class DockModel;
 class TabBarItem;
 
-class GraphView : public QGraphicsView
+class WorkspaceView : public QGraphicsView
 {
     Q_OBJECT
 public:
-    explicit GraphView(DirModel *model,
+    explicit WorkspaceView(DirModel *model,
                        DockModel *dockModel);
     QGraphicsScene *scene;
     QPoint dragStartPosition;
@@ -55,4 +55,4 @@ private:
     //QPointF dragDelta;
 };
 
-#endif // GRAPHVIEW_H
+#endif // WORKSPACEVIEW_H

@@ -5,7 +5,7 @@
 #include <QtWidgets>
 
 class DirModel;
-class GraphView;
+class WorkspaceView;
 class BoostGraph;
 class FileNode;
 class DockModel;
@@ -16,12 +16,12 @@ class RootItem : public QGraphicsObject
     Q_OBJECT
 public:
     explicit RootItem(DirModel* model,
-                      GraphView *view,
+                      WorkspaceView *view,
                       DockModel *dockModel);
     ~RootItem();
     DirModel *m_model;
     //! The GraphView which contains this RootItem.
-    GraphView *view;
+    WorkspaceView *view;
     //! The file nodes in this RootItem.
     QList<FileNode *> fileNodes;
     //! The DockModel which stores the items marked as important.

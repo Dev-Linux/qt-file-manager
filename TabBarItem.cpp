@@ -5,7 +5,7 @@
 #include "TabLabelItem.h"
 #include "misc.h"
 
-TabBarItem::TabBarItem(GraphView *view) : QGraphicsObject()
+TabBarItem::TabBarItem(WorkspaceView *view) : QGraphicsObject()
 {
     this->view = view;
 
