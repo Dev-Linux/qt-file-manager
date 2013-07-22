@@ -30,7 +30,7 @@ AsyncFileOperation::~AsyncFileOperation()
 void AsyncFileOperation::doAsync(FileOperationData *data,
                                  FileOperationItem *item)
 {
-    MainWindowController::instance()->view->fileOperations->insert(data, item);
+    MainWindowController::instance()->file_ops->insert(data, item);
     emit operationRequested(data);
 }
 

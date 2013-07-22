@@ -7,6 +7,7 @@
 class MainWindow;
 class FileOperationData;
 class AsyncFileOperation;
+class FileOperationItem;
 
 class MainWindowController : public QObject
 {
@@ -16,6 +17,7 @@ public:
     explicit MainWindowController(const QString &initial_path);
     ~MainWindowController();
     AsyncFileOperation *async_file_op;
+    QHash<const FileOperationData *, FileOperationItem *> *file_ops;
     MainWindow *view;
     
 signals:

@@ -41,7 +41,6 @@ public:
     QString savedSearchBuf;
     QDateTime lastSearchKey;
     Breadcrumb *breadcrumb;
-    QHash<const FileOperationData *, FileOperationItem *> *fileOperations;
     SearchLineEdit *searchLineEdit;
     //std::random_device randomDevice;
 

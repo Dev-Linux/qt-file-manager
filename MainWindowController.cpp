@@ -55,7 +55,10 @@ MainWindowController::MainWindowController(const QString &initial_path) :
     new (view) MainWindow(initial_path);
 
     m_layout = RootItem::GRAPH;
+    file_ops = new QHash<const FileOperationData *,
+            FileOperationItem *>();
     async_file_op = new AsyncFileOperation();
+
     m_search_timer.setSingleShot(true);
 
     connect(view, &MainWindow::layout_button_clicked,
@@ -250,7 +253,7 @@ void MainWindowController::search_timeout()
  */
 void MainWindowController::file_op_progressed(FileOperationData *data)
 {
-    FileOperationItem *item = view->fileOperations->value(data);
+    FileOperationItem *item = file_ops->value(data);
     if (data->type() == "copy" || data->type() == "move") {
         item->update();
     }
@@ -264,13 +267,13 @@ void MainWindowController::file_op_progressed(FileOperationData *data)
 void MainWindowController::file_op_done(FileOperationData *data)
 {
     //! @todo bring to top in menu, when done (copy, move & all others)
-    if (!view->fileOperations->contains(data)) {
+    if (!file_ops->contains(data)) {
         // internal file operation (currently recycle does this,
         // the future implementation shouldn't do this anymore,
         // so this check will be useless)
         return;
     }
-    FileOperationItem *item = view->fileOperations->value(data);
+    FileOperationItem *item = file_ops->value(data);
 
     if (data->anyOperationsAborted) {
         item->verb = "Aborted " + item->verb.toLower();

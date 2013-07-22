@@ -76,9 +76,6 @@ MainWindow::MainWindow(const QString& initialPath) :
 {
     settings = new QSettings("settings.ini", QSettings::IniFormat);
 
-    fileOperations = new QHash<const FileOperationData *,
-                                FileOperationItem *>();
-
     setWindowTitle("Linky Explorer");
     resize(800, 600);
 
