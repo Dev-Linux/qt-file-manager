@@ -81,9 +81,9 @@ int main (int argc, char *argv[])
     auto args = a.arguments();
     if (args.size() > 1) {
         //! @todo open more than one folders (tabs, please) if size more than 2
-        main_win_ctrl = new MainWindowController(args[1]);
+        main_win_ctrl = MainWindowController::instance(args[1]);
     } else {
-        main_win_ctrl = new MainWindowController();
+        main_win_ctrl = MainWindowController::instance();
     }
     main_win_ctrl->view->show();
 

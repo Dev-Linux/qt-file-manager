@@ -1,6 +1,6 @@
 #include "TabBarItem.h"
 
-#include "view/GraphView.h"
+#include "view/WorkspaceView.h"
 #include "fileinfo.h"
 #include "TabLabelItem.h"
 #include "misc.h"

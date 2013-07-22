@@ -14,6 +14,7 @@
 #include "fileoperationitem.h"
 #include "DockModel.h"
 #include "misc.h"
+#include "MainWindowController.h"
 
 DirController::DirController(QObject *parent) :
     QObject(parent)
@@ -225,10 +226,11 @@ void DirController::addTag(int index, const QString &tag)
 
 void DirController::contextMenuTriggered(QAction *action)
 {
+    MainWindowController *main_win_ctrl = MainWindowController::instance();
     if (action->text() == "It's important") {
         foreach (const int &x, model->sel->savedSet) {
             auto path = view->itemAt(x)->fileInfo.absoluteFilePath();
-            MainWindow::getInstance()->dock->model->addPath(path);
+            main_win_ctrl->view->dock->model->addPath(path);
         }
     } else if (action->text() == "Delete this" ||
                action->text() == "Recycle this") {
@@ -246,7 +248,7 @@ void DirController::contextMenuTriggered(QAction *action)
         //s = p.fontMetrics().elidedText(s, Qt::ElideRight, 300);
         //item->setLabel("<strong>" + s + "</strong>.");
         auto s = pathList.join(",<br>");
-        MainWindow::getInstance()->fileOperationsMenu->addItem(item);
+        main_win_ctrl->view->fileOperationsMenu->addItem(item);
         view->op->doAsync(data, item);
     }
 }

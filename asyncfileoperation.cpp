@@ -1,6 +1,7 @@
 #include "asyncfileoperation.h"
 
 #include "misc.h"
+#include "MainWindowController.h"
 #include "mainwindow.h"
 #include "asyncfileoperationworker.h"
 #include "fileoperationitem.h"
@@ -29,7 +30,7 @@ AsyncFileOperation::~AsyncFileOperation()
 void AsyncFileOperation::doAsync(FileOperationData *data,
                                  FileOperationItem *item)
 {
-    MainWindow::getInstance()->fileOperations->insert(data, item);
+    MainWindowController::instance()->view->fileOperations->insert(data, item);
     emit operationRequested(data);
 }
 

@@ -1,6 +1,7 @@
 #include "fileinfo.h"
 
 #include "mainwindow.h"
+#include "MainWindowController.h"
 #include "view/DirController.h"
 #include "view/DirModel.h"
 
@@ -22,7 +23,8 @@ FileInfo::FileInfo(const QFileInfo &info) : FileInfo()
 
 QIcon FileInfo::icon() const
 {
-    auto dr = MainWindow::getInstance()->dirCtrl->model->drives;
+    auto dr = MainWindowController::instance()->view->
+            dirCtrl->model->drives;
     if (dr) {
         if (!iconCache.contains(absoluteFilePath())) {
             // this thing makes a long and powerful noise,

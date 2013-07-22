@@ -17,6 +17,7 @@
 #include "fileinfo.h"
 #include <functional>
 #include "misc.h"
+#include "MainWindowController.h"
 
 #include <QGraphicsScene>
 
@@ -507,7 +508,7 @@ void RootItem::nodeRightClicked(const Qt::KeyboardModifiers &modifiers)
  */
 void RootItem::contextMenuTriggered(QAction *action)
 {
-    auto mw = MainWindow::getInstance();
+    auto mw = MainWindowController::instance()->view;
     if (action->text() == "It's important") {
         auto list = m_model->selectedAbsolutePaths(false);
         m_model->sel->clear();

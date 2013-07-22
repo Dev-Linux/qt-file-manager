@@ -1,6 +1,7 @@
 #include "DockModel.h"
 
 #include "mainwindow.h"
+#include "MainWindowController.h"
 
 /**
  * @class DockModel
@@ -10,7 +11,7 @@
 DockModel::DockModel(QObject *parent) :
     QObject(parent)
 {
-    s = MainWindow::getInstance()->settings;
+    s = MainWindowController::instance()->view->settings;
     Q_ASSERT(s != 0);
     readingSettings = false;
 }

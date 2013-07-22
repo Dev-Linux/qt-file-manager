@@ -10,11 +10,12 @@
 #include "fileinfo.h"
 #include "ListViewItem.h"
 #include "ViewSelectionModel.h"
+#include "MainWindowController.h"
 
 View::View(QWidget *parent) :
     QWidget(parent)
 {
-    op = MainWindow::getInstance()->asyncFileOperation;
+    op = MainWindowController::instance()->view->asyncFileOperation;
 
     ctrl = 0;
     l = new QVBoxLayout();

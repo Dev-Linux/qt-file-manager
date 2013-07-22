@@ -3,6 +3,7 @@
 #include "mainwindow.h"
 #include "fileoperationitem.h"
 #include "fileoperationdata.h"
+#include "MainWindowController.h"
 
 FileOperationsMenu::FileOperationsMenu(QWidget *parent) :
     QMenu(parent)
@@ -33,7 +34,8 @@ void FileOperationsMenu::showEvent(QShowEvent *event)
      * @todo If it isn't able to completely show up right aligned, then show it
      * left aligned.
      */
-    QPushButton *button = MainWindow::getInstance()->fileOperationsButton;
+    QPushButton *button = MainWindowController::instance()->
+            view->fileOperationsButton;
     move(button->mapToGlobal(QPoint(0, 0)).x() + button->width() - width(), this->pos().y());
     QMenu::showEvent(event);
 }
