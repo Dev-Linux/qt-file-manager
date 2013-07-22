@@ -39,7 +39,6 @@ public:
     DirController *dirCtrl;
     WorkspaceController *workspace_ctrl;
 
-    QSettings *settings;
     //std::random_device randomDevice;
 
 signals:

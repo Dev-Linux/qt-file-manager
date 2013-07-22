@@ -74,8 +74,6 @@ void MainWindow::connect_slots()
 MainWindow::MainWindow(const QString& initialPath) :
     QMainWindow()
 {
-    settings = new QSettings("settings.ini", QSettings::IniFormat);
-
     setWindowTitle("Linky Explorer");
     resize(800, 600);
 

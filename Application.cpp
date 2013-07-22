@@ -4,9 +4,16 @@
 #include "mainwindow.h"
 //#include <ctime>
 
+Application *Application::m_instance = nullptr;
+
 Application::Application(int &argc, char **argv) :
     QApplication(argc, argv)
 {
+    m_instance = this;
+
+    settings = new QSettings("settings.ini",
+                             QSettings::IniFormat);
+
     // cross-platform style (used because I develop for many platforms and I
     // don't have time for testing the tiny UI changes I make on all platforms)
     QApplication::setStyle(QStyleFactory::create("Fusion"));
@@ -37,4 +44,15 @@ Application::Application(int &argc, char **argv) :
 #else
     qDebug() << "Not X11.";
 #endif
+}
+
+Application::~Application()
+{
+    delete settings;
+}
+
+Application *Application::instance()
+{
+    Q_ASSERT(m_instance != nullptr);
+    return m_instance;
 }
