@@ -1,8 +1,5 @@
-#include <QtWidgets>
-#include "MainWindowController.h"
-#include "mainwindow.h"
+#include "Application.h"
 #include "misc.h"
-//#include <ctime>
 
 /**
  * @mainpage
@@ -48,44 +45,14 @@
  * @param argc Number of CLI arguments.
  * @param argv CLI arguments.
  * @return Program return code.
- * @retval 0 succes
+ * @retval 0 success
  */
-int main (int argc, char *argv[])
+int main(int argc, char *argv[])
 {
     //qSetMessagePattern("[%{function}:%{line}] %{message}");
     qInstallMessageHandler(MessageHandler::msgHandler);
 
-    QApplication a(argc, argv);
-    QFile styleSheetFile(":/style.css");
-    QString styleSheet;
-    MainWindowController *main_win_ctrl;
+    Application app(argc, argv);
 
-    // cross-platform style (used because I develop for many platforms and I
-    // don't have time for testing the tiny UI changes I make on all platforms)
-    QApplication::setStyle(QStyleFactory::create("Fusion"));
-
-#ifdef  Q_WS_X11
-    qDebug() << "X11.";
-#else
-    qDebug() << "Not X11.";
-#endif
-
-    styleSheetFile.open(QFile::ReadOnly);
-    styleSheet = styleSheetFile.readAll();
-    a.setStyleSheet(styleSheet);
-
-    a.setWindowIcon(QIcon(":/root.png"));
-
-    //qsrand(time(NULL));
-
-    auto args = a.arguments();
-    if (args.size() > 1) {
-        //! @todo open more than one folders (tabs, please) if size more than 2
-        main_win_ctrl = MainWindowController::instance(args[1]);
-    } else {
-        main_win_ctrl = MainWindowController::instance();
-    }
-    main_win_ctrl->view->show();
-
-    return a.exec();
+    return app.exec();
 }

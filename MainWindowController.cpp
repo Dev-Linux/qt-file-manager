@@ -28,6 +28,11 @@ MainWindowController* MainWindowController::m_instance = nullptr;
  * ROOT_PATH.
  *
  * @return The existing or newly created MainWindowController instance.
+ *
+ * @note I'm using the placement new because I've noticed that the program
+ * doesn't work without it. It's use here is connected to the fact that in the
+ * constructor MainWindowController() I am also using placement new and to the
+ * reasons of it's use there.
  */
 MainWindowController *MainWindowController::instance
                                         (const QString &initial_path)
@@ -47,6 +52,13 @@ MainWindowController *MainWindowController::instance
 
 }
 
+/**
+ * @brief Creates a MainWindowController.
+ * @param initial_path The initial path of the MainWindow created here.
+ * @note I'm using placement new because the constructor of MainWindow calls
+ * indirectly the instance() static method of MainWindowController. I haven't
+ * found a better way to do this.
+ */
 MainWindowController::MainWindowController(const QString &initial_path) :
     QObject()
 {

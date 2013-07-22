@@ -39,7 +39,8 @@ SOURCES += main.cpp \
     TabLabelItem.cpp \
     view/WorkspaceView.cpp \
     view/WorkspaceController.cpp \
-    MainWindowController.cpp
+    MainWindowController.cpp \
+    Application.cpp
 
 PRECOMPILED_DIR = pch # otherwise, with clang: conflict with TARGET
 PRECOMPILED_HEADER = stable.h
@@ -78,7 +79,8 @@ HEADERS += \
     TabLabelItem.h \
     view/WorkspaceView.h \
     view/WorkspaceController.h \
-    MainWindowController.h
+    MainWindowController.h \
+    Application.h
 
 # FORMS =
 
