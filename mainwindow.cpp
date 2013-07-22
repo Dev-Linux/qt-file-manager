@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 
-#include <new>
 #include "view/WorkspaceView.h"
 #include "breadcrumb.h"
 #include "Dock.h"
