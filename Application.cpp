@@ -4,6 +4,11 @@
 #include "mainwindow.h"
 //#include <ctime>
 
+/**
+ * @class Application
+ * @brief The main controller of the application.
+ */
+
 Application *Application::m_instance = nullptr;
 
 Application::Application(int &argc, char **argv) :
