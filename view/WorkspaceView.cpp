@@ -11,7 +11,7 @@
 #include "TabBarItem.h"
 
 /**
- * @class GraphView
+ * @class WorkspaceView
  * @todo check zoom out behavior on RootItem space
  * @todo idea: moving/copying shows progress on file node (background
  * eventually green, just like a progress bar). when moving, the source and the
