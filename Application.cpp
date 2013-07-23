@@ -31,18 +31,16 @@ Application::Application(int &argc, char **argv) :
 
     this->setWindowIcon(QIcon(":/root.png"));
 
-    MainWindowController *main_win_ctrl;
-
     //qsrand(time(NULL));
 
     auto args = this->arguments();
     if (args.size() > 1) {
         //! @todo open more than one folders (tabs, please) if size more than 2
-        main_win_ctrl = MainWindowController::instance(args[1]);
+        m_main_win_ctrl = MainWindowController::instance(args[1]);
     } else {
-        main_win_ctrl = MainWindowController::instance();
+        m_main_win_ctrl = MainWindowController::instance();
     }
-    main_win_ctrl->view->show();
+    m_main_win_ctrl->view->show();
 
 #ifdef Q_WS_X11
     qDebug() << "X11.";
@@ -53,6 +51,7 @@ Application::Application(int &argc, char **argv) :
 
 Application::~Application()
 {
+    delete m_main_win_ctrl;
     delete settings;
 }
 

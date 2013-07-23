@@ -5,6 +5,8 @@
 #include <QApplication>
 #include <QSettings>
 
+class MainWindowController;
+
 class Application : public QApplication
 {
     Q_OBJECT
@@ -20,6 +22,7 @@ public slots:
     
 private:
     static Application *m_instance;
+    MainWindowController *m_main_win_ctrl;
 };
 
 #endif // APPLICATION_H
