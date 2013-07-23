@@ -12,7 +12,6 @@
 
 class WorkspaceView;
 class Breadcrumb;
-class Dock;
 class SearchLineEdit;
 class LocationEdit;
 class FileOperationsMenu;
@@ -21,15 +20,16 @@ class FileOperationItem;
 class AsyncFileOperation;
 class DirController;
 class WorkspaceController;
+class DockController;
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 public:
-    MainWindow(const QString &initialPath);
+    MainWindow();
     FileOperationsMenu *fileOperationsMenu;
     QPushButton *fileOperationsButton;
-    Dock *dock;
+    DockController *dock_ctrl;
     QPushButton *layout_button;
     LocationEdit *locationEdit;
     QStackedWidget *stackedWidget;

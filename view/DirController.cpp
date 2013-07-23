@@ -1,7 +1,6 @@
 #include "DirController.h"
 
 #include "mainwindow.h"
-#include "Dock.h"
 #include "fileoperationsmenu.h"
 #include "View.h"
 #include "DirModel.h"
@@ -12,7 +11,10 @@
 #include "asyncfileoperation.h"
 #include "fileoperationdata.h"
 #include "fileoperationitem.h"
+
+#include "DockController.h"
 #include "DockModel.h"
+
 #include "misc.h"
 #include "MainWindowController.h"
 
@@ -230,7 +232,7 @@ void DirController::contextMenuTriggered(QAction *action)
     if (action->text() == "It's important") {
         foreach (const int &x, model->sel->savedSet) {
             auto path = view->itemAt(x)->fileInfo.absoluteFilePath();
-            main_win_ctrl->view->dock->model->addPath(path);
+            main_win_ctrl->view->dock_ctrl->model->addPath(path);
         }
     } else if (action->text() == "Delete this" ||
                action->text() == "Recycle this") {

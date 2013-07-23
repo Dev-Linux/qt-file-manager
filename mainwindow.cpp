@@ -2,15 +2,20 @@
 
 #include "view/WorkspaceView.h"
 #include "view/WorkspaceController.h"
-#include "breadcrumb.h"
+
+#include "DockController.h"
 #include "Dock.h"
+
+#include "view/DirController.h"
+#include "view/View.h"
+
 #include "SearchLineEdit.h"
 #include "locationedit.h"
 #include "fileoperationsmenu.h"
-#include "view/DirController.h"
-#include "view/View.h"
+#include "breadcrumb.h"
 #include "misc.h"
 #include "view/RootItem.h"
+
 //#include <random>
 
 /**
@@ -48,11 +53,11 @@ void MainWindow::connect_slots()
 /**
  * @brief Opens the settings file, initializes the widgets, calls connectSlots()
  * and locationEditChanged().
- * @param initialPath The initial path to show to the user.
+ *
  * @bug ask for confirmation on delete/overwrite in the
  * fileOperationsMenu which should be instantly shown with the relevant
  * file operation highlighted and with action buttons and text clearly
- * explaining what's happening
+ * explaining what's happening.
  *
  * @bug when dragging a file from the app to Windows File Explorer, the
  * file operation works well, but appearantly and surprisingly (because the
@@ -61,13 +66,13 @@ void MainWindow::connect_slots()
  * moving the mouse cursor over my app I can see the file being dragged
  * although I don't press any mouse button.
  *
- * @todo clipboard view, workspace view
- * @todo see Customizing QDockWidget in Qt Style Sheet Examples (Qt docs)
- * @todo sort files according to access count in a time span (e.g. last X days)
- * @todo clipboard with drag & drop
- * @todo accesare meniu standard la fisiere, foldere (not x-platform)
+ * @todo clipboard view, workspace view.
+ * @todo see Customizing QDockWidget in Qt Style Sheet Examples (Qt docs).
+ * @todo sort files according to access count in a time span (e.g. last X days).
+ * @todo clipboard with drag & drop.
+ * @todo accesare meniu standard la fisiere, foldere (not x-platform).
  */
-MainWindow::MainWindow(const QString& initialPath) :
+MainWindow::MainWindow() :
     QMainWindow()
 {
     setWindowTitle("Linky Explorer");
@@ -90,18 +95,17 @@ MainWindow::MainWindow(const QString& initialPath) :
                                  QSizePolicy::Maximum);
 
     locationEdit = new LocationEdit();
-    locationEdit->setText(initialPath);
 
     fileOperationsMenu = new FileOperationsMenu();
 
     fileOperationsButton = new QPushButton("File tasks");
     fileOperationsButton->setMenu(fileOperationsMenu);
 
-    dock = new Dock();
-    breadcrumb = new Breadcrumb(dock->model);
+    dock_ctrl = new DockController();
+    breadcrumb = new Breadcrumb(dock_ctrl->model);
 
     workspace_ctrl = new WorkspaceController(dirCtrl->model,
-                                             dock->model);
+                                             dock_ctrl->model);
 
     layout_button = new QPushButton(" auto");
     layout_button->setObjectName("viewButton");
@@ -109,10 +113,10 @@ MainWindow::MainWindow(const QString& initialPath) :
     connect(layout_button, &QPushButton::clicked,
             this, &MainWindow::layout_button_clicked);
 
-    auto zoomInButton = new QPushButton("zoom +");
+    QPushButton *zoomInButton = new QPushButton("zoom +");
     zoomInButton->setAutoRepeat(true);
 
-    auto zoomOutButton = new QPushButton("zoom -");
+    QPushButton *zoomOutButton = new QPushButton("zoom -");
     zoomOutButton->setAutoRepeat(true);
 
     connect(zoomInButton, &QPushButton::clicked,
@@ -121,7 +125,7 @@ MainWindow::MainWindow(const QString& initialPath) :
             workspace_ctrl, &WorkspaceController::zoom_out);
 
     addToolBar(Qt::TopToolBarArea, toolBar);
-    addDockWidget(Qt::RightDockWidgetArea, dock);
+    addDockWidget(Qt::RightDockWidgetArea, dock_ctrl->view);
     setCentralWidget(centralWidget);
     centralWidget->setLayout(verticalLayout);
     centralWidget->setParent(this);

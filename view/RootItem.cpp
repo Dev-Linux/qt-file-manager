@@ -9,7 +9,10 @@
 #include "DirController.h"
 #include "fileoperationdata.h"
 #include "fileoperationsmenu.h"
+
+#include "DockController.h"
 #include "Dock.h"
+
 #include "View.h"
 #include "asyncfileoperation.h"
 #include "fileoperationitem.h"
@@ -516,7 +519,7 @@ void RootItem::contextMenuTriggered(QAction *action)
 
         QStringListIterator it(list);
         while (it.hasNext()) {
-            mw->dock->model->addPath(it.next());
+            mw->dock_ctrl->model->addPath(it.next());
         }
     } else if (action->text() == "Delete this") {
         QStringList pathList = m_model->selectedAbsolutePaths(true);

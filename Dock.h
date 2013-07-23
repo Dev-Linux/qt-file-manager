@@ -13,23 +13,25 @@ class Dock : public QDockWidget
 {
     Q_OBJECT
 public:
-    explicit Dock(QWidget *parent = 0);
+    explicit Dock(DockModel *dock_model);
     DockModel *model;
     ListViewItem *selectedItem;
-    QMenu *menu = nullptr;
     View *view;
-    QMenu *buildMenu();
-    
-protected:
-    virtual QSize sizeHint() const;
+
 signals:
-    
+
 public slots:
     void removeItem(FileInfo &info);
-    void addItem(const FileInfo &info);
     void itemRightClicked(const QPoint &globalPos);
     void itemDoubleClicked();
     void removeActionTriggered();
+
+protected:
+    virtual QSize sizeHint() const;
+
+private:
+    QMenu *buildMenu();
+    QMenu *menu = nullptr;
 };
 
 #endif // DOCK_H

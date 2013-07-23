@@ -54,7 +54,9 @@ MainWindowController *MainWindowController::instance
 
 /**
  * @brief Creates a MainWindowController.
- * @param initial_path The initial path of the MainWindow created here.
+ *
+ * @param initial_path The initial path to show to the user.
+ *
  * @note I'm using placement new because the constructor of MainWindow calls
  * indirectly the instance() static method of MainWindowController. I haven't
  * found a better way to do this.
@@ -64,7 +66,7 @@ MainWindowController::MainWindowController(const QString &initial_path) :
 {
     view = static_cast<MainWindow*>
             (::operator new(sizeof(MainWindow)));
-    new (view) MainWindow(initial_path);
+    new (view) MainWindow();
 
     m_layout = RootItem::GRAPH;
     file_ops = new QHash<const FileOperationData *,
@@ -102,6 +104,7 @@ MainWindowController::MainWindowController(const QString &initial_path) :
     connect(async_file_op, &AsyncFileOperation::done,
             this, &MainWindowController::file_op_done);
 
+    view->locationEdit->setText(initial_path);
     location_edit_changed();
 }
 

@@ -8,20 +8,14 @@
 #include <functional>
 #include "misc.h"
 
-Dock::Dock(QWidget *parent) :
-    QDockWidget(parent)
+Dock::Dock(DockModel *dock_model) : QDockWidget()
 {
     view = new View();
     view->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     this->setWidget(view);
     this->setWindowTitle("Important");
 
-    model = new DockModel();
-    connect(model, &DockModel::added,
-            this, &Dock::addItem);
-    connect(model, &DockModel::removed,
-            this, &Dock::removeItem);
-    model->readSettings();
+    model = dock_model;
 
     menu = buildMenu();
 
@@ -57,18 +51,6 @@ void Dock::removeItem(FileInfo &info)
 // auto itemDoubleClicked = [] (ListViewItem* item) { };
 // connect(item, &ListViewItem::doubleClicked,
 // std::function<void()>(std::bind(itemDoubleClicked, item)));
-
-void Dock::addItem(const FileInfo &info)
-{
-    auto item = new ListViewItem(info);
-
-    connect(item, &ListViewItem::doubleClicked,
-            this, &Dock::itemDoubleClicked);
-    connect(item, &ListViewItem::rightClicked,
-            this, &Dock::itemRightClicked);
-
-    view->addItem(item);
-}
 
 void Dock::itemRightClicked(const QPoint &globalPos)
 { Q_UNUSED(globalPos)

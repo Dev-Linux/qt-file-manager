@@ -40,7 +40,8 @@ SOURCES += main.cpp \
     view/WorkspaceView.cpp \
     view/WorkspaceController.cpp \
     MainWindowController.cpp \
-    Application.cpp
+    Application.cpp \
+    DockController.cpp
 
 PRECOMPILED_DIR = pch # otherwise, with clang: conflict with TARGET
 PRECOMPILED_HEADER = stable.h
@@ -80,7 +81,8 @@ HEADERS += \
     view/WorkspaceView.h \
     view/WorkspaceController.h \
     MainWindowController.h \
-    Application.h
+    Application.h \
+    DockController.h
 
 # FORMS =
 
