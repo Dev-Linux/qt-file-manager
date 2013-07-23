@@ -4,23 +4,24 @@
 #include "view/ListViewItem.h"
 #include "view/View.h"
 #include "fileinfo.h"
-#include "DockModel.h"
 #include <functional>
 #include "misc.h"
 
-Dock::Dock(DockModel *dock_model) : QDockWidget()
+/**
+ * @class Dock
+ * @todo "routines" list (macros + places + favourites + ...)
+ */
+
+Dock::Dock() : QDockWidget()
 {
     view = new View();
     view->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     this->setWidget(view);
     this->setWindowTitle("Important");
 
-    model = dock_model;
-
     menu = buildMenu();
 
     // this->setFeatures(QDockWidget::DockWidgetMovable); ? needed?
-    //! @todo "routines" list (macros + places + favourites + ...)
 }
 
 QMenu *Dock::buildMenu()
@@ -28,7 +29,7 @@ QMenu *Dock::buildMenu()
     auto m = new QMenu();
     QAction *action = m->addAction("Remove");
     connect(action, &QAction::triggered,
-            this, &Dock::removeActionTriggered);
+            this, &Dock::remove_action_triggered);
     return m;
 }
 
@@ -37,8 +38,7 @@ void Dock::removeItem(FileInfo &info)
     bool found = false;
     int c = view->itemCount();
     for (int i = 0; i < c; i++) {
-        if (view->itemAt(i)->fileInfo.fileInfo ==
-                info.fileInfo) {
+        if (view->itemAt(i)->fileInfo == info) {
             view->removeItem(i);
             found = true;
             break;
@@ -47,11 +47,15 @@ void Dock::removeItem(FileInfo &info)
     Q_ASSERT(found);
 }
 
-// random info: simulating sender() with std::bind
-// auto itemDoubleClicked = [] (ListViewItem* item) { };
-// connect(item, &ListViewItem::doubleClicked,
-// std::function<void()>(std::bind(itemDoubleClicked, item)));
-
+/**
+ * @brief Dock::itemRightClicked
+ * @note random info: simulating sender() with std::bind:
+ * @code
+ * auto itemDoubleClicked = [] (ListViewItem* item) {  };
+ * connect(item, &ListViewItem::doubleClicked,
+ *     std::function<void()>(std::bind(itemDoubleClicked, item)));
+ * @endcode
+ */
 void Dock::itemRightClicked(const QPoint &globalPos)
 { Q_UNUSED(globalPos)
     qDebug() << "begin";
@@ -79,13 +83,6 @@ void Dock::itemDoubleClicked()
     } else {
         misc::openLocalFile(info.absoluteFilePath());
     }
-    qDebug() << "end";
-}
-
-void Dock::removeActionTriggered()
-{
-    qDebug() << "begin";
-    model->removePath(selectedItem->fileInfo.absoluteFilePath());
     qDebug() << "end";
 }
 

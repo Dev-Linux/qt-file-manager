@@ -1,3 +1,4 @@
+#pragma once
 #ifndef DOCKCONTROLLER_H
 #define DOCKCONTROLLER_H
 
@@ -20,7 +21,7 @@ public slots:
 
 private slots:
     void add_item(const FileInfo &info);
-    
+    void remove_action_triggered();
 };
 
 #endif // DOCKCONTROLLER_H

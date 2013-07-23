@@ -13,18 +13,17 @@ class Dock : public QDockWidget
 {
     Q_OBJECT
 public:
-    explicit Dock(DockModel *dock_model);
-    DockModel *model;
+    explicit Dock();
     ListViewItem *selectedItem;
     View *view;
 
 signals:
+    void remove_action_triggered();
 
 public slots:
     void removeItem(FileInfo &info);
     void itemRightClicked(const QPoint &globalPos);
     void itemDoubleClicked();
-    void removeActionTriggered();
 
 protected:
     virtual QSize sizeHint() const;
