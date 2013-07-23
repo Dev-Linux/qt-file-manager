@@ -29,16 +29,6 @@
  */
 void MainWindow::connect_slots()
 {
-    connect(breadcrumb, &Breadcrumb::clicked,
-            this, &MainWindow::breadcrumb_clicked);
-    connect(breadcrumb, &Breadcrumb::pathChanged,
-            this, &MainWindow::breadcrumb_path_changed);
-
-    connect(dirCtrl, &DirController::pathChanged,
-            this, &MainWindow::dir_ctrl_path_changed);
-    connect(dirCtrl, &DirController::searchStarted,
-            this, &MainWindow::dir_search_started);
-
     connect(locationEdit, &LocationEdit::focused,
             this, &MainWindow::location_edit_focused);
     connect(locationEdit, &LocationEdit::returnPressed,
@@ -48,6 +38,14 @@ void MainWindow::connect_slots()
 
     connect(searchLineEdit, &SearchLineEdit::textEdited,
             this, &MainWindow::search_text_edited);
+
+    connect(zoom_in_button, &QPushButton::clicked,
+            this, &MainWindow::zoom_in_requested);
+    connect(zoom_out_button, &QPushButton::clicked,
+            this, &MainWindow::zoom_out_requested);
+
+    connect(layout_button, &QPushButton::clicked,
+            this, &MainWindow::layout_button_clicked);
 }
 
 /**
@@ -72,15 +70,15 @@ void MainWindow::connect_slots()
  * @todo clipboard with drag & drop.
  * @todo accesare meniu standard la fisiere, foldere (not x-platform).
  */
-MainWindow::MainWindow() :
+MainWindow::MainWindow(Dock *dock_view,
+                       WorkspaceView *workspace_view,
+                       Breadcrumb *breadcrumb_view) :
     QMainWindow()
 {
     setWindowTitle("Linky Explorer");
     resize(800, 600);
 
     centralWidget = new QWidget();
-    dirCtrl = new DirController();
-    dirCtrl->view->hide();
 
     verticalLayout = new QVBoxLayout();
     verticalLayout->setContentsMargins(0, 0, 0, 0);
@@ -101,45 +99,31 @@ MainWindow::MainWindow() :
     fileOperationsButton = new QPushButton("File tasks");
     fileOperationsButton->setMenu(fileOperationsMenu);
 
-    dock_ctrl = new DockController();
-    breadcrumb = new Breadcrumb(dock_ctrl->model);
-
-    workspace_ctrl = new WorkspaceController(dirCtrl->model,
-                                             dock_ctrl->model);
-
     layout_button = new QPushButton(" auto");
     layout_button->setObjectName("viewButton");
     layout_button->setIcon(QIcon(":/secview.png"));
-    connect(layout_button, &QPushButton::clicked,
-            this, &MainWindow::layout_button_clicked);
 
-    QPushButton *zoomInButton = new QPushButton("zoom +");
-    zoomInButton->setAutoRepeat(true);
+    zoom_in_button = new QPushButton("zoom +");
+    zoom_in_button->setAutoRepeat(true);
 
-    QPushButton *zoomOutButton = new QPushButton("zoom -");
-    zoomOutButton->setAutoRepeat(true);
-
-    connect(zoomInButton, &QPushButton::clicked,
-            workspace_ctrl, &WorkspaceController::zoom_in);
-    connect(zoomOutButton, &QPushButton::clicked,
-            workspace_ctrl, &WorkspaceController::zoom_out);
+    zoom_out_button = new QPushButton("zoom -");
+    zoom_out_button->setAutoRepeat(true);
 
     addToolBar(Qt::TopToolBarArea, toolBar);
-    addDockWidget(Qt::RightDockWidgetArea, dock_ctrl->view);
+    addDockWidget(Qt::RightDockWidgetArea, dock_view);
     setCentralWidget(centralWidget);
     centralWidget->setLayout(verticalLayout);
     centralWidget->setParent(this);
-    stackedWidget->addWidget(breadcrumb);
+    stackedWidget->addWidget(breadcrumb_view);
     stackedWidget->addWidget(locationEdit);
     toolBar->addWidget(stackedWidget);
     toolBar->addWidget(fileOperationsButton);
     toolBar->addWidget(layout_button);
     searchToolBar->addWidget(searchLineEdit);
-    searchToolBar->addWidget(zoomInButton);
-    searchToolBar->addWidget(zoomOutButton);
+    searchToolBar->addWidget(zoom_in_button);
+    searchToolBar->addWidget(zoom_out_button);
     //verticalLayout->addWidget(toolBar);
-    verticalLayout->addWidget(workspace_ctrl->view);
-    verticalLayout->addWidget(dirCtrl->view);
+    verticalLayout->addWidget(workspace_view);
     verticalLayout->addWidget(searchToolBar);
 
     connect_slots();

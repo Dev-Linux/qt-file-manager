@@ -9,6 +9,10 @@ class MainWindow;
 class FileOperationData;
 class AsyncFileOperation;
 class FileOperationItem;
+class DirController;
+class DockController;
+class WorkspaceController;
+class Breadcrumb;
 
 class MainWindowController : public QObject
 {
@@ -20,6 +24,8 @@ public:
     AsyncFileOperation *async_file_op;
     QHash<const FileOperationData *, FileOperationItem *> *file_ops;
     MainWindow *view;
+    bool isShowingDrives() const;
+    void markPathAsImportant(const QString &path);
     
 signals:
     
@@ -43,6 +49,10 @@ private:
     static MainWindowController *m_instance;
     QTimer m_search_timer;
     QString m_search_buf;
+    DirController *m_dir_ctrl;
+    DockController *m_dock_ctrl;
+    WorkspaceController *m_workspace_ctrl;
+    Breadcrumb *m_breadcrumb_ctrl;
 };
 
 #endif // MAINWINDOWCONTROLLER_H

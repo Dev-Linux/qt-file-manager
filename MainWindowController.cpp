@@ -15,6 +15,9 @@
 #include "view/DirModel.h"
 #include "asyncfileoperation.h"
 
+#include "DockModel.h"
+#include "DockController.h"
+
 /**
  * @brief The singleton instance of MainWindowController.
  */
@@ -64,9 +67,16 @@ MainWindowController *MainWindowController::instance
 MainWindowController::MainWindowController(const QString &initial_path) :
     QObject()
 {
+    m_dir_ctrl = new DirController();
+    m_dock_ctrl = new DockController();
+    m_workspace_ctrl = new WorkspaceController(m_dir_ctrl->model,
+                                             m_dock_ctrl->model);
+    m_breadcrumb_ctrl = new Breadcrumb(m_dock_ctrl->model);
+
     view = static_cast<MainWindow*>
             (::operator new(sizeof(MainWindow)));
-    new (view) MainWindow();
+    new (view) MainWindow(m_dock_ctrl->view,
+                          m_workspace_ctrl->view, m_breadcrumb_ctrl);
 
     m_layout = RootItem::GRAPH;
     file_ops = new QHash<const FileOperationData *,
@@ -75,16 +85,18 @@ MainWindowController::MainWindowController(const QString &initial_path) :
 
     m_search_timer.setSingleShot(true);
 
+    connect(m_breadcrumb_ctrl, &Breadcrumb::clicked,
+            this, &MainWindowController::breadcrumb_clicked);
+    connect(m_breadcrumb_ctrl, &Breadcrumb::pathChanged,
+            this, &MainWindowController::breadcrumb_path_changed);
+
+    connect(m_dir_ctrl, &DirController::pathChanged,
+            this, &MainWindowController::dir_ctrl_path_changed);
+    connect(m_dir_ctrl, &DirController::searchStarted,
+            this, &MainWindowController::dir_search_started);
+
     connect(view, &MainWindow::layout_button_clicked,
             this, &MainWindowController::layout_button_clicked);
-    connect(view, &MainWindow::breadcrumb_clicked,
-            this, &MainWindowController::breadcrumb_clicked);
-    connect(view, &MainWindow::breadcrumb_path_changed,
-            this, &MainWindowController::breadcrumb_path_changed);
-    connect(view, &MainWindow::dir_ctrl_path_changed,
-            this, &MainWindowController::dir_ctrl_path_changed);
-    connect(view, &MainWindow::dir_search_started,
-            this, &MainWindowController::dir_search_started);
     connect(view, &MainWindow::location_edit_focused,
             this, &MainWindowController::location_edit_focused);
 
@@ -104,6 +116,11 @@ MainWindowController::MainWindowController(const QString &initial_path) :
     connect(async_file_op, &AsyncFileOperation::done,
             this, &MainWindowController::file_op_done);
 
+    connect(view, &MainWindow::zoom_in_requested,
+            m_workspace_ctrl, &WorkspaceController::zoom_in);
+    connect(view, &MainWindow::zoom_out_requested,
+            m_workspace_ctrl, &WorkspaceController::zoom_out);
+
     view->locationEdit->setText(initial_path);
     location_edit_changed();
 }
@@ -119,6 +136,16 @@ MainWindowController::~MainWindowController()
     delete async_file_op;
 }
 
+bool MainWindowController::isShowingDrives() const
+{
+    return m_dir_ctrl->model->drives;
+}
+
+void MainWindowController::markPathAsImportant(const QString &path)
+{
+    m_dock_ctrl->model->addPath(path);
+}
+
 /**
  * @brief Changes the layout of the view and updates the layout_button to
  * reflect that.
@@ -131,13 +158,13 @@ void MainWindowController::layout_button_clicked()
         view->layout_button->setText(" auto");
         //dirCtrl->view->hide();
         //graphView->show();
-        view->workspace_ctrl->set_layout(RootItem::GRAPH);
+        m_workspace_ctrl->set_layout(RootItem::GRAPH);
         m_layout = RootItem::GRAPH;
     } else { // == RootItem::GRAPH
         view->layout_button->setText(" list");
         //graphView->hide();
         //dirCtrl->view->show();
-        view->workspace_ctrl->set_layout(RootItem::LIST);
+        m_workspace_ctrl->set_layout(RootItem::LIST);
         m_layout = RootItem::LIST;
     }
 }
@@ -169,8 +196,8 @@ void MainWindowController::breadcrumb_path_changed(const QString &path)
 void MainWindowController::dir_ctrl_path_changed(const QString &path)
 {
     view->locationEdit->setText(path);
-    view->breadcrumb->setPath(path);
-    view->stackedWidget->setCurrentWidget(view->breadcrumb);
+    m_breadcrumb_ctrl->setPath(path);
+    view->stackedWidget->setCurrentWidget(m_breadcrumb_ctrl);
 }
 
 /**
@@ -191,7 +218,7 @@ void MainWindowController::dir_search_started(const QString &str)
 void MainWindowController::location_edit_focused(bool focused)
 {
     if (!focused && !view->locationEdit->contextMenuOpen) {
-        view->stackedWidget->setCurrentWidget(view->breadcrumb);
+        view->stackedWidget->setCurrentWidget(m_breadcrumb_ctrl);
     }
 }
 
@@ -209,8 +236,8 @@ void MainWindowController::location_edit_changed()
         // windows, QDir::drives....
         view->locationEdit->setText(path);
 
-        view->dirCtrl->setPath(path);
-        view->dirCtrl->view->setFocus();
+        m_dir_ctrl->setPath(path);
+        m_dir_ctrl->view->setFocus();
         return;
     }
 
@@ -225,8 +252,8 @@ void MainWindowController::location_edit_changed()
         }
         view->locationEdit->setText(path);
 
-        view->dirCtrl->setPath(path);
-        view->dirCtrl->view->setFocus();
+        m_dir_ctrl->setPath(path);
+        m_dir_ctrl->view->setFocus();
     } else {
         QMessageBox::information(view, "Error",
             QString("\"%1\" does not exist.").arg(path));
@@ -258,7 +285,7 @@ void MainWindowController::search_timeout()
         QString pat = m_search_buf;
         pat = misc::escapeQDirNameFilter(pat);
         l << QString("*%1*").arg(pat);
-        view->dirCtrl->model->setNameFilters(l);
+        m_dir_ctrl->model->setNameFilters(l);
     }
 }
 

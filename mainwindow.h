@@ -21,23 +21,21 @@ class AsyncFileOperation;
 class DirController;
 class WorkspaceController;
 class DockController;
+class Dock;
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 public:
-    MainWindow();
+    MainWindow(Dock *dock_view,
+               WorkspaceView *workspace_view,
+               Breadcrumb *breadcrumb_view);
     FileOperationsMenu *fileOperationsMenu;
     QPushButton *fileOperationsButton;
-    DockController *dock_ctrl;
     QPushButton *layout_button;
     LocationEdit *locationEdit;
     QStackedWidget *stackedWidget;
-    Breadcrumb *breadcrumb;
     SearchLineEdit *searchLineEdit;
-
-    DirController *dirCtrl;
-    WorkspaceController *workspace_ctrl;
 
     //std::random_device randomDevice;
 
@@ -51,6 +49,8 @@ signals:
     void location_edit_return_pressed();
     void location_edit_button_clicked();
     void search_text_edited(const QString &text);
+    void zoom_in_requested();
+    void zoom_out_requested();
 
 public slots:
 
@@ -58,6 +58,7 @@ private:
     QWidget *centralWidget;
     QVBoxLayout *verticalLayout;
     QToolBar *toolBar, *searchToolBar;
+    QPushButton *zoom_in_button, *zoom_out_button;
     void connect_slots();
 };
 

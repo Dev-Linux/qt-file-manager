@@ -18,6 +18,12 @@
 #include "misc.h"
 #include "MainWindowController.h"
 
+/**
+ * @class DirController
+ * @brief DirController class
+ * @deprecated Use WorkspaceController instead.
+ */
+
 DirController::DirController(QObject *parent) :
     QObject(parent)
 {
@@ -232,7 +238,7 @@ void DirController::contextMenuTriggered(QAction *action)
     if (action->text() == "It's important") {
         foreach (const int &x, model->sel->savedSet) {
             auto path = view->itemAt(x)->fileInfo.absoluteFilePath();
-            main_win_ctrl->view->dock_ctrl->model->addPath(path);
+            main_win_ctrl->markPathAsImportant(path);
         }
     } else if (action->text() == "Delete this" ||
                action->text() == "Recycle this") {

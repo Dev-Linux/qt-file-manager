@@ -49,9 +49,9 @@ void Dock::removeItem(FileInfo &info)
 
 /**
  * @brief Dock::itemRightClicked
- * @note random info: simulating sender() with std::bind:
+ * @note Random info: simulating `QObject::sender()` with `std::bind`
  * @code
- * auto itemDoubleClicked = [] (ListViewItem* item) {  };
+ * auto itemDoubleClicked = [] (ListViewItem* item) { };
  * connect(item, &ListViewItem::doubleClicked,
  *     std::function<void()>(std::bind(itemDoubleClicked, item)));
  * @endcode

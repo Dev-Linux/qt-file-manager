@@ -511,7 +511,8 @@ void RootItem::nodeRightClicked(const Qt::KeyboardModifiers &modifiers)
  */
 void RootItem::contextMenuTriggered(QAction *action)
 {
-    auto mw = MainWindowController::instance()->view;
+    auto main_win_ctrl = MainWindowController::instance();
+    auto mw = main_win_ctrl->view;
     if (action->text() == "It's important") {
         auto list = m_model->selectedAbsolutePaths(false);
         m_model->sel->clear();
@@ -519,7 +520,7 @@ void RootItem::contextMenuTriggered(QAction *action)
 
         QStringListIterator it(list);
         while (it.hasNext()) {
-            mw->dock_ctrl->model->addPath(it.next());
+            main_win_ctrl->markPathAsImportant(it.next());
         }
     } else if (action->text() == "Delete this") {
         QStringList pathList = m_model->selectedAbsolutePaths(true);
@@ -533,7 +534,7 @@ void RootItem::contextMenuTriggered(QAction *action)
         auto s = pathList.join(",<br>");
         item->setLabel("<strong>" + s + "</strong>.");
         mw->fileOperationsMenu->addItem(item);
-        mw->dirCtrl->view->op->doAsync(data, item);
+        main_win_ctrl->async_file_op->doAsync(data, item);
     } else if (action->text() == "Recycle this") {
         QStringList pathList = m_model->selectedAbsolutePaths(false); // true? this WILL be X-OS
 
@@ -554,7 +555,7 @@ void RootItem::contextMenuTriggered(QAction *action)
 
         item->setLabel("<strong>" + s + "</strong>.");
         mw->fileOperationsMenu->addItem(item);
-        mw->dirCtrl->view->op->doAsync(data, item);
+        main_win_ctrl->async_file_op->doAsync(data, item);
     }
 }
 

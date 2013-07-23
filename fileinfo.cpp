@@ -23,8 +23,7 @@ FileInfo::FileInfo(const QFileInfo &info) : FileInfo()
 
 QIcon FileInfo::icon() const
 {
-    auto dr = MainWindowController::instance()->view->
-            dirCtrl->model->drives;
+    auto dr = MainWindowController::instance()->isShowingDrives();
     if (dr) {
         if (!iconCache.contains(absoluteFilePath())) {
             // this thing makes a long and powerful noise,
