@@ -41,10 +41,13 @@ public:
                QWidget *widget = 0);
     void viewResized();
     void setLayout(Layout l);
+    void update_layout();
     
 signals:
     
 public slots:
+    void clearView();
+    void addNode(const FileInfo &info);
     void itemDoubleClicked();
     void nodeLeftClicked(const Qt::KeyboardModifiers &modifiers);
     void nodeRightClicked(const Qt::KeyboardModifiers &modifiers);
@@ -57,18 +60,12 @@ protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 
 private slots:
-    void clearView();
-    void addNode(const FileInfo &info);
-    void pathChanged(const QString &path);
     void connectNode(const FileNode *node);
 
     void importantAdded(FileInfo &info);
     void importantRemoved(FileInfo &info);
-    void refresh();
-    void file_system_change();
 private:
     void initGraph();
-    void refreshTags();
 
     void refresh_list_pos_and_sizes();
     void refresh_graph_positions();
@@ -90,7 +87,6 @@ private:
     QMenu *menu = nullptr;
     //! The graph for GRAPH layout.
     QScopedPointer<BoostGraph> g;
-    void update_layout();
 };
 
 #endif // ROOTITEM_H

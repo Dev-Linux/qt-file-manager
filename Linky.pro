@@ -41,7 +41,9 @@ SOURCES += main.cpp \
     FileOperationData.cpp \
     FileOperationItem.cpp \
     FileOperationsMenu.cpp \
-    LocationEdit.cpp
+    LocationEdit.cpp \
+    view/WorkspaceModel.cpp \
+    view/RootItemController.cpp
 
 PRECOMPILED_DIR = pch # otherwise, with clang: conflict with TARGET
 PRECOMPILED_HEADER = stable.h
@@ -82,7 +84,9 @@ HEADERS += \
     FileOperationItem.h \
     FileOperationsMenu.h \
     LocationEdit.h \
-    view/FileNode.h
+    view/FileNode.h \
+    view/WorkspaceModel.h \
+    view/RootItemController.h
 
 # FORMS =
 

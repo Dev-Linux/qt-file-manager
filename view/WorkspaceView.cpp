@@ -2,7 +2,10 @@
 
 #include "MainWindow.h"
 #include "DirModel.h"
+
+#include "RootItemController.h"
 #include "RootItem.h"
+
 #include "FileNode.h"
 #include "ViewSelectionModel.h"
 #include "FileInfo.h"
@@ -11,15 +14,21 @@
 
 /**
  * @class WorkspaceView
- * @todo check zoom out behavior on RootItem space
- * @todo idea: moving/copying shows progress on file node (background
- * eventually green, just like a progress bar). when moving, the source and the
- * target have different progress direction (source, left; target, right).
- * @todo When there is not enough space to show the whole name of a file, the
- * FileNode should put '...' at the end.
- * @bug In LIST layout, I'm not sure if it's visible that if the user clicks
- * on the tab bar, the selection is cleared. This is the only way the user can
- * clear the selection, I think, and this is a problem.
+ *
+ * @todo Check zoom out behavior on RootItem space.
+ *
+ * @todo Idea: moving/copying shows progress on file node (background
+ * eventually green, just like a progress bar). when moving, the source
+ * and the target have different progress direction (source, left;
+ * target, right).
+ *
+ * @todo When there is not enough space to show the whole name of a
+ * file, the FileNode should put '...' at the end.
+ *
+ * @bug In RootItem::LIST layout, I'm not sure if it's visible that if
+ * the user clicks on the tab bar, the selection is cleared. This is
+ * the only way the user can clear the selection, I think, and this is
+ * a problem.
  */
 
 WorkspaceView::WorkspaceView(DirModel *model, DockModel *dockModel) :
@@ -39,27 +48,27 @@ WorkspaceView::WorkspaceView(DirModel *model, DockModel *dockModel) :
     tabBarItem = new TabBarItem(this);
 
     /**
-     * @bug I think that when the current directory contains more than ~999999
-     * files, some files could cover the TabBarItem. As the z value is changed
-     * in the Graph layout while dragging and after.
+     * @bug I think that when the current directory contains more than
+     * ~999999 files, some files could cover the TabBarItem. As the z
+     * value is changed in the Graph layout while dragging and after.
      */
-    // It's a hack but otherwise, when scrolling, RootItem covers TabBarItem.
+    // It's a hack but otherwise, when scrolling, RootItem covers
+    // TabBarItem.
     tabBarItem->setZValue(999999);
 
     tabBarItem->setPos(0, 0);
 
-    connect(model, &DirModel::pathChanged,
-            tabBarItem, &TabBarItem::modelPathChanged);
-
     scene->addItem(tabBarItem);
 
-    rootItem = new RootItem(model, this, dockModel);
+    RootItemController *root_item_ctrl = new RootItemController
+            (model, this, dockModel);
+    root_item_view = root_item_ctrl->view;
     auto tabBarRect = tabBarItem->boundingRect();
     auto tabBarSceneRect =
             tabBarItem->mapToScene(tabBarRect).boundingRect();
-    rootItem->setPos(QPointF(0, tabBarSceneRect.height()));
+    root_item_view->setPos(QPointF(0, tabBarSceneRect.height()));
 
-    scene->addItem(rootItem);
+    scene->addItem(root_item_view);
     //setWidgetResizable(true);
     this->model = model;
     setAcceptDrops(true);
@@ -69,14 +78,11 @@ WorkspaceView::WorkspaceView(DirModel *model, DockModel *dockModel) :
     setAlignment(Qt::AlignLeft | Qt::AlignTop);
     //setRubberBandSelectionMode(Qt::ContainsItemShape);
     setDragMode(QGraphicsView::RubberBandDrag);
-
-    connect(this, &WorkspaceView::rubberBandChanged,
-            rootItem, &RootItem::selRectChanged);
 }
 
 void WorkspaceView::resizeEvent(QResizeEvent *evt)
 {
-    rootItem->viewResized();
+    root_item_view->viewResized();
     QGraphicsView::resizeEvent(evt);
 }
 
@@ -90,7 +96,7 @@ void WorkspaceView::mousePressEvent(QMouseEvent *event)
         auto items = scene->items(mapToScene(dragStartPosition));
 
         // nodes under cursor (rootItem has only nodes as children)
-        items = misc::filterByAncestor(items, rootItem);
+        items = misc::filterByAncestor(items, root_item_view);
 
         if (items.isEmpty()) {
             draggedNode = nullptr;
@@ -109,7 +115,7 @@ void WorkspaceView::mousePressEvent(QMouseEvent *event)
                                     mapToScene(draggedNode->shape()));
 
             // items intersecting draggedNode
-            items = misc::filterByAncestor(items, rootItem);
+            items = misc::filterByAncestor(items, root_item_view);
             items.removeOne(draggedNode);
 
             // stack draggedNode over intersecting nodes
@@ -215,7 +221,7 @@ void WorkspaceView::mouseMoveEvent(QMouseEvent *event)
     qDebug() << draggedNode->fileInfo.fileName();
 
     // change drag selection
-    int index = rootItem->fileNodes.indexOf(draggedNode);
+    int index = root_item_view->fileNodes.indexOf(draggedNode);
     bool draggedNodeWasSelected = model->selected(index);
 
     if (!draggedNodeWasSelected) {
@@ -227,7 +233,7 @@ void WorkspaceView::mouseMoveEvent(QMouseEvent *event)
     // calculate deltas for all selected nodes
     selDeltas.clear();
     foreach (int index, model->sel->savedSet) {
-        auto node = rootItem->fileNodes[index];
+        auto node = root_item_view->fileNodes[index];
         qDebug() << "- " << node->fileInfo.fileName();
         auto delta = node->mapFromScene(
                         mapToScene(dragStartPosition));
@@ -236,12 +242,12 @@ void WorkspaceView::mouseMoveEvent(QMouseEvent *event)
 
     // stack selection over all other nodes
     QHashIterator<int, QPointF> it(selDeltas);
-    qreal z = rootItem->fileNodes.size() + 5;
+    qreal z = root_item_view->fileNodes.size() + 5;
     while (it.hasNext()) {
         it.next();
         //qDebug() << "z value" << z;
         //! @bug Buggy Z, Buggy.
-        rootItem->fileNodes[it.key()]->setZValue(z);
+        root_item_view->fileNodes[it.key()]->setZValue(z);
     }
 
     // set drag data
@@ -327,7 +333,7 @@ void WorkspaceView::dragMoveEvent(QDragMoveEvent *event)
 
         QPointF fin = scenep - delta;
 
-        rootItem->fileNodes[index]->setPos(fin);
+        root_item_view->fileNodes[index]->setPos(fin);
     }
 }
 
@@ -345,12 +351,13 @@ void WorkspaceView::dropEvent(QDropEvent *event)
         it.next();
         int index = it.key();
         auto delta = it.value();
-        rootItem->fileNodes[index]->setPos(scenep - delta);
+        root_item_view->fileNodes[index]->setPos(scenep - delta);
     }
 
     setSceneRect(scene->itemsBoundingRect());
 
-    auto items = scene->items(draggedNode->mapToScene(draggedNode->shape()));
+    auto items = scene->items(draggedNode->
+                              mapToScene(draggedNode->shape()));
     items.removeOne(draggedNode);
     if (!items.isEmpty()) {
         draggedNode->setZValue(items[0]->zValue() + 1);

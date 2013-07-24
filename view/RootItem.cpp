@@ -25,17 +25,18 @@
 #include <QGraphicsScene>
 
 /**
-  * @class RootItem
-  * @bug Unusual behavior. Steps to reproduce:
-  * 1. clear selection
-  * 2. draw a sel rect
-  * 3. notice that at least the first selected node by the sel rect (the last node
-  * that intersected the sel rect) remains selected although you reduce the sel
-  * rect to 0 covered nodes
-  * @todo right click on Breadcrumb => FileNode context menu
-  * @todo When going "up" in the breadcrumb, scroll to the last position and
-  * highlight for a few seconds the folder from which the user comes.
-  */
+ * @class RootItem
+ * @bug Unusual behavior. Steps to reproduce:
+ * 1. clear selection
+ * 2. draw a sel rect
+ * 3. notice that at least the first selected node by the sel rect (the last node
+ * that intersected the sel rect) remains selected although you reduce the sel
+ * rect to 0 covered nodes  * @todo right click on Breadcrumb => FileNode context menu
+ * @todo When going "up" in the breadcrumb, scroll to the last position and
+ * highlight for a few seconds the folder from which the user comes.
+ * @todo migrate all functionality from DirController to WorkspaceView
+ * @todo show progress on move, < progress on source, > progress on destination
+ */
 RootItem::RootItem(DirModel* model,
                    WorkspaceView *view,
                    DockModel *dockModel) :
@@ -46,19 +47,6 @@ RootItem::RootItem(DirModel* model,
     this->dockModel = dockModel;
 
     setFlag(QGraphicsItem::ItemSendsGeometryChanges);
-
-    connect(model, &DirModel::pathChanged,
-            this, &RootItem::pathChanged);
-    connect(model, &DirModel::nameFiltersChanged,
-            this, &RootItem::refresh);
-    connect(model->sel, &ViewSelectionModel::changed,
-            this, &RootItem::selModelChanged);
-    connect(model, &DirModel::cleared,
-            this, &RootItem::clearView);
-    connect(model, &DirModel::added,
-            this, &RootItem::addNode);
-    connect(model, &DirModel::file_system_change,
-            this, &RootItem::file_system_change);
 
     connect(model, &DirModel::tagAdded,
             [this] (int index, const QString &tag) {
@@ -178,8 +166,9 @@ void RootItem::update_layout() {
 }
 
 /**
- * @brief Removes and destroys all file nodes. If layout == LIST, also sets
- * height to 0 and calls prepareGeometryChange() which usually calls update().
+ * @brief Removes and destroys all file nodes. If layout == LIST, also
+ * sets height to 0 and calls prepareGeometryChange() which usually
+ * calls update().
  */
 void RootItem::clearView()
 {
@@ -196,10 +185,11 @@ void RootItem::clearView()
 }
 
 /**
- * @brief Creates a FileNode from @a info, adds it to the RootItem and updates
- * it's size.
- * @param info FileInfo corresponding to the file to be represented by the
- * created FileNode.
+ * @brief Creates a FileNode from @a info, adds it to the RootItem and
+ * updates it's size.
+ *
+ * @param info FileInfo corresponding to the file to be represented by
+ * the created FileNode.
  */
 void RootItem::addNode(const FileInfo &info)
 {
@@ -212,18 +202,6 @@ void RootItem::addNode(const FileInfo &info)
         setHeight(m_height + node->listHeight());
         //update_layout();
     }
-}
-
-/**
- * @brief Called when the model's path has changed. Updates FileNode positions,
- * the scene rect shown by the GraphView and refreshes tags using refreshTags().
- * @param path The new path of the DirModel.
- */
-void RootItem::pathChanged(const QString &path)
-{ Q_UNUSED(path)
-    update_layout();
-    view->setSceneRect(view->scene->itemsBoundingRect());
-    refreshTags();
 }
 
 /**
@@ -309,9 +287,6 @@ qreal RootItem::height() const
 {
     return m_height;
 }
-
-/** \todo migrate all functionality from DirController to GraphView */
-/** \todo show progress on move, < progress on source, > progress on destination */
 
 /*void RootItem::loadAllFilesInModel()
 {
@@ -589,32 +564,6 @@ void RootItem::selRectChanged(QRect rubberBandRect,
 }
 
 /**
- * @brief Adds the important tag to files marked as important in the current
- * directory.
- */
-void RootItem::refreshTags()
-{
-    // dock FileInfos in the current folder
-    QList<FileInfo> list =
-            misc::filterByDirAbsPath(dockModel->list,
-                            m_model->dir.absolutePath());
-
-    QList<FileInfo>::iterator it, ei, bi, i;
-    for (it = list.begin(); it != list.end(); ++it) {
-        FileInfo &info = *it;
-        bi = m_model->list.begin();
-        ei = m_model->list.end();
-        i = qFind(bi, ei, info);
-
-        Q_ASSERT(i != ei);
-
-        const int index = i - bi;
-
-        m_model->addTag(index, "important");
-    }
-}
-
-/**
  * @brief Paints the background.
  */
 void RootItem::paint(QPainter *painter,
@@ -678,29 +627,6 @@ void RootItem::importantRemoved(FileInfo &info) {
             }
         }
     }
-}
-
-/**
- * @brief Replaced by clearView(), addItem() and refreshPos().
- * @bug Still called by search.
- * @deprecated
- */
-void RootItem::refresh()
-{
-    clearView();
-    //loadAllFilesInModel();
-    Q_ASSERT_X(false, "RootItem::refresh",
-               "not sure I should call loadAllFilesInModel");
-    view->setSceneRect(view->scene->itemsBoundingRect());
-    refreshTags();
-}
-
-/**
- * @brief Called when the model encounters a file system change.
- */
-void RootItem::file_system_change()
-{
-    update_layout();
 }
 
 /**

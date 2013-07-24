@@ -19,7 +19,7 @@ public:
     QGraphicsScene *scene;
     QPoint dragStartPosition;
 
-    RootItem *rootItem;
+    RootItem *root_item_view;
     TabBarItem *tabBarItem;
     FileNode *draggedNode = nullptr;
     QDrag *drag;
@@ -28,8 +28,6 @@ public:
 signals:
 
 public slots:
-    void zoomIn() { scale(1.2, 1.2); }
-    void zoomOut() { scale(1 / 1.2, 1 / 1.2); }
 
 protected:
     virtual void resizeEvent(QResizeEvent *);
