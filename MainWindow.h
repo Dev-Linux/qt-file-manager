@@ -37,8 +37,6 @@ public:
     QStackedWidget *stackedWidget;
     SearchLineEdit *searchLineEdit;
 
-    //std::random_device randomDevice;
-
 signals:
     void layout_button_clicked();
     void breadcrumb_clicked();

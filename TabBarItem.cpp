@@ -5,6 +5,13 @@
 #include "TabLabelItem.h"
 #include "misc.h"
 
+
+/**
+ * @class TabBarItem
+ * @note Random info: QList seems to destroy it's elements in it's destructor,
+ * so I don't need to use it with @q{core,QScopedPointer} elements.
+ */
+
 TabBarItem::TabBarItem(WorkspaceView *view) : QGraphicsObject()
 {
     this->view = view;
@@ -23,7 +30,6 @@ TabBarItem::TabBarItem(WorkspaceView *view) : QGraphicsObject()
 
 TabBarItem::~TabBarItem()
 {
-
 }
 
 void TabBarItem::paint(QPainter *painter,
@@ -38,10 +44,6 @@ void TabBarItem::paint(QPainter *painter,
     painter->setBrush(QBrush("lightblue"));
     painter->drawRect(option->rect);
 }
-
-// random info: QList seems to destroy it's elements in it's
-// destructor, so I don't need to use it with QScopedPointer
-// elements
 
 QRectF TabBarItem::boundingRect() const
 {

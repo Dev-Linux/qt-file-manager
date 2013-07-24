@@ -29,8 +29,8 @@ private:
     WorkspaceView *view;
     QList<TabLabelItem*> tabLabels;
     int activeIndex = -1;
-    int padding = 5;
-    int spacing = 5;
+    const int padding = 5;
+    const int spacing = 5;
     QScopedPointer<TabLabelItem> addButton;
 
     void repositionTabLabels();

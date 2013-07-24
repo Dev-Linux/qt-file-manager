@@ -19,9 +19,6 @@
 #include <QtCore>
 #include <QtWidgets>
 
-#include <random>
-#include <functional>
-
 // http://qt-project.org/forums/viewthread/22993/
 // https://bugreports.qt-project.org/browse/QTBUG-29331
 // http://stackoverflow.com/questions/15056834/qt5-migration-and-boost-if-hpp-macro-argument-mismatch-bug
@@ -39,7 +36,5 @@
 #include <boost/graph/gursoy_atun_layout.hpp>
 
 #endif // Q_MOC_RUN
-
-//#include "misc.h"
 
 #endif

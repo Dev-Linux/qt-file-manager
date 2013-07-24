@@ -16,8 +16,6 @@
 #include "misc.h"
 #include "view/RootItem.h"
 
-//#include <random>
-
 /**
  * @class MainWindow
  * @todo Show general progress on File tasks menu button.

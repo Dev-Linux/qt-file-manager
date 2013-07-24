@@ -25,8 +25,7 @@ public:
     bool isDir() const;
     QDir absoluteDir() const;
     bool operator ==(const FileInfo &info) const;
-    // - random info: #ifdef Q_COMPILER_RVALUE_REFS
-    // both clang and msvc support rvalue refs
+
 private:
     static QFileIconProvider fileIconProvider;
     static QHash<const QString, QIcon> iconCache;

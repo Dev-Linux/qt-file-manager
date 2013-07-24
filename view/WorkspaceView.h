@@ -25,12 +25,9 @@ public:
     QDrag *drag;
     DirModel *model;
 
-    //bool randomTry(int &x, int &y);
-
 signals:
 
 public slots:
-    //void resizeTimeout();
     void zoomIn() { scale(1.2, 1.2); }
     void zoomOut() { scale(1 / 1.2, 1 / 1.2); }
 
@@ -51,7 +48,6 @@ private:
     bool movedWhileSelRectPossible;
     QHash<int, QPointF> selDeltas;
     QMouseEvent *mousePressEvt = nullptr;
-    //QTimer resizeTimer;
     //QPointF dragDelta;
 };
 

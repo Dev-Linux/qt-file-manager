@@ -5,6 +5,13 @@
 #include "view/DirController.h"
 #include "view/DirModel.h"
 
+
+/**
+ * @class FileInfo
+ * @note Random info: [`#%ifdef Q_COMPILER_RVALUE_REFS`] both Clang and MSVC
+ * support rvalue references.
+ */
+
 QFileIconProvider FileInfo::fileIconProvider;
 QHash<const QString, QIcon> FileInfo::iconCache;
 

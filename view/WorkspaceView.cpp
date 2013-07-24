@@ -5,7 +5,6 @@
 #include "RootItem.h"
 #include "FileNode.h"
 #include "ViewSelectionModel.h"
-//#include <random>
 #include "FileInfo.h"
 #include "misc.h"
 #include "TabBarItem.h"
@@ -36,11 +35,6 @@ WorkspaceView::WorkspaceView(DirModel *model, DockModel *dockModel) :
 
     // by default, true:
     //setInteractive(true);
-
-    //w = new GraphViewWidget(model, this);
-    //scene->addWidget(w);
-
-    //resizeTimer.setSingleShot(true);
 
     tabBarItem = new TabBarItem(this);
 
@@ -75,72 +69,16 @@ WorkspaceView::WorkspaceView(DirModel *model, DockModel *dockModel) :
     setAlignment(Qt::AlignLeft | Qt::AlignTop);
     //setRubberBandSelectionMode(Qt::ContainsItemShape);
     setDragMode(QGraphicsView::RubberBandDrag);
-    //connect(&resizeTimer, &QTimer::timeout,
-    //        this, &GraphView::resizeTimeout);
 
     connect(this, &WorkspaceView::rubberBandChanged,
             rootItem, &RootItem::selRectChanged);
 }
 
-/*void GraphView::resizeTimeout()
-{
-    rootItem->refreshPos();
-    setSceneRect(scene->itemsBoundingRect());
-}*/
-
 void WorkspaceView::resizeEvent(QResizeEvent *evt)
 {
-    //scene->setSceneRect(scene->itemsBoundingRect());
-    //resizeTimer.start(25);
-
     rootItem->viewResized();
     QGraphicsView::resizeEvent(evt);
 }
-
-/*bool GraphView::randomTry(int &x, int &y)
-{
-    // the thing from which we get random numbers (used for repeaded trying
-    // of random coordinates)
-    std::random_device rd;
-
-    // if the file node with the current coordinates overlaps with other
-    // existing file nodes, or it gets outside of the view with it's
-    // (100, 100) size
-    int olc = 0;
-    bool overlaps;
-    do {
-        if (olc == 10) break;
-        // initially, everything's fine
-        overlaps = false;
-
-        // these rd() expressions return random x and y
-        x = rd() % width() + 1;
-        y = rd() % height() + 1;
-
-        // if it escapes the view
-        if (width() - x < 100 || height() - y < 100) {
-            overlaps = true;
-        } / *else {
-            // the rect of the file node with the current coordinates
-            QRect r(x, y, 100, 100);
-
-            // for each existing file node, verify if it doesn't overlap
-            // with the current file node
-            foreach (FileNode* crtNode, fileNodes) {
-                if (r.intersects(crtNode->frameGeometry())) {
-                    overlaps = true;
-                    break;
-                }
-            }
-        }* /
-        if (overlaps) {
-            olc++;
-        }
-    } while (overlaps);
-
-    if (overlaps) return false;
-    return true;
-}*/
 
 void WorkspaceView::mousePressEvent(QMouseEvent *event)
 {

@@ -63,15 +63,18 @@ void BoostGraph::setRectangle(qreal x, qreal y,
     topology = new rectangle_topology<>(x, y, width, height);
 }
 
-/** \brief Returns the position map of the graph.
- * \returns The position map of the graph.
+/** @brief Returns the position map of the graph.
  *
- * Random info: `include \<typeinfo\>, typeid(variable).name()` = mangled type
- * name. Use \c c++flit to demangle it.
+ * @returns The position map of the graph.
  *
- * Demangled return value of `get(vertex_position, *g)`:
+ * @note Random info:
+ * @code
+ * #include <typeinfo>
+ * typeid(variable).name(); // => Mangled type name. Use c++flit to demangle it.
+ * @endcode
  *
- * \code
+ * @note Demangled return value of `get(vertex_position, *g)`:
+ * @code
  * boost::adj_list_vertex_property_map
  * <boost::adjacency_list
  * <boost::listS, boost::listS, boost::directedS,
@@ -82,9 +85,8 @@ void BoostGraph::setRectangle(qreal x, qreal y,
  * boost::convex_topology<2ul>::point,
  * boost::convex_topology<2ul>::point&,
  * vertex_position_t>
- * \endcode
- *
- * and so I typedef'd it in position_map
+ * @endcode
+ * And so I `typedef`'d it as `position_map`.
  */
 position_map BoostGraph::getPos()
 {
@@ -92,30 +94,26 @@ position_map BoostGraph::getPos()
 }
 
 /**
- * @brief Calls gursoy_atun_layout (Boost).
- * @pre @a topology should be set with setRectangle().
- * @param pos The position map in which to store the coordinates.
+ @brief Calls gursoy_atun_layout (Boost).
+
+ @pre @a topology should be set with setRectangle().
+
+ @param pos The position map in which to store the coordinates.
+
+ If I ever want to use a circle layout:
+ @code
+ boost::circle_graph_layout(g, get(vertex_position, g), radius);
+ @endcode
+
+ Without `_T` at the end, these macros don't use trait detection but the actual
+ given type (in this case, `Graph`):
+ @code
+ BGL_FORALL_VERTICES(v, g, Graph) { }
+ BGL_FORALL_EDGES(e, g, Graph) { }
+ @endcode
  */
 void BoostGraph::doLayout(position_map pos)
 {
-    //int radius = (qMin(parentWidget()->width(), parentWidget()->height()) - 100) / 2;
-    //circle_graph_layout(g, get(vertex_position, g), radius);
-
-    //print_graph_layout(g, get(vertex_position, g), topology);
-
-    //min_max_coords(g, pos, topology, minx, miny, maxx, maxy);
-    //qDebug() << "width" << width() << "height" << height();
-
-    // without T does not use typename outside of template (no T-raits,
-    // just types, I guess)
-    // BGL_FORALL_VERTICES
-    /*BGL_FORALL_EDGES(e, g, Graph) { }*/
-
-    // the coordinates of the file node widget
-    //int xx, yy;
-    //randomTry(xx, yy);
-    // now it doesn't overlap with anything and it can be added to the view at (xx,yy)
-
     Q_ASSERT(topology != nullptr);
 
     gursoy_atun_layout(*g, *topology, pos);
