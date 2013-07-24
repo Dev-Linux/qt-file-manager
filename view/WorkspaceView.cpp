@@ -1,12 +1,12 @@
 #include "WorkspaceView.h"
 
-#include "mainwindow.h"
+#include "MainWindow.h"
 #include "DirModel.h"
 #include "RootItem.h"
-#include "filenode.h"
+#include "FileNode.h"
 #include "ViewSelectionModel.h"
 //#include <random>
-#include "fileinfo.h"
+#include "FileInfo.h"
 #include "misc.h"
 #include "TabBarItem.h"
 

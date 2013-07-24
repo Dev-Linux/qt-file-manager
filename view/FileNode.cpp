@@ -1,4 +1,4 @@
-#include "filenode.h"
+#include "FileNode.h"
 
 #include "misc.h"
 #include "RootItem.h" // just for enum Layout?...

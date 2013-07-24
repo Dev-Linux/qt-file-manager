@@ -4,7 +4,7 @@
 
 #include <QtWidgets>
 
-#include "fileinfo.h"
+#include "FileInfo.h"
 
 class View;
 class DirModel;

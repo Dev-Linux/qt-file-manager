@@ -4,7 +4,7 @@
 
 #include <QtCore>
 
-#include "fileinfo.h"
+#include "FileInfo.h"
 
 #define debugType(x) std::cerr << #x << ": " << \
     typeid(x).name() << std::endl

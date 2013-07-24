@@ -1,7 +1,7 @@
 #include "TrashModel.h"
 
-#include "fileinfo.h"
-#include "fileoperationdata.h"
+#include "FileInfo.h"
+#include "FileOperationData.h"
 
 TrashModel::TrashModel() :
     QObject()

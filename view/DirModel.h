@@ -3,7 +3,7 @@
 #define DIRMODEL_H
 
 #include <QtWidgets>
-#include "fileinfo.h"
+#include "FileInfo.h"
 
 class ViewSelectionModel;
 

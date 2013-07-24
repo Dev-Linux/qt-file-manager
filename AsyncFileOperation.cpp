@@ -1,11 +1,11 @@
-#include "asyncfileoperation.h"
+#include "AsyncFileOperation.h"
 
 #include "misc.h"
 #include "MainWindowController.h"
-#include "mainwindow.h"
-#include "asyncfileoperationworker.h"
-#include "fileoperationitem.h"
-#include "fileoperationdata.h"
+#include "MainWindow.h"
+#include "AsyncFileOperationWorker.h"
+#include "FileOperationItem.h"
+#include "FileOperationData.h"
 
 #ifdef Q_OS_WIN32
 #include <objbase.h>

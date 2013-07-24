@@ -1,4 +1,4 @@
-#include "fileoperationdata.h"
+#include "FileOperationData.h"
 
 FileOperationData::FileOperationData()
 {

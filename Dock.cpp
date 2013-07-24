@@ -1,9 +1,9 @@
 #include "Dock.h"
 
-#include "mainwindow.h"
+#include "MainWindow.h"
 #include "view/ListViewItem.h"
 #include "view/View.h"
-#include "fileinfo.h"
+#include "FileInfo.h"
 #include <functional>
 #include "misc.h"
 

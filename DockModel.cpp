@@ -1,6 +1,6 @@
 #include "DockModel.h"
 
-#include "mainwindow.h"
+#include "MainWindow.h"
 #include "MainWindowController.h"
 #include "Application.h"
 

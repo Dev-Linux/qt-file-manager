@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+#include "MainWindow.h"
 
 #include "view/WorkspaceView.h"
 #include "view/WorkspaceController.h"
@@ -10,9 +10,9 @@
 #include "view/View.h"
 
 #include "SearchLineEdit.h"
-#include "locationedit.h"
-#include "fileoperationsmenu.h"
-#include "breadcrumb.h"
+#include "LocationEdit.h"
+#include "FileOperationsMenu.h"
+#include "Breadcrumb.h"
 #include "misc.h"
 #include "view/RootItem.h"
 

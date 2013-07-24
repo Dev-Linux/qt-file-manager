@@ -1,4 +1,4 @@
-#include "locationedit.h"
+#include "LocationEdit.h"
 
 LocationEdit::LocationEdit(QWidget *parent) :
     QLineEdit(parent)

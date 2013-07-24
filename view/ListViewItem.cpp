@@ -1,5 +1,5 @@
 #include "ListViewItem.h"
-#include "mainwindow.h"
+#include "MainWindow.h"
 #include "misc.h"
 
 //QThread *ListViewItem::thread = new QThread();

@@ -7,17 +7,7 @@ CONFIG += precompile_header c++11
 TEMPLATE = app
 
 SOURCES += main.cpp \
-    mainwindow.cpp \
-    locationedit.cpp \
-    breadcrumb.cpp \
-    asyncfileoperation.cpp \
-    asyncfileoperationworker.cpp \
-    fileoperationsmenu.cpp \
-    fileoperationitem.cpp \
-    fileoperationdata.cpp \
     misc.cpp \
-    fileinfo.cpp \
-    view/filenode.cpp \
     #view/_quickfilegraphview.cpp \
     view/ViewScrollArea.cpp \
     view/ViewWidget.cpp \
@@ -41,24 +31,24 @@ SOURCES += main.cpp \
     view/WorkspaceController.cpp \
     MainWindowController.cpp \
     Application.cpp \
-    DockController.cpp
+    DockController.cpp \
+    MainWindow.cpp \
+    FileInfo.cpp \
+    view/FileNode.cpp \
+    AsyncFileOperation.cpp \
+    AsyncFileOperationWorker.cpp \
+    Breadcrumb.cpp \
+    FileOperationData.cpp \
+    FileOperationItem.cpp \
+    FileOperationsMenu.cpp \
+    LocationEdit.cpp
 
 PRECOMPILED_DIR = pch # otherwise, with clang: conflict with TARGET
 PRECOMPILED_HEADER = stable.h
 
 HEADERS += \
-    mainwindow.h \
-    locationedit.h \
-    breadcrumb.h \
-    asyncfileoperation.h \
-    asyncfileoperationworker.h \
-    fileoperationsmenu.h \
-    fileoperationitem.h \
-    fileoperationdata.h \
     misc.h \
     stable.h \
-    fileinfo.h \
-    view/filenode.h \
     #view/_quickfilegraphview.h \
     view/ViewScrollArea.h \
     view/ViewWidget.h \
@@ -82,7 +72,17 @@ HEADERS += \
     view/WorkspaceController.h \
     MainWindowController.h \
     Application.h \
-    DockController.h
+    DockController.h \
+    MainWindow.h \
+    FileInfo.h \
+    AsyncFileOperation.h \
+    AsyncFileOperationWorker.h \
+    Breadcrumb.h \
+    FileOperationData.h \
+    FileOperationItem.h \
+    FileOperationsMenu.h \
+    LocationEdit.h \
+    view/FileNode.h
 
 # FORMS =
 

@@ -1,6 +1,6 @@
-#include "fileoperationitem.h"
-#include "mainwindow.h"
-#include "fileoperationdata.h"
+#include "FileOperationItem.h"
+#include "MainWindow.h"
+#include "FileOperationData.h"
 
 FileOperationItem::FileOperationItem(FileOperationData* data,
                                      const QString &str,

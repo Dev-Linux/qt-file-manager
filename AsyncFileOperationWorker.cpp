@@ -1,7 +1,7 @@
-#include "asyncfileoperationworker.h"
+#include "AsyncFileOperationWorker.h"
 
 #include "TrashModel.h"
-#include "fileoperationdata.h"
+#include "FileOperationData.h"
 #include "misc.h"
 
 #ifdef Q_OS_WIN32

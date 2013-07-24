@@ -1,6 +1,6 @@
-#include "fileinfo.h"
+#include "FileInfo.h"
 
-#include "mainwindow.h"
+#include "MainWindow.h"
 #include "MainWindowController.h"
 #include "view/DirController.h"
 #include "view/DirModel.h"

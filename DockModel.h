@@ -4,7 +4,7 @@
 
 #include <QtCore>
 
-#include "fileinfo.h"
+#include "FileInfo.h"
 
 class DockModel : public QObject
 {

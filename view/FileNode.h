@@ -7,7 +7,7 @@
 #include <QFont>
 #include <QSize>
 
-#include "fileinfo.h"
+#include "FileInfo.h"
 
 #include "RootItem.h" // TODO: just for an enum? search the web
 // well, it's an enum from class RootItem...
