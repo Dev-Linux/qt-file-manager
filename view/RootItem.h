@@ -16,16 +16,13 @@ class RootItem : public QGraphicsObject
     Q_OBJECT
 public:
     explicit RootItem(DirModel* model,
-                      WorkspaceView *view,
-                      DockModel *dockModel);
+                      WorkspaceView *workspace_view);
     ~RootItem();
     DirModel *m_model;
     //! The GraphView which contains this RootItem.
-    WorkspaceView *view;
+    WorkspaceView *workspace_view;
     //! The file nodes in this RootItem.
     QList<FileNode *> fileNodes;
-    //! The DockModel which stores the items marked as important.
-    DockModel *dockModel;
 
     /** RootItem and FileNode layout types */
     enum Layout {
@@ -62,8 +59,6 @@ protected:
 private slots:
     void connectNode(const FileNode *node);
 
-    void importantAdded(FileInfo &info);
-    void importantRemoved(FileInfo &info);
 private:
     void initGraph();
 

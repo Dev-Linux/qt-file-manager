@@ -3,11 +3,10 @@
 
 #include "DirModel.h"
 #include "ViewSelectionModel.h"
-
+#include "DockModel.h"
 #include "WorkspaceView.h"
 
-#include "DockModel.h"
-
+#include "FileNode.h"
 #include "misc.h"
 
 RootItemController::RootItemController(DirModel* dir_model,
@@ -17,7 +16,13 @@ RootItemController::RootItemController(DirModel* dir_model,
 {
     m_dock_model = dock_model;
     m_dir_model = dir_model;
-    view = new RootItem(dir_model, workspace_view, dock_model);
+    m_workspace_view = workspace_view;
+    view = new RootItem(dir_model, workspace_view);
+
+    connect(dock_model, &DockModel::added,
+            this, &RootItemController::important_added);
+    connect(dock_model, &DockModel::removed,
+            this, &RootItemController::important_removed);
 
     connect(dir_model, &DirModel::pathChanged,
             this, &RootItemController::path_changed);
@@ -31,6 +36,11 @@ RootItemController::RootItemController(DirModel* dir_model,
             view, &RootItem::addNode);
     connect(dir_model, &DirModel::file_system_change,
             this, &RootItemController::file_system_change);
+
+    connect(dir_model, &DirModel::tagAdded,
+            this, &RootItemController::dir_model_tag_added);
+    connect(dir_model, &DirModel::tagRemoved,
+            this, &RootItemController::dir_model_tag_removed);
 }
 
 /**
@@ -67,7 +77,7 @@ void RootItemController::refresh_tags()
 void RootItemController::path_changed(const QString &path)
 { Q_UNUSED(path)
     view->update_layout();
-    view->view->setSceneRect(view->view->scene->itemsBoundingRect());
+    m_workspace_view->setSceneRect(m_workspace_view->scene->itemsBoundingRect());
     refresh_tags();
 }
 
@@ -84,7 +94,8 @@ void RootItemController::name_filters_changed()
     //loadAllFilesInModel();
     Q_ASSERT_X(false, "RootItemController::name_filters_changed",
                "not sure I should call loadAllFilesInModel");
-    view->view->setSceneRect(view->view->scene->itemsBoundingRect());
+    m_workspace_view->setSceneRect(m_workspace_view->
+                                   scene->itemsBoundingRect());
     refresh_tags();
 }
 
@@ -94,4 +105,62 @@ void RootItemController::name_filters_changed()
 void RootItemController::file_system_change()
 {
     view->update_layout();
+}
+
+/**
+ * @brief Called when a folder was marked as important.
+ * @param info The file/folder marked as important.
+ * @note QDir operator == doesn't work even though they have the
+ * same path and absolutePath.
+ */
+void RootItemController::important_added(FileInfo &info)
+{
+    // NOTE: also compares sort and filter settings
+    if (info.absoluteDir().absolutePath() ==
+            m_dir_model->dir.absolutePath()) { //! @todo drives on Win?
+        for (int i = 0; i < m_dir_model->count(); i++) {
+            if (m_dir_model->list[i] == info) {
+                m_dir_model->addTag(i, "important");
+                break;
+            }
+        }
+    }
+}
+
+/**
+ * @brief Called when an important folder was removed from the dock.
+ * @param info The file/folder unmarked important.
+ * @note QDir operator == doesn't work even though they have the
+ * same path and absolutePath.
+ */
+void RootItemController::important_removed(FileInfo &info)
+{
+    // NOTE: also compares sort and filter settings
+    if (info.absoluteDir().absolutePath() ==
+            m_dir_model->dir.absolutePath()) { //! @todo drives on Win?
+        for (int i = 0; i < m_dir_model->count(); i++) {
+            if (m_dir_model->list[i] == info) {
+                m_dir_model->removeTag(i, "important");
+                break;
+            }
+        }
+    }
+}
+
+void RootItemController::dir_model_tag_added(int index,
+                                             const QString &tag)
+{
+    if (tag == "important") {
+        auto node = view->fileNodes[index];
+        node->setHighlighted();
+    }
+}
+
+void RootItemController::dir_model_tag_removed(int index,
+                                               const QString &tag)
+{
+    if (tag == "important") {
+        auto node = view->fileNodes[index];
+        node->setHighlighted(false);
+    }
 }

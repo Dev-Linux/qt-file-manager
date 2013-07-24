@@ -26,66 +26,54 @@
 
 /**
  * @class RootItem
+ *
  * @bug Unusual behavior. Steps to reproduce:
  * 1. clear selection
  * 2. draw a sel rect
- * 3. notice that at least the first selected node by the sel rect (the last node
- * that intersected the sel rect) remains selected although you reduce the sel
- * rect to 0 covered nodes  * @todo right click on Breadcrumb => FileNode context menu
- * @todo When going "up" in the breadcrumb, scroll to the last position and
- * highlight for a few seconds the folder from which the user comes.
+ * 3. notice that at least the first selected node by the sel rect (the
+ * last node that intersected the sel rect) remains selected although
+ * you reduce the sel rect to 0 covered nodes.
+ *
+ * @todo right click on Breadcrumb => FileNode context menu
+ *
+ * @todo When going "up" in the breadcrumb, scroll to the last position
+ * and highlight for a few seconds the folder from which the user
+ * comes.
+ *
  * @todo migrate all functionality from DirController to WorkspaceView
- * @todo show progress on move, < progress on source, > progress on destination
+ *
+ * @todo show progress on move, < progress on source, > progress on
+ * destination
+ *
+ * @note **Search the web:** doxygen todo line number.
+ *
+ * @todo I should make my own Dir class for more flexibility.
  */
 RootItem::RootItem(DirModel* model,
-                   WorkspaceView *view,
-                   DockModel *dockModel) :
+                   WorkspaceView *view) :
     QGraphicsObject()
 {
     this->m_model = model;
-    this->view = view;
-    this->dockModel = dockModel;
+    this->workspace_view = view;
 
     setFlag(QGraphicsItem::ItemSendsGeometryChanges);
-
-    connect(model, &DirModel::tagAdded,
-            [this] (int index, const QString &tag) {
-        if (tag == "important") {
-            auto node = fileNodes[index];
-            node->setHighlighted();
-        }
-    });
-    connect(model, &DirModel::tagRemoved,
-            [this] (int index, const QString &tag) {
-        if (tag == "important") {
-            auto node = fileNodes[index];
-            node->setHighlighted(false);
-        }
-    });
-
-    connect(dockModel, &DockModel::added,
-            this, &RootItem::importantAdded);
-
-    //! @note **Search the web:** doxygen todo line number.
-    //! @todo I should make my own Dir class for more flexibility.
-
-    connect(dockModel, &DockModel::removed,
-            this, &RootItem::importantRemoved);
 
     viewResized();
 }
 
 /**
- * @brief Empty. Needed for using QScopedPointer with forward declarations.
+ * @brief Empty. Needed for using QScopedPointer with forward
+ * declarations.
  */
 RootItem::~RootItem()
 {
 }
 
 /**
- * @brief Changes the layout of all @ref FileNode "FileNodes", updates their
- * positions and updates the size of the RootItem according to the layout and
- * the @ref FileNode "FileNodes".
+ * @brief Changes the layout of all @ref FileNode "FileNodes", updates
+ * their positions and updates the size of the RootItem according to
+ * the layout and the @ref FileNode "FileNodes".
+ *
  * @param l The new layout.
  */
 void RootItem::setLayout(RootItem::Layout l)
@@ -117,16 +105,16 @@ QRectF RootItem::boundingRect() const
 void RootItem::viewResized()
 {
     // update always needed sizes
-    this->m_viewport_height = view->viewport()->height();
-    setWidth(view->viewport()->width());
+    this->m_viewport_height = workspace_view->viewport()->height();
+    setWidth(workspace_view->viewport()->width());
 
     update_layout();
 }
 
 /**
- * @brief Observes changes to y coordinate of RootItem and updates private
- * variables used in boundingRect() then calls prepareGeometryChange() which
- * usually calls update() too.
+ * @brief Observes changes to y coordinate of RootItem and updates
+ * private variables used in boundingRect() then calls
+ * prepareGeometryChange() which usually calls update() too.
  */
 QVariant RootItem::itemChange(QGraphicsItem::GraphicsItemChange change,
                               const QVariant &value)
@@ -150,7 +138,7 @@ void RootItem::update_layout() {
 
         //view->scene->setSceneRect(this->boundingRect());
         //view->scene->setSceneRect(QRectF());
-        view->setSceneRect(view->scene->itemsBoundingRect());
+        workspace_view->setSceneRect(workspace_view->scene->itemsBoundingRect());
     } else {
         // update layout-dependant sizes
         if (fileNodes.isEmpty()) {
@@ -161,7 +149,7 @@ void RootItem::update_layout() {
             // do layout specific jobs
             this->refresh_list_pos_and_sizes(); // call only if the layout or the w has changed
         }
-        view->setSceneRect(view->scene->itemsBoundingRect());
+        workspace_view->setSceneRect(workspace_view->scene->itemsBoundingRect());
     }
 }
 
@@ -545,7 +533,7 @@ void RootItem::selRectChanged(QRect rubberBandRect,
     auto mod = QApplication::keyboardModifiers();
 
     // items itersecting sel rect
-    auto items = view->scene->items(view->mapToScene(rubberBandRect),
+    auto items = workspace_view->scene->items(workspace_view->mapToScene(rubberBandRect),
                           Qt::IntersectsItemShape);
     // nodes itersecting sel rect (rootItem contains only nodes)
     items = misc::filterByAncestor(items, this);
@@ -589,44 +577,6 @@ QDebug operator<<(QDebug dbg, const FileInfo &info)
     dbg.nospace() << "FileInfo("
                   << info.absoluteFilePath() << ")";
     return dbg.space();
-}
-
-/**
- * @brief Called when a folder was marked as important.
- * @param info The file/folder marked as important.
- * @note QDir operator == doesn't work even though they have the
- * same path and absolutePath.
- */
-void RootItem::importantAdded(FileInfo &info) {
-    // NOTE: also compares sort and filter settings
-    if (info.absoluteDir().absolutePath() ==
-            m_model->dir.absolutePath()) { //! @todo drives on Win?
-        for (int i = 0; i < m_model->count(); i++) {
-            if (m_model->list[i] == info) {
-                m_model->addTag(i, "important");
-                break;
-            }
-        }
-    }
-}
-
-/**
- * @brief Called when an important folder was removed from the dock.
- * @param info The file/folder unmarked important.
- * @note QDir operator == doesn't work even though they have the
- * same path and absolutePath.
- */
-void RootItem::importantRemoved(FileInfo &info) {
-    // NOTE: also compares sort and filter settings
-    if (info.absoluteDir().absolutePath() ==
-            m_model->dir.absolutePath()) { //! @todo drives on Win?
-        for (int i = 0; i < m_model->count(); i++) {
-            if (m_model->list[i] == info) {
-                m_model->removeTag(i, "important");
-                break;
-            }
-        }
-    }
 }
 
 /**
@@ -676,6 +626,6 @@ void RootItem::selModelChanged(QSet<int> added, QSet<int> removed) {
         fileNodes[x]->setSelected(false);
     }
     if (isVisible() && lastAdded != -1) {
-        view->ensureVisible(fileNodes[lastAdded], 0, 0);
+        workspace_view->ensureVisible(fileNodes[lastAdded], 0, 0);
     }
 }
