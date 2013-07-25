@@ -108,6 +108,12 @@ void WorkspaceView::mousePressEvent(QMouseEvent *event)
             // queueing event because of the sel rect posibility
             movedWhileSelRectPossible = false;
             //QGraphicsView::mousePressEvent(event);
+
+            // Not needed because mouseReleaseEvent doesn't post
+            // this event again in this case:
+            // Update: Why it's still needed and can't make sel rect
+            // without it?
+            mousePressEvt = event;
         } else {
             // don't change selection with sel square
             this->setDragMode(QGraphicsView::NoDrag);
@@ -116,7 +122,7 @@ void WorkspaceView::mousePressEvent(QMouseEvent *event)
             draggedNode = dynamic_cast<FileNode*>(items.first());
 
             items = scene->items(draggedNode->
-                                    mapToScene(draggedNode->shape()));
+                                 mapToScene(draggedNode->shape()));
 
             // items intersecting draggedNode
             items = misc::filterByAncestor(items, root_item_view);
@@ -140,9 +146,10 @@ void WorkspaceView::mousePressEvent(QMouseEvent *event)
             //          do drag sel
             //      else
             //          call nodeleftclicked
+
+            mousePressEvt = event;
         }
-        mousePressEvt = event;
-        // event->accept();
+        //event->accept();
     } else {
         QGraphicsView::mousePressEvent(event);
     }
@@ -150,32 +157,50 @@ void WorkspaceView::mousePressEvent(QMouseEvent *event)
 
 void WorkspaceView::mouseReleaseEvent(QMouseEvent *event)
 {
-    if (draggedNode != nullptr) {
-        if (!movedWhileDragPossible) {
-            if (mousePressEvt != nullptr) {
-                qDebug() << "before mousePressEvent call";
-                QGraphicsView::mousePressEvent(mousePressEvt);
-                qDebug() << "after mousePressEvent call";
-            } else {
-                qDebug() << "nullptr mousePressEvt";
+    event->ignore();
+    if (event->button() == Qt::LeftButton) {
+        if (draggedNode != nullptr) {
+            // last mouse press was over a FileNode
+
+            if (!movedWhileDragPossible) {
+                if (mousePressEvt != nullptr) {
+//                    if (m_last_press_is_dbl_click) {
+//                        qDebug() << "last press is dbl click";
+                        // this will call RootItemController::
+                        // node_left_clicked:
+                        QGraphicsView::mousePressEvent(mousePressEvt);
+//                        m_last_press_is_dbl_click = false;
+//                    } else {
+//                        emit root_item_view->
+//                            node_left_clicked(draggedNode,
+//                                              event->modifiers());
+//                    }
+                } else {
+                    // this case shouldn't happen and is not handled
+                    Q_ASSERT(false);
+                }
             }
-        }
-        draggedNode = nullptr;
-    } else {
-        if (!movedWhileSelRectPossible) {
-            if (mousePressEvt != nullptr) {
+            draggedNode = nullptr;
+        } else {
+            // last mouse press wasn't over a FileNode, it was over
+            // empty space
+
+            if (!movedWhileSelRectPossible) {
                 if (!model->sel->isEmpty()) {
                     model->sel->clear();
                     model->sel->save();
                 }
-                QGraphicsView::mousePressEvent(mousePressEvt);
-            } else {
-                qDebug() << "nullptr mousePressEvt 2";
             }
         }
+        setDragMode(QGraphicsView::RubberBandDrag);
     }
-    setDragMode(QGraphicsView::RubberBandDrag);
     QGraphicsView::mouseReleaseEvent(event);
+}
+
+void WorkspaceView::mouseDoubleClickEvent(QMouseEvent *event)
+{
+    m_last_press_is_dbl_click = true;
+    QGraphicsView::mouseDoubleClickEvent(event);
 }
 
 void WorkspaceView::mouseMoveEvent(QMouseEvent *event)

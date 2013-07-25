@@ -17,6 +17,7 @@ class RootItem : public QGraphicsObject
 public:
     explicit RootItem();
     ~RootItem();
+
     //! The file nodes in this RootItem.
     QList<FileNode *> fileNodes;
 
@@ -57,7 +58,8 @@ public slots:
     void addNode(const FileInfo &info);
 
 protected:
-    QVariant itemChange(GraphicsItemChange change, const QVariant &value);
+    QVariant itemChange(GraphicsItemChange change,
+                        const QVariant &value);
 
 private slots:
 

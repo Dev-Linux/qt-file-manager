@@ -53,7 +53,7 @@ RootItemController::RootItemController(DirModel* dir_model,
             view, &RootItem::addNode);
     connect(dir_model, &DirModel::file_system_change,
             this, &RootItemController::file_system_change);
-    connect(dir_model, &DirModel::before_adding_n,\
+    connect(dir_model, &DirModel::before_adding_n,
             this, &RootItemController::before_adding_n);
 
     connect(dir_model, &DirModel::tagAdded,
@@ -227,12 +227,18 @@ void RootItemController::node_dbl_clicked(FileNode *node)
  * @brief Called when an item was left-clicked.
  *
  * @param node The left-clicked node.
+ *
  * @param modifiers The modifiers pressed at the moment of the mouse
  * button press.
+ *
+ * @bug (Not necessary to be fixed here). Steps to reproduce:
+ * 1. Right click on a file node.
+ * 2. Left-click and hold while drawing a sel. rect on a point in empty
+ * space.
  */
 void RootItemController::node_left_clicked(FileNode *node,
                             const Qt::KeyboardModifiers &modifiers)
-{ Q_UNUSED(modifiers)
+{
     FileNode * const clickedItem = node;
     metaDebug(clickedItem->fileInfo.absoluteFilePath());
 
