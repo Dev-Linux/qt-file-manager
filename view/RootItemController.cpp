@@ -381,10 +381,10 @@ void RootItemController::context_menu_triggered(QAction *action)
         //s = p.fontMetrics().elidedText(s, Qt::ElideRight, 300);
         //auto s = pathList.join(",<br>");
 
-        // QDir::nativePathSeparators seems unnecessary at least for now,
-        // because this if branch is only called on linux whose native
-        // separator is the one provided by TrashModel anyway.
-        auto s = pathList.join(",<br>");
+        // QDir::nativePathSeparators seems unnecessary at least for
+        // now, because this if branch is only called on linux whose
+        // native separator is the one provided by TrashModel anyway.
+        // auto s = pathList.join(",<br>");
 
         item->setLabel("<strong>" + s + "</strong>.");
         main_win->fileOperationsMenu->addItem(item);
