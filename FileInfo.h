@@ -4,6 +4,7 @@
 
 #include <QIcon>
 #include <QFileIconProvider>
+#include <QDebug>
 
 class FileInfo
 {
@@ -37,5 +38,7 @@ private:
 
     mutable bool isLoaded;
 };
+
+QDebug operator<<(QDebug dbg, const FileInfo &info);
 
 #endif // FILEINFO_H

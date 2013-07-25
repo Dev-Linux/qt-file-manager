@@ -15,12 +15,8 @@ class RootItem : public QGraphicsObject
 {
     Q_OBJECT
 public:
-    explicit RootItem(DirModel* model,
-                      WorkspaceView *workspace_view);
+    explicit RootItem();
     ~RootItem();
-    DirModel *m_model;
-    //! The GraphView which contains this RootItem.
-    WorkspaceView *workspace_view;
     //! The file nodes in this RootItem.
     QList<FileNode *> fileNodes;
 
@@ -39,47 +35,51 @@ public:
     void viewResized();
     void setLayout(Layout l);
     void update_layout();
-    
-signals:
-    
-public slots:
-    void clearView();
-    void addNode(const FileInfo &info);
-    void itemDoubleClicked();
-    void nodeLeftClicked(const Qt::KeyboardModifiers &modifiers);
-    void nodeRightClicked(const Qt::KeyboardModifiers &modifiers);
-    void contextMenuTriggered(QAction *action);
-    void selRectChanged(QRect rubberBandRect, QPointF fromScenePoint,
-                        QPointF toScenePoint);
-    void selModelChanged(QSet<int> added, QSet<int> removed);
-
-protected:
-    QVariant itemChange(GraphicsItemChange change, const QVariant &value);
-
-private slots:
-    void connectNode(const FileNode *node);
-
-private:
-    void initGraph();
-
-    void refresh_list_pos_and_sizes();
-    void refresh_graph_positions();
 
     void setWidth(qreal w);
     void setHeight(qreal h);
     qreal width() const;
     qreal height() const;
+    void set_future_count(int n);
+    
+signals:
+    void node_dbl_clicked(FileNode *node);
+    void node_left_clicked(FileNode *node,
+                           const Qt::KeyboardModifiers &modifiers);
+    void node_right_clicked(FileNode *node,
+                            const Qt::KeyboardModifiers &modifiers);
+    void position_changed(QPointF new_pos);
+    void before_layout_update(Layout layout);
+    void layout_updated();
+    
+public slots:
+    void clearView();
+    void addNode(const FileInfo &info);
+
+protected:
+    QVariant itemChange(GraphicsItemChange change, const QVariant &value);
+
+private slots:
+
+private:
+    void initGraph();
+    void connectNode(FileNode *node);
+
+    void refresh_list_pos_and_sizes();
+    void refresh_graph_positions();
 
     //void loadAllFilesInModel();
 
     //! Caches for bounding rect calculation.
-    qreal m_width, m_height, m_viewport_height, m_y;
+    qreal m_width, m_height;
+    // = 0 needed here because otherwise initGraph get's called before
+    // it's initialized with model's count through before_adding_n()
+    // and it will start creating a graph with infinite vertices.
+    int m_future_count = 0;
     //! Cache.
     mutable QRectF m_bounding_rect;
     //! The initial layout is GRAPH.
     Layout layout = GRAPH;
-    //! The context menu.
-    QMenu *menu = nullptr;
     //! The graph for GRAPH layout.
     QScopedPointer<BoostGraph> g;
 };

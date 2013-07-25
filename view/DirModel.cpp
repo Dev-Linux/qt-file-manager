@@ -134,11 +134,13 @@ void DirModel::loadEntries()
         foreach (const QFileInfo &info, l) {
             list << FileInfo(info);
         }
+        emit before_adding_n(list.size());
         foreach (const FileInfo &info, list) {
             emit added(info);
         }
     } else {
         list = drivesList;
+        emit before_adding_n(list.size());
         foreach (const FileInfo &info, list) {
             emit added(info);
         }

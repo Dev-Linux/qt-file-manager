@@ -43,6 +43,13 @@ signals:
     void nameFiltersChanged(const QStringList &nf);
 
     /**
+     * @brief Emitted before n continuous emissions of the added()
+     * signal.
+     * @param n The number of emissions of added() that will follow.
+     */
+    void before_adding_n(int n);
+
+    /**
      * @brief Emitted after the cleared() and added() signals.
      */
     void file_system_change();

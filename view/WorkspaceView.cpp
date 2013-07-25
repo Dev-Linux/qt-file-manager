@@ -29,9 +29,15 @@
  * the user clicks on the tab bar, the selection is cleared. This is
  * the only way the user can clear the selection, I think, and this is
  * a problem.
+ *
+ * @bug The resizing method I choose (through signals) can be optimized.
+ * Although better architectured for maintainability, it is not as
+ * efficient as before and the slow down can be feeled by resizing the
+ * window at a speed expected from normal users.
  */
 
-WorkspaceView::WorkspaceView(DirModel *model, DockModel *dockModel) :
+WorkspaceView::WorkspaceView(DirModel *model,
+                             RootItem *root_item_view) :
     QGraphicsView()
 {
     scene = new QGraphicsScene();
@@ -60,9 +66,7 @@ WorkspaceView::WorkspaceView(DirModel *model, DockModel *dockModel) :
 
     scene->addItem(tabBarItem);
 
-    RootItemController *root_item_ctrl = new RootItemController
-            (model, this, dockModel);
-    root_item_view = root_item_ctrl->view;
+    this->root_item_view = root_item_view;
     auto tabBarRect = tabBarItem->boundingRect();
     auto tabBarSceneRect =
             tabBarItem->mapToScene(tabBarRect).boundingRect();
@@ -82,7 +86,7 @@ WorkspaceView::WorkspaceView(DirModel *model, DockModel *dockModel) :
 
 void WorkspaceView::resizeEvent(QResizeEvent *evt)
 {
-    root_item_view->viewResized();
+    emit resized();
     QGraphicsView::resizeEvent(evt);
 }
 

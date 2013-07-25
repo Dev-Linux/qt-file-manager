@@ -37,7 +37,7 @@
  *  - Scroll until the first FileNode is partially hidden.
  *  - Resize the MainWindow or the Dock.
  *  - Try to scroll back to see the whole first FileNode.
- *
+ * See RootItem::selRectChanged, lines `if (!items.isEmpty())` + 3.
  */
 
 /**

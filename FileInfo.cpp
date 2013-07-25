@@ -119,3 +119,19 @@ void FileInfo::init() const
     }
 }
 
+/**
+ * @brief Allows qDebugging of FileInfo instances (prints their
+ * absolute file path).
+ *
+ * @param dbg The QDebug instance (returned by calls to qDebug()).
+ *
+ * @param info The FileInfo to output.
+ *
+ * @return The same QDebug instance @a dbg, for chained calls.
+ */
+QDebug operator<<(QDebug dbg, const FileInfo &info)
+{
+    dbg.nospace() << "FileInfo("
+                  << info.absoluteFilePath() << ")";
+    return dbg.space();
+}

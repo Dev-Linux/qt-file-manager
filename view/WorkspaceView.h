@@ -15,7 +15,7 @@ class WorkspaceView : public QGraphicsView
     Q_OBJECT
 public:
     explicit WorkspaceView(DirModel *model,
-                       DockModel *dockModel);
+                       RootItem *root_item_view);
     QGraphicsScene *scene;
     QPoint dragStartPosition;
 
@@ -26,6 +26,7 @@ public:
     DirModel *model;
 
 signals:
+    void resized();
 
 public slots:
 
