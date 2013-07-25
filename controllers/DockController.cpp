@@ -1,10 +1,10 @@
 #include "DockController.h"
 
-#include "Dock.h"
-#include "DockModel.h"
+#include "models/DockModel.h"
 
-#include "view/View.h"
-#include "view/ListViewItem.h"
+#include "views/Dock.h"
+#include "views/View.h"
+#include "views/ListViewItem.h"
 
 DockController::DockController(QObject *parent) :
     QObject(parent)

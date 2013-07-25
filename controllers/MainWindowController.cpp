@@ -1,22 +1,24 @@
 #include "MainWindowController.h"
 
-#include "MainWindow.h"
-#include "view/RootItem.h"
-#include "view/WorkspaceController.h"
-#include "view/WorkspaceView.h"
-#include "LocationEdit.h"
-#include "Breadcrumb.h"
-#include "SearchLineEdit.h"
-#include "misc.h"
-#include "view/DirController.h"
-#include "view/View.h"
-#include "FileOperationData.h"
-#include "FileOperationItem.h"
-#include "view/DirModel.h"
-#include "AsyncFileOperation.h"
+#include "controllers/WorkspaceController.h"
+#include "controllers/DirController.h"
+#include "controllers/DockController.h"
 
-#include "DockModel.h"
-#include "DockController.h"
+#include "views/MainWindow.h"
+#include "views/RootItem.h"
+#include "views/WorkspaceView.h"
+#include "views/LocationEdit.h"
+#include "views/Breadcrumb.h"
+#include "views/SearchLineEdit.h"
+#include "views/View.h"
+#include "views/FileOperationItem.h"
+
+#include "models/FileOperationData.h"
+#include "models/DockModel.h"
+#include "models/DirModel.h"
+
+#include "misc.h"
+#include "AsyncFileOperation.h"
 
 /**
  * @brief The singleton instance of MainWindowController.

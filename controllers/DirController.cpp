@@ -1,22 +1,23 @@
 #include "DirController.h"
 
-#include "MainWindow.h"
-#include "FileOperationsMenu.h"
-#include "View.h"
-#include "DirModel.h"
-#include "ListViewItem.h"
-#include "ViewSelectionModel.h"
-#include "ViewWidget.h"
-#include "ViewScrollArea.h"
-#include "AsyncFileOperation.h"
-#include "FileOperationData.h"
-#include "FileOperationItem.h"
+#include "views/MainWindow.h"
+#include "views/View.h"
+#include "views/ListViewItem.h"
+#include "views/ViewWidget.h"
+#include "views/ViewScrollArea.h"
+#include "views/FileOperationsMenu.h"
+#include "views/FileOperationItem.h"
+
+#include "models/ViewSelectionModel.h"
+#include "models/DirModel.h"
+#include "models/DockModel.h"
+#include "models/FileOperationData.h"
 
 #include "DockController.h"
-#include "DockModel.h"
-
-#include "misc.h"
 #include "MainWindowController.h"
+
+#include "AsyncFileOperation.h"
+#include "misc.h"
 
 /**
  * @class DirController

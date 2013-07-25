@@ -1,6 +1,7 @@
 #include "TabLabelItem.h"
 
 #include "misc.h"
+
 #include <QtWidgets>
 
 TabLabelItem::TabLabelItem(const QString &label) :

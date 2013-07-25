@@ -1,9 +1,11 @@
 #include "FileOperationsMenu.h"
 
-#include "MainWindow.h"
-#include "FileOperationItem.h"
-#include "FileOperationData.h"
-#include "MainWindowController.h"
+#include "views/MainWindow.h"
+#include "views/FileOperationItem.h"
+
+#include "models/FileOperationData.h"
+
+#include "controllers/MainWindowController.h"
 
 FileOperationsMenu::FileOperationsMenu(QWidget *parent) :
     QMenu(parent)

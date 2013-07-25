@@ -1,10 +1,11 @@
 #include "FileInfo.h"
 
-#include "MainWindow.h"
-#include "MainWindowController.h"
-#include "view/DirController.h"
-#include "view/DirModel.h"
+#include "views/MainWindow.h"
 
+#include "controllers/MainWindowController.h"
+#include "controllers/DirController.h"
+
+#include "models/DirModel.h"
 
 /**
  * @class FileInfo

@@ -1,7 +1,8 @@
 // C includes
 
-// Windows includes (not using GCC on Linux)
-#ifndef __GNUC__
+// Windows includes (not using GCC or clang)
+// (I use GCC/clang only on Linux)
+#if !defined(__GNUC__) && !defined(__clang__)
 
 #define NOMINMAX
 #include <windows.h>

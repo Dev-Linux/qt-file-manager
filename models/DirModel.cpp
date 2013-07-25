@@ -1,5 +1,6 @@
 #include "DirModel.h"
-#include "ViewSelectionModel.h"
+
+#include "models/ViewSelectionModel.h"
 
 DirModel::DirModel(QObject *parent) :
     QObject(parent)

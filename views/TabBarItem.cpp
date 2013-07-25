@@ -1,10 +1,10 @@
 #include "TabBarItem.h"
 
-#include "view/WorkspaceView.h"
-#include "FileInfo.h"
-#include "TabLabelItem.h"
-#include "misc.h"
+#include "views/WorkspaceView.h"
+#include "views/TabLabelItem.h"
 
+#include "FileInfo.h"
+#include "misc.h"
 
 /**
  * @class TabBarItem

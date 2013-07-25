@@ -1,11 +1,14 @@
 #include "AsyncFileOperation.h"
 
+#include "controllers/MainWindowController.h"
+
+#include "views/MainWindow.h"
+#include "views/FileOperationItem.h"
+
+#include "models/FileOperationData.h"
+
 #include "misc.h"
-#include "MainWindowController.h"
-#include "MainWindow.h"
 #include "AsyncFileOperationWorker.h"
-#include "FileOperationItem.h"
-#include "FileOperationData.h"
 
 #ifdef Q_OS_WIN32
 #include <objbase.h>

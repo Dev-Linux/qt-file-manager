@@ -1,20 +1,19 @@
 #include "MainWindow.h"
 
-#include "view/WorkspaceView.h"
-#include "view/WorkspaceController.h"
+#include "views/WorkspaceView.h"
+#include "views/Dock.h"
+#include "views/View.h"
+#include "views/SearchLineEdit.h"
+#include "views/LocationEdit.h"
+#include "views/FileOperationsMenu.h"
+#include "views/Breadcrumb.h"
+#include "views/RootItem.h"
 
-#include "DockController.h"
-#include "Dock.h"
+#include "controllers/WorkspaceController.h"
+#include "controllers/DockController.h"
+#include "controllers/DirController.h"
 
-#include "view/DirController.h"
-#include "view/View.h"
-
-#include "SearchLineEdit.h"
-#include "LocationEdit.h"
-#include "FileOperationsMenu.h"
-#include "Breadcrumb.h"
 #include "misc.h"
-#include "view/RootItem.h"
 
 /**
  * @class MainWindow

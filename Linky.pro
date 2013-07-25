@@ -1,106 +1,102 @@
 QT += core widgets
-win32 { # for qDebug to work with cmd.exe
+win32 {
+    # For qDebug to work with cmd.exe. On Linux I don't need this.
     debug: QT += console
 }
 TARGET = linky
-CONFIG += precompile_header c++11
 TEMPLATE = app
+
+# CONFIG += c++11 is a replacement for (at least):
+#QMAKE_CXXFLAGS += "-std=c++11"
+CONFIG += precompile_header c++11
 
 SOURCES += main.cpp \
     misc.cpp \
-    #view/_quickfilegraphview.cpp \
-    view/ViewScrollArea.cpp \
-    view/ViewWidget.cpp \
-    view/ListViewItem.cpp \
-    view/View.cpp \
-    view/ViewSelectionModel.cpp \
-    view/DirModel.cpp \
-    Dock.cpp \
-    view/DirController.cpp \
-    SearchLineEdit.cpp \
+    #views/_quickfilegraphview.cpp \
+    views/ViewScrollArea.cpp \
+    views/ViewWidget.cpp \
+    views/ListViewItem.cpp \
+    views/View.cpp \
+    controllers/DirController.cpp \
     #_filesystemmodel.cpp \
-    #view/_listview.cpp
-    #view/_GraphViewWidget.cpp
-    DockModel.cpp \
-    view/RootItem.cpp \
-    view/ZoneItem.cpp \
-    view/BoostGraph.cpp \
-    TabBarItem.cpp \
-    TabLabelItem.cpp \
-    view/WorkspaceView.cpp \
-    view/WorkspaceController.cpp \
-    MainWindowController.cpp \
+    #views/_listview.cpp
+    #views/_GraphViewWidget.cpp
+    views/RootItem.cpp \
+    views/ZoneItem.cpp \
+    views/WorkspaceView.cpp \
     Application.cpp \
-    DockController.cpp \
-    MainWindow.cpp \
     FileInfo.cpp \
-    view/FileNode.cpp \
+    views/FileNode.cpp \
     AsyncFileOperation.cpp \
     AsyncFileOperationWorker.cpp \
-    Breadcrumb.cpp \
-    FileOperationData.cpp \
-    FileOperationItem.cpp \
-    FileOperationsMenu.cpp \
-    LocationEdit.cpp \
-    view/WorkspaceModel.cpp \
-    view/RootItemController.cpp
+    controllers/DockController.cpp \
+    models/DockModel.cpp \
+    models/DirModel.cpp \
+    views/Breadcrumb.cpp \
+    views/Dock.cpp \
+    views/LocationEdit.cpp \
+    views/MainWindow.cpp \
+    controllers/MainWindowController.cpp \
+    views/SearchLineEdit.cpp \
+    views/TabBarItem.cpp \
+    views/TabLabelItem.cpp \
+    BoostGraph.cpp \
+    controllers/RootItemController.cpp \
+    controllers/WorkspaceController.cpp \
+    models/WorkspaceModel.cpp \
+    views/FileOperationItem.cpp \
+    views/FileOperationsMenu.cpp \
+    models/FileOperationData.cpp \
+    models/ViewSelectionModel.cpp
 
-PRECOMPILED_DIR = pch # otherwise, with clang: conflict with TARGET
 PRECOMPILED_HEADER = stable.h
+
+# Otherwise, on clang, PRECOMPILED_HEADER is in conflict with TARGET.
+PRECOMPILED_DIR = pch
 
 HEADERS += \
     misc.h \
     stable.h \
-    #view/_quickfilegraphview.h \
-    view/ViewScrollArea.h \
-    view/ViewWidget.h \
-    view/ListViewItem.h \
-    view/View.h \
-    view/ViewSelectionModel.h \
-    view/DirModel.h \
-    Dock.h \
-    view/DirController.h \
-    SearchLineEdit.h \
+    #views/_quickfilegraphview.h \
+    views/ViewScrollArea.h \
+    views/ViewWidget.h \
+    views/ListViewItem.h \
+    views/View.h \
     #_filesystemmodel.h \
-    #view/_listview.h
-    #view/_GraphViewWidget.h
-    DockModel.h \
-    view/RootItem.h \
-    view/ZoneItem.h \
-    view/BoostGraph.h \
-    TabBarItem.h \
-    TabLabelItem.h \
-    view/WorkspaceView.h \
-    view/WorkspaceController.h \
-    MainWindowController.h \
-    Application.h \
-    DockController.h \
-    MainWindow.h \
+    #views/_listview.h
+    #views/_GraphViewWidget.h
+    views/RootItem.h \
+    views/ZoneItem.h \
+    views/WorkspaceView.h \
     FileInfo.h \
     AsyncFileOperation.h \
     AsyncFileOperationWorker.h \
-    Breadcrumb.h \
-    FileOperationData.h \
-    FileOperationItem.h \
-    FileOperationsMenu.h \
-    LocationEdit.h \
-    view/FileNode.h \
-    view/WorkspaceModel.h \
-    view/RootItemController.h
-
-# FORMS =
-
-linux {
-    # on windows I handle the trash in other place
-    # I am sure I will merge Win & Linux implementations
-    # of trash/recycle functionality in this file, in future
-    SOURCES += TrashModel.cpp
-    HEADERS += TrashModel.h
-}
+    views/FileNode.h \
+    controllers/DirController.h \
+    models/DirModel.h \
+    BoostGraph.h \
+    controllers/RootItemController.h \
+    controllers/WorkspaceController.h \
+    models/WorkspaceModel.h \
+    views/Breadcrumb.h \
+    views/Dock.h \
+    controllers/DockController.h \
+    models/DockModel.h \
+    views/LocationEdit.h \
+    views/MainWindow.h \
+    controllers/MainWindowController.h \
+    views/SearchLineEdit.h \
+    views/TabBarItem.h \
+    views/TabLabelItem.h \
+    Application.h \
+    views/FileOperationsMenu.h \
+    views/FileOperationItem.h \
+    models/FileOperationData.h \
+    models/ViewSelectionModel.h
 
 OTHER_FILES += \
     readme.txt \
-#    view/filegraph.qml \
+#    views/filegraph.qml \
     style.css
 
 RESOURCES += \
@@ -110,23 +106,27 @@ win32 {
     LIBS += -lshell32 -lole32 -lcomsuppwd
     RC_ICONS += \
         root.ico
-    # on win32, boost is not by default in the include paths
+    # on win32, boost is not by default in the include paths.
+    # In any case, I should move it near the project directory.
     INCLUDEPATH += "C:\Users\Silviu\Downloads\boost_1_54_0\boost_1_54_0"
-    # from folder view including a file from Linky folder => error...
+    # Including files from main dir, in files from subdirs causes error.
     INCLUDEPATH += "D:\infoedu\Linky"
 }
 
-#QMAKE_CXXFLAGS += "-std=c++11 -Werror"
-linux { # MSVC doesn't recognise this...
+linux {
+    # linux-only because MSVC doesn't recognise -Werror
     QMAKE_CXXFLAGS += "-Werror"
-}
-linux { # I am not sure if MSVC supports this
-    #QMAKE_CXXFLAGS += "-pipe"
-    # on linux-clang it's the default.. so I commented it
+
+    # On Windows I handle the Trash concept in another place.
+    #
+    # In the future I will merge the Win implementation of
+    # trash/recycle functionality in these files.
+    SOURCES += \
+        models/TrashModel.cpp
+    HEADERS += \
+        models/TrashModel.h
 }
 
-# this script must be rewritten from scratch to use clang lib
-# only then it will be truly useful:
-#linux {
-    #QMAKE_POST_LINK = (cd /home/penguin/qtvis && ./dotty.sh)
-#}
+# On linux-clang -pipe is enabled by default.
+# I am not sure if MSVC supports this.
+#QMAKE_CXXFLAGS += "-pipe"

@@ -1,7 +1,9 @@
 #include "Application.h"
 
-#include "MainWindowController.h"
-#include "MainWindow.h"
+#include "controllers/MainWindowController.h"
+
+#include "views/MainWindow.h"
+
 //#include <ctime>
 
 /**

@@ -2,7 +2,8 @@
 #define WORKSPACECONTROLLER_H
 
 #include <QObject>
-#include "RootItem.h"
+
+#include "views/RootItem.h"
 
 class WorkspaceView;
 class DirModel;

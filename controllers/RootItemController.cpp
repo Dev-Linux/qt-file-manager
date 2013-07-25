@@ -1,22 +1,21 @@
 #include "RootItemController.h"
-#include "RootItem.h"
 
-#include "DirModel.h"
-#include "ViewSelectionModel.h"
-#include "DockModel.h"
+#include "views/RootItem.h"
+#include "views/WorkspaceView.h"
+#include "views/MainWindow.h"
+#include "views/FileOperationItem.h"
+#include "views/FileOperationsMenu.h"
+#include "views/FileNode.h"
 
-#include "WorkspaceController.h"
-#include "WorkspaceView.h"
+#include "models/DirModel.h"
+#include "models/ViewSelectionModel.h"
+#include "models/DockModel.h"
+#include "models/FileOperationData.h"
 
-#include "MainWindowController.h"
-#include "MainWindow.h"
+#include "controllers/WorkspaceController.h"
+#include "controllers/MainWindowController.h"
 
-#include "FileOperationData.h"
-#include "FileOperationItem.h"
-#include "FileOperationsMenu.h"
 #include "AsyncFileOperation.h"
-
-#include "FileNode.h"
 #include "misc.h"
 
 RootItemController::RootItemController(DirModel* dir_model,

@@ -1,10 +1,12 @@
 #include "WorkspaceController.h"
 
-#include "WorkspaceView.h"
-#include "DirModel.h"
-#include "DockModel.h"
-#include "TabBarItem.h"
-#include "RootItemController.h"
+#include "views/WorkspaceView.h"
+#include "views/TabBarItem.h"
+
+#include "models/DirModel.h"
+#include "models/DockModel.h"
+
+#include "controllers/RootItemController.h"
 
 WorkspaceController::WorkspaceController(DirModel *model,
                                          DockModel *dockModel) :

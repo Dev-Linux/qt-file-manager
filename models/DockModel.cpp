@@ -1,7 +1,9 @@
 #include "DockModel.h"
 
-#include "MainWindow.h"
-#include "MainWindowController.h"
+#include "views/MainWindow.h"
+
+#include "controllers/MainWindowController.h"
+
 #include "Application.h"
 
 /**

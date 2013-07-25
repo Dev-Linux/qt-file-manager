@@ -3,6 +3,7 @@
 #define LISTVIEWITEM_H
 
 #include <QtWidgets>
+
 #include "FileInfo.h"
 
 /*class Worker : public QObject {

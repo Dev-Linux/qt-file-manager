@@ -3,14 +3,17 @@
 #include "MainWindow.h"
 #include "ViewScrollArea.h"
 #include "ViewWidget.h"
-#include "AsyncFileOperation.h"
-#include "misc.h"
-#include "DirController.h"
-#include "DirModel.h"
-#include "FileInfo.h"
 #include "ListViewItem.h"
-#include "ViewSelectionModel.h"
-#include "MainWindowController.h"
+
+#include "models/ViewSelectionModel.h"
+#include "models/DirModel.h"
+
+#include "controllers/DirController.h"
+#include "controllers/MainWindowController.h"
+
+#include "misc.h"
+#include "AsyncFileOperation.h"
+#include "FileInfo.h"
 
 View::View(QWidget *parent) :
     QWidget(parent)

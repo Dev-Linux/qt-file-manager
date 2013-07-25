@@ -3,7 +3,8 @@
 #define ROOTITEMCONTROLLER_H
 
 #include <QObject>
-#include "RootItem.h"
+
+#include "views/RootItem.h"
 
 class RootItem;
 class DirModel;

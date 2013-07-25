@@ -2,8 +2,9 @@
 
 #include "View.h"
 #include "ListViewItem.h"
-#include "DirModel.h"
-#include "ViewSelectionModel.h"
+
+#include "models/ViewSelectionModel.h"
+#include "models/DirModel.h"
 
 ViewScrollArea::ViewScrollArea(View* view) :
     QScrollArea()

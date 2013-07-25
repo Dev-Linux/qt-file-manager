@@ -1,6 +1,6 @@
 #include "Breadcrumb.h"
 
-#include "DockModel.h"
+#include "models/DockModel.h"
 
 Breadcrumb::Breadcrumb(DockModel *dockModel) : QWidget()
 {

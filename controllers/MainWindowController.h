@@ -3,7 +3,8 @@
 #define MAINWINDOWCONTROLLER_H
 
 #include <QObject>
-#include "view/RootItem.h"
+
+#include "views/RootItem.h"
 
 class MainWindow;
 class FileOperationData;

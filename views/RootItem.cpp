@@ -1,26 +1,28 @@
 #include "RootItem.h"
 
+#include "models/DirModel.h"
+#include "models/FileOperationData.h"
+#include "models/DockModel.h"
+#include "models/ViewSelectionModel.h"
+
+#include "controllers/DirController.h"
+#include "controllers/DockController.h"
+#include "controllers/MainWindowController.h"
+
 #include "MainWindow.h"
-#include "DirModel.h"
 #include "WorkspaceView.h"
 #include "BoostGraph.h"
 #include "FileNode.h"
-#include "ViewSelectionModel.h"
-#include "DirController.h"
-#include "FileOperationData.h"
 #include "FileOperationsMenu.h"
-
-#include "DockController.h"
 #include "Dock.h"
-
 #include "View.h"
-#include "AsyncFileOperation.h"
 #include "FileOperationItem.h"
-#include "DockModel.h"
+
+#include "AsyncFileOperation.h"
 #include "FileInfo.h"
-#include <functional>
 #include "misc.h"
-#include "MainWindowController.h"
+
+#include <functional>
 
 #include <QGraphicsScene>
 

@@ -1,13 +1,13 @@
 #include "WorkspaceView.h"
 
+#include "models/DirModel.h"
+#include "models/ViewSelectionModel.h"
+
+#include "controllers/RootItemController.h"
+
 #include "MainWindow.h"
-#include "DirModel.h"
-
-#include "RootItemController.h"
 #include "RootItem.h"
-
 #include "FileNode.h"
-#include "ViewSelectionModel.h"
 #include "FileInfo.h"
 #include "misc.h"
 #include "TabBarItem.h"

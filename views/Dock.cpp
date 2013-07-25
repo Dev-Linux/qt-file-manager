@@ -1,11 +1,13 @@
 #include "Dock.h"
 
 #include "MainWindow.h"
-#include "view/ListViewItem.h"
-#include "view/View.h"
+#include "ListViewItem.h"
+#include "View.h"
+
 #include "FileInfo.h"
-#include <functional>
 #include "misc.h"
+
+#include <functional>
 
 /**
  * @class Dock
