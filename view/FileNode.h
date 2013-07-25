@@ -9,8 +9,9 @@
 
 #include "FileInfo.h"
 
-#include "RootItem.h" // TODO: just for an enum? search the web
+// include this just for an enum? search the web!
 // well, it's an enum from class RootItem...
+#include "RootItem.h"
 
 class FileNode : public QGraphicsObject
 {

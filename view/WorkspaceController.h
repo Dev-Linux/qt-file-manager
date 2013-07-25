@@ -19,8 +19,7 @@ public:
     WorkspaceView *view = nullptr;
     void set_layout(RootItem::Layout layout);
     void set_scene_rect_to_items_bounding_rect();
-    QList<QGraphicsItem *> items_intersecting_rect_in_view
-                                                    (QRect rect) const;
+    QList<QGraphicsItem *> items_intersecting_rect(QRectF rect) const;
     int viewport_width() const;
     int viewport_height() const;
     void ensure_visible(const QGraphicsItem *item);

@@ -18,10 +18,10 @@ WorkspaceController::WorkspaceController(DirModel *model,
 
     connect(model, &DirModel::pathChanged,
             view->tabBarItem, &TabBarItem::modelPathChanged);
-    connect(view, &WorkspaceView::rubberBandChanged,
-            m_root_item_ctrl, &RootItemController::sel_rect_changed);
     connect(view, &WorkspaceView::resized,
             this, &WorkspaceController::view_resized);
+    connect(view, &WorkspaceView::sel_rect_changed,
+            m_root_item_ctrl, &RootItemController::sel_rect_changed);
 }
 
 void WorkspaceController::set_layout(RootItem::Layout layout)
@@ -38,10 +38,9 @@ void WorkspaceController::set_scene_rect_to_items_bounding_rect()
 }
 
 QList<QGraphicsItem *>
-WorkspaceController::items_intersecting_rect_in_view(QRect rect) const
+WorkspaceController::items_intersecting_rect(QRectF rect) const
 {
-    return view->scene->items
-            (view->mapToScene(rect), Qt::IntersectsItemShape);
+    return view->scene->items(rect, Qt::IntersectsItemShape);
 }
 
 int WorkspaceController::viewport_width() const

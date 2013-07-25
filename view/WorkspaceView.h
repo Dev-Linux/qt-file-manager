@@ -24,9 +24,11 @@ public:
     FileNode *draggedNode = nullptr;
     QDrag *drag;
     DirModel *model;
+    QGraphicsRectItem *sel_rect;
 
 signals:
     void resized();
+    void sel_rect_changed(QRectF sel_rect);
 
 public slots:
 
@@ -49,7 +51,6 @@ private:
     bool m_last_press_is_dbl_click = false;
     QHash<int, QPointF> selDeltas;
     QMouseEvent *mousePressEvt = nullptr;
-    //QPointF dragDelta;
 };
 
 #endif // WORKSPACEVIEW_H

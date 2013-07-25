@@ -45,9 +45,6 @@ WorkspaceView::WorkspaceView(DirModel *model,
     //               QPen(Qt::NoPen), QBrush(QColor("lightyellow")));
     //scene->setBackgroundBrush(palette().midlight());
 
-    // better is the default (center)
-    //setAlignment(Qt::AlignTop | Qt::AlignLeft);
-
     // by default, true:
     //setInteractive(true);
 
@@ -79,9 +76,21 @@ WorkspaceView::WorkspaceView(DirModel *model,
     setScene(scene);
 
     //setResizeAnchor(QGraphicsView::AnchorViewCenter);
+
+    // The default value is AlignCenter.
     setAlignment(Qt::AlignLeft | Qt::AlignTop);
-    //setRubberBandSelectionMode(Qt::ContainsItemShape);
-    setDragMode(QGraphicsView::RubberBandDrag);
+
+    sel_rect = new QGraphicsRectItem();
+
+    QColor sel_rect_bg_col = palette().highlight().color();
+    sel_rect_bg_col.setAlphaF(0.3);
+    QColor sel_rect_pen_col = palette().light().color();
+
+    sel_rect->setBrush(QBrush(sel_rect_bg_col));
+    sel_rect->setPen(QPen(sel_rect_pen_col));
+
+    // This way it is below the TabBarItem.
+    sel_rect->setZValue(999998);
 }
 
 void WorkspaceView::resizeEvent(QResizeEvent *evt)
@@ -96,8 +105,9 @@ void WorkspaceView::mousePressEvent(QMouseEvent *event)
     if (event->button() == Qt::LeftButton) {
         dragStartPosition = event->pos();
 
+        QPointF scene_drag_start_pos = mapToScene(dragStartPosition);
         // items under cursor
-        auto items = scene->items(mapToScene(dragStartPosition));
+        auto items = scene->items(scene_drag_start_pos);
 
         // nodes under cursor (rootItem has only nodes as children)
         items = misc::filterByAncestor(items, root_item_view);
@@ -107,6 +117,10 @@ void WorkspaceView::mousePressEvent(QMouseEvent *event)
 
             // queueing event because of the sel rect posibility
             movedWhileSelRectPossible = false;
+            sel_rect->setRect(scene_drag_start_pos.x(),
+                              scene_drag_start_pos.y(),
+                              0, 0);
+            scene->addItem(sel_rect);
             //QGraphicsView::mousePressEvent(event);
 
             // Not needed because mouseReleaseEvent doesn't post
@@ -115,9 +129,6 @@ void WorkspaceView::mousePressEvent(QMouseEvent *event)
             // without it?
             mousePressEvt = event;
         } else {
-            // don't change selection with sel square
-            this->setDragMode(QGraphicsView::NoDrag);
-
             // the item directly under the cursor
             draggedNode = dynamic_cast<FileNode*>(items.first());
 
@@ -191,8 +202,10 @@ void WorkspaceView::mouseReleaseEvent(QMouseEvent *event)
                     model->sel->save();
                 }
             }
+
+            scene->removeItem(sel_rect);
+            emit sel_rect_changed(QRectF());
         }
-        setDragMode(QGraphicsView::RubberBandDrag);
     }
     QGraphicsView::mouseReleaseEvent(event);
 }
@@ -226,7 +239,27 @@ void WorkspaceView::mouseMoveEvent(QMouseEvent *event)
             QGraphicsView::mousePressEvent(mousePressEvt);
             mousePressEvt = nullptr;
         }
-        QGraphicsView::mouseMoveEvent(event); // sel rect, drag possible
+
+        // sel rect, drag possible
+        QPointF current_pos = mapToScene(event->pos());
+        QPointF origin = mapToScene(dragStartPosition);
+        QRectF sel_rect_rect;
+
+        if (origin.x() < current_pos.x() ||
+                origin.y() < current_pos.y()) {
+            sel_rect_rect.setTopLeft(origin);
+            sel_rect_rect.setBottomRight(current_pos);
+        } else {
+            sel_rect_rect.setTopLeft(current_pos);
+            sel_rect_rect.setBottomRight(origin);
+        }
+        sel_rect_rect = sel_rect_rect.normalized();
+
+        sel_rect->setRect(sel_rect_rect);
+
+        emit sel_rect_changed(sel_rect_rect);
+
+        //QGraphicsView::mouseMoveEvent(event);
         return;
     }
 
@@ -331,9 +364,6 @@ void WorkspaceView::mouseMoveEvent(QMouseEvent *event)
 
     Qt::DropAction dropAction = drag->exec();
     // drag finished
-
-    // make the sel rect available again
-    setDragMode(QGraphicsView::RubberBandDrag);
 
     event->accept();
 

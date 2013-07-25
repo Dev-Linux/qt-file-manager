@@ -24,8 +24,7 @@ public:
 signals:
     
 public slots:
-    void sel_rect_changed(QRect sel_rect, QPointF from_scene_pt,
-                          QPointF to_scene_pt);
+    void sel_rect_changed(QRectF sel_rect);
     void workspace_view_resized();
 
 private:

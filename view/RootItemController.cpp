@@ -396,16 +396,12 @@ void RootItemController::context_menu_triggered(QAction *action)
  * @brief Called when the rubberBandRect or selection rectangle
  * changes. Updates the selection model.
  */
-void RootItemController::sel_rect_changed(QRect sel_rect,
-                                          QPointF from_scene_pt,
-                                          QPointF to_scene_pt)
+void RootItemController::sel_rect_changed(QRectF sel_rect)
 {
-    Q_UNUSED(from_scene_pt) Q_UNUSED(to_scene_pt)
     auto mod = QApplication::keyboardModifiers();
 
     // items itersecting sel rect
-    auto items = m_workspace_ctrl->items_intersecting_rect_in_view
-            (sel_rect);
+    auto items = m_workspace_ctrl->items_intersecting_rect(sel_rect);
 
     // nodes itersecting sel rect (RootItem contains only nodes)
     items = misc::filterByAncestor(items, this->view);
