@@ -14,8 +14,7 @@ class WorkspaceView : public QGraphicsView
 {
     Q_OBJECT
 public:
-    explicit WorkspaceView(DirModel *model,
-                       RootItem *root_item_view);
+    explicit WorkspaceView(RootItem *root_item_view);
     QGraphicsScene *scene;
     QPoint dragStartPosition;
 
@@ -23,12 +22,15 @@ public:
     TabBarItem *tabBarItem;
     FileNode *draggedNode = nullptr;
     QDrag *drag;
-    DirModel *model;
     QGraphicsRectItem *sel_rect;
+    QSet<int> nodes_to_drag;
 
 signals:
     void resized();
     void sel_rect_changed(QRectF sel_rect);
+    void clicked_on_empty_space();
+    void before_drag(FileNode *drag_start_node);
+    void escape_key_pressed();
 
 public slots:
 

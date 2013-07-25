@@ -9,6 +9,7 @@ class WorkspaceView;
 class DirModel;
 class DockModel;
 class RootItemController;
+class FileNode;
 
 class WorkspaceController : public QObject
 {
@@ -33,9 +34,13 @@ public slots:
 
 private:
     RootItemController *m_root_item_ctrl;
+    DirModel *m_dir_model;
 
 private slots:
     void view_resized();
+    void clicked_on_empty_space();
+    void before_drag(FileNode *drag_start_node);
+    void escape_key_pressed();
 };
 
 #endif // WORKSPACECONTROLLER_H

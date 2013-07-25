@@ -2,9 +2,11 @@
 
 #include "views/WorkspaceView.h"
 #include "views/TabBarItem.h"
+#include "views/FileNode.h"
 
 #include "models/DirModel.h"
 #include "models/DockModel.h"
+#include "models/ViewSelectionModel.h"
 
 #include "controllers/RootItemController.h"
 
@@ -12,18 +14,26 @@ WorkspaceController::WorkspaceController(DirModel *model,
                                          DockModel *dockModel) :
     QObject()
 {
-    m_root_item_ctrl = new RootItemController(model, this, dockModel);
+    m_dir_model = model;
+    m_root_item_ctrl = new RootItemController(m_dir_model, this,
+                                              dockModel);
 
-    view = new WorkspaceView(model, m_root_item_ctrl->view);
+    view = new WorkspaceView(m_root_item_ctrl->view);
 
     m_root_item_ctrl->workspace_view_resized();
 
-    connect(model, &DirModel::pathChanged,
+    connect(m_dir_model, &DirModel::pathChanged,
             view->tabBarItem, &TabBarItem::modelPathChanged);
     connect(view, &WorkspaceView::resized,
             this, &WorkspaceController::view_resized);
     connect(view, &WorkspaceView::sel_rect_changed,
             m_root_item_ctrl, &RootItemController::sel_rect_changed);
+    connect(view, &WorkspaceView::clicked_on_empty_space,
+            this, &WorkspaceController::clicked_on_empty_space);
+    connect(view, &WorkspaceView::before_drag,
+            this, &WorkspaceController::before_drag);
+    connect(view, &WorkspaceView::escape_key_pressed,
+            this, &WorkspaceController::escape_key_pressed);
 }
 
 void WorkspaceController::set_layout(RootItem::Layout layout)
@@ -73,4 +83,42 @@ void WorkspaceController::zoom_out()
 void WorkspaceController::view_resized()
 {
     m_root_item_ctrl->workspace_view_resized();
+}
+
+void WorkspaceController::clicked_on_empty_space()
+{
+    if (!m_dir_model->sel->isEmpty()) {
+        m_dir_model->sel->clear();
+        m_dir_model->sel->save();
+    }
+}
+
+/**
+ * @brief Changes the selection before drag.
+ * @param drag_start_node The node through which the drag was started
+ * (a.k.a. The node under the mouse cursor).
+ */
+void WorkspaceController::before_drag(FileNode *drag_start_node)
+{
+    // change drag selection
+    int index = m_root_item_ctrl->view->
+            fileNodes.indexOf(drag_start_node);
+    bool draggedNodeWasSelected = m_dir_model->selected(index);
+
+    if (!draggedNodeWasSelected) {
+        m_dir_model->sel->clear();
+        m_dir_model->sel->add(index);
+        m_dir_model->sel->save();
+    }
+
+    view->nodes_to_drag = m_dir_model->sel->savedSet;
+}
+
+/**
+ * @brief Called when #view gets an Esc press. Clears the selection.
+ */
+void WorkspaceController::escape_key_pressed()
+{
+    m_dir_model->sel->clear();
+    m_dir_model->sel->save();
 }

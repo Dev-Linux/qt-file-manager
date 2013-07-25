@@ -36,8 +36,7 @@
  * window at a speed expected from normal users.
  */
 
-WorkspaceView::WorkspaceView(DirModel *model,
-                             RootItem *root_item_view) :
+WorkspaceView::WorkspaceView(RootItem *root_item_view) :
     QGraphicsView()
 {
     scene = new QGraphicsScene();
@@ -71,7 +70,6 @@ WorkspaceView::WorkspaceView(DirModel *model,
 
     scene->addItem(root_item_view);
     //setWidgetResizable(true);
-    this->model = model;
     setAcceptDrops(true);
     setScene(scene);
 
@@ -197,14 +195,11 @@ void WorkspaceView::mouseReleaseEvent(QMouseEvent *event)
             // empty space
 
             if (!movedWhileSelRectPossible) {
-                if (!model->sel->isEmpty()) {
-                    model->sel->clear();
-                    model->sel->save();
-                }
+                emit clicked_on_empty_space();
+            } else {
+                scene->removeItem(sel_rect);
+                emit sel_rect_changed(QRectF());
             }
-
-            scene->removeItem(sel_rect);
-            emit sel_rect_changed(QRectF());
         }
     }
     QGraphicsView::mouseReleaseEvent(event);
@@ -279,24 +274,20 @@ void WorkspaceView::mouseMoveEvent(QMouseEvent *event)
 
     // from now, drag distance touched, starting drag
 
-    qDebug() << "---";
-    qDebug() << draggedNode->fileInfo.fileName();
+    nodes_to_drag.clear();
 
-    // change drag selection
-    int index = root_item_view->fileNodes.indexOf(draggedNode);
-    bool draggedNodeWasSelected = model->selected(index);
+    emit before_drag(draggedNode);
 
-    if (!draggedNodeWasSelected) {
-        model->sel->clear();
-        model->sel->add(index);
-        model->sel->save();
+    if (nodes_to_drag.isEmpty()) {
+        int index = root_item_view->
+                fileNodes.indexOf(draggedNode);
+        nodes_to_drag.insert(index);
     }
 
     // calculate deltas for all selected nodes
     selDeltas.clear();
-    foreach (int index, model->sel->savedSet) {
+    foreach (int index, nodes_to_drag) {
         auto node = root_item_view->fileNodes[index];
-        qDebug() << "- " << node->fileInfo.fileName();
         auto delta = node->mapFromScene(
                         mapToScene(dragStartPosition));
         selDeltas[index] = delta;
@@ -432,8 +423,7 @@ void WorkspaceView::keyPressEvent(QKeyEvent *event)
     event->ignore();
     if (event->modifiers().testFlag(Qt::NoModifier) &&
             event->key() == Qt::Key_Escape) {
-        model->sel->clear();
-        model->sel->save();
+        emit escape_key_pressed();
         event->accept();
     }
     QGraphicsView::keyPressEvent(event);
