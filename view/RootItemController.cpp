@@ -379,7 +379,7 @@ void RootItemController::context_menu_triggered(QAction *action)
         //QPainter p(item);
         //auto s = pathList.join(", ");
         //s = p.fontMetrics().elidedText(s, Qt::ElideRight, 300);
-        //auto s = pathList.join(",<br>");
+        auto s = pathList.join(",<br>");
 
         // QDir::nativePathSeparators seems unnecessary at least for
         // now, because this if branch is only called on linux whose
