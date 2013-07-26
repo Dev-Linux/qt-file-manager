@@ -9,10 +9,13 @@ class ZoneItem : public QGraphicsObject
     Q_OBJECT
 public:
     explicit ZoneItem();
-    QRectF boundingRect() const;
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
-               QWidget *widget = 0);
-    QPen borderPen;
+
+    virtual QRectF boundingRect() const;
+    virtual void paint(QPainter *painter,
+                       const QStyleOptionGraphicsItem *option,
+                       QWidget *widget = 0);
+    QPen border_pen;
+
 signals:
     
 public slots:

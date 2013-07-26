@@ -15,7 +15,7 @@ class AsyncFileOperationWorker : public QObject
 
 public:
     explicit AsyncFileOperationWorker(QObject *parent = 0);
-    TrashModel *trashModel;
+    TrashModel *trash_model;
     
 public slots:
     void operate(FileOperationData *data);
@@ -26,11 +26,13 @@ signals:
 
 private:
     QPair<qint64, qint64> scan(const QStringList& src);
-    void copy(const QStringList& src, const QString& dest,
+    void copy(const QStringList& src,
+              const QString& dest,
               FileOperationData* data);
-    void recursiveDelete(const QStringList& src,
+    void recursive_delete(const QStringList& src,
                          FileOperationData* data);
-    bool copyFile(const QString& fileName, const QString& newName,
+    bool copy_file(const QString& fileName,
+                  const QString& newName,
                   FileOperationData* data);
 };
 

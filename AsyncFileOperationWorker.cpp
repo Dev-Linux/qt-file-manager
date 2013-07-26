@@ -26,18 +26,18 @@ void AsyncFileOperationWorker::operate(FileOperationData *data)
      */
     QString type = data->type();
     if (type == "copy") {
-        QPair<qint64, qint64> size = scan(data->sourceList());
-        data->workTotal = size.first;
-        data->bytesTotal = size.second;
+        QPair<qint64, qint64> size = scan(data->source_list());
+        data->work_total = size.first;
+        data->bytes_total = size.second;
 
-        copy(data->sourceList(), data->destination(), data);
+        copy(data->source_list(), data->destination(), data);
     } else if (type == "move") {
-        QPair<qint64, qint64> size = scan(data->sourceList());
-        data->workTotal = 2 * size.first;
-        data->bytesTotal = 2 * size.second;
+        QPair<qint64, qint64> size = scan(data->source_list());
+        data->work_total = 2 * size.first;
+        data->bytes_total = 2 * size.second;
 
-        copy(data->sourceList(), data->destination(), data);
-        recursiveDelete(data->sourceList(), data);
+        copy(data->source_list(), data->destination(), data);
+        recursive_delete(data->source_list(), data);
     } else if (type == "recycle") {
 #ifdef Q_OS_WIN32
         // delete files to Recycle Bin (FOF_ALLOWUNDO)
@@ -89,8 +89,8 @@ void AsyncFileOperationWorker::operate(FileOperationData *data)
             // TODO: ar trebui sa pot vedea Recycle Bin-ul
         }
 #else // linux
-        foreach (const QString& path, data->sourceList()) {
-            auto data = trashModel->moveToTrash(path);
+        foreach (const QString& path, data->source_list()) {
+            auto data = trash_model->move_to_trash(path);
             operate(data); // strange way of doing this,
             // modifying arch will be needed to watch progress, I think
             // probably it would be the best to just read the `data`
@@ -105,7 +105,7 @@ void AsyncFileOperationWorker::operate(FileOperationData *data)
 #endif
     } else if (type == "delete") {
         // cross-platform, undoable
-        recursiveDelete(data->sourceList(), data);
+        recursive_delete(data->source_list(), data);
     }
     emit done(data);
 }
@@ -124,7 +124,7 @@ void AsyncFileOperationWorker::copy(const QStringList &src, const QString &dest,
         if (sourceInfo->isFile() || sourceInfo->isSymLink()) {
             sourceFileName = sourceInfo->fileName();
             a = destDir.absoluteFilePath(sourceFileName);
-            copyFile(source, a, data);
+            copy_file(source, a, data);
         } else {
             QDir sourceDir(source);
             destDir.mkdir(sourceDir.dirName());
@@ -142,7 +142,7 @@ void AsyncFileOperationWorker::copy(const QStringList &src, const QString &dest,
     }
 }
 
-void AsyncFileOperationWorker::recursiveDelete(const QStringList &src,
+void AsyncFileOperationWorker::recursive_delete(const QStringList &src,
                                                FileOperationData* data)
 {
     QFileInfo *sourceInfo;
@@ -152,8 +152,8 @@ void AsyncFileOperationWorker::recursiveDelete(const QStringList &src,
         sourceFile.setFileName(source);
         if (sourceInfo->isFile() || sourceInfo->isSymLink()) {
             sourceFile.remove();
-            data->workSoFar++;
-            data->bytesSoFar += sourceInfo->size();
+            data->work_so_far++;
+            data->bytes_so_far += sourceInfo->size();
             emit progress(data);
         } else {
             QDir sourceDir(source);
@@ -165,14 +165,14 @@ void AsyncFileOperationWorker::recursiveDelete(const QStringList &src,
                     sourceList << sourceEntry;
                 }
             }
-            recursiveDelete(sourceList, data);
+            recursive_delete(sourceList, data);
             sourceDir.rmdir(source);
         }
         delete sourceInfo;
     }
 }
 
-bool AsyncFileOperationWorker::copyFile(const QString &fileName, const QString &newName,
+bool AsyncFileOperationWorker::copy_file(const QString &fileName, const QString &newName,
                                         FileOperationData *data)
 {
     // took from QFile::copy in Qt 5.0.2 method and modified to fulfill my needs
@@ -220,7 +220,7 @@ bool AsyncFileOperationWorker::copyFile(const QString &fileName, const QString &
                 if (in <= 0)
                     break;
                 totalRead += in;
-                data->bytesSoFar += in;
+                data->bytes_so_far += in;
                 if (i % 3 == 0 && totalRead != f.size()) {
                     emit progress(data);
                 }
@@ -254,7 +254,7 @@ bool AsyncFileOperationWorker::copyFile(const QString &fileName, const QString &
     if(!error) {
         QFile::setPermissions(newName, f.permissions());
         f.close();
-        data->workSoFar++;
+        data->work_so_far++;
         emit progress(data);
         return true;
     }

@@ -61,12 +61,12 @@ QDebug operator<<(QDebug dbg, const COMError &com_err)
  * \param layout The QLayout to clear.
  * \post layout->count() == 0
  */
-void misc::clearQLayout(QLayout *layout)
+void misc::clear_QLayout(QLayout *layout)
 {
     QLayoutItem *item;
     while((item = layout->takeAt(0))) {
         if (item->layout()) {
-            misc::clearQLayout(item->layout());
+            misc::clear_QLayout(item->layout());
             delete item->layout();
         }
         delete item->widget();
@@ -78,7 +78,7 @@ void misc::clearQLayout(QLayout *layout)
  * @param w The widget to update.
  * @param s The style to use when updating.
  */
-void misc::updateWithStyle(QWidget *w, QStyle *s)
+void misc::update_with_style(QWidget *w, QStyle *s)
 {
     s->unpolish(w);
     s->polish(w);
@@ -94,7 +94,7 @@ void misc::updateWithStyle(QWidget *w, QStyle *s)
  * \bug [win] Fișierele DLL nu se deschid (eroare 31 - nu există program
  * care să le deschidă)
  */
-bool misc::openLocalFile(QString path)
+bool misc::open_local_file(QString path)
 {
     return QDesktopServices::openUrl(QUrl::fromLocalFile(path));
 }
@@ -107,7 +107,7 @@ bool misc::openLocalFile(QString path)
  * @return The padded rectangle.
  * @see misc::unpadRect()
  */
-QRect misc::padRectangle(int padding, const QRect &r)
+QRect misc::pad_rect(int padding, const QRect &r)
 {
     int x = r.x(), y = r.y(),
         w = r.width(), h = r.height();
@@ -124,7 +124,7 @@ QRect misc::padRectangle(int padding, const QRect &r)
  * @return The unpadded rectangle.
  * @see misc::padRectangle()
  */
-QRectF misc::unpadRect(const QRectF &r, qreal padding)
+QRectF misc::unpad_rect(const QRectF &r, qreal padding)
 {
     qreal x = r.x(), y = r.y(),
         w = r.width(), h = r.height();
@@ -212,7 +212,7 @@ void misc::print_graph_layout(const Graph& g, PositionMap position,
  * @param nf The string to escape.
  * @return The escaped string.
  */
-QString misc::escapeQDirNameFilter(const QString &nf)
+QString misc::escape_QDir_name_filter(const QString &nf)
 {
     QString s = nf;
     s.replace("?", "\\?");
@@ -229,7 +229,7 @@ QString misc::escapeQDirNameFilter(const QString &nf)
  * @param anc The ancestor to use as a filter.
  * @return The filtered QList<QGraphicsItem *>
  */
-QList<QGraphicsItem *> misc::filterByAncestor(
+QList<QGraphicsItem *> misc::filter_by_ancestor(
         const QList<QGraphicsItem *> items, const QGraphicsItem *anc)
 {
     QList<QGraphicsItem *> list;
@@ -242,18 +242,22 @@ QList<QGraphicsItem *> misc::filterByAncestor(
 }
 
 /**
- * \brief Filters a list of FileInfo by absoulte directory path @a absDirPath.
- * \param list The list of FileInfo to filter.
- * \param absDirPath The absolute directory path to use as a filter.
- * \return A list containing only the FileInfo which have \a absDirPath as the
- * absolute path of their directory.
+ * @brief Filters a list of FileInfo by absoulte directory path @a
+ * absDirPath.
+ *
+ * @param list The list of FileInfo to filter.
+ *
+ * @param absDirPath The absolute directory path to use as a filter.
+ *
+ * @return A list containing only the FileInfo which have @a absDirPath
+ * as the absolute path of their directory.
  */
-QList<FileInfo> misc::filterByDirAbsPath(QList<FileInfo> list,
-                                         const QString &absDirPath)
+QList<FileInfo> misc::filter_by_dir_abs_path(QList<FileInfo> list,
+                                         const QString &abs_dir_path)
 {
     QList<FileInfo> l;
     for (auto i = list.begin(); i != list.end(); ++i) {
-        if (i->absoluteDir().absolutePath() == absDirPath) {
+        if (i->abs_dir().absolutePath() == abs_dir_path) {
             l << *i;
         }
     }
@@ -327,7 +331,7 @@ QString MessageHandler::last_func_name;
  * repeatedly output the function name if more qDebug calls are made sequentially
  * from the same function.
  */
-void MessageHandler::msgHandler(QtMsgType type,
+void MessageHandler::msg_handler(QtMsgType type,
                     const QMessageLogContext &context,
                     const QString &msg) {
     QString s = misc::func_name_from_func_str(context.function);

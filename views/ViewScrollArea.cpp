@@ -13,10 +13,10 @@ ViewScrollArea::ViewScrollArea(View* view) :
     setFocusProxy(view);
 }
 
-void ViewScrollArea::scrollTo(int index)
+void ViewScrollArea::scroll_to(int index)
 {
     View *view = qobject_cast<View*>(parentWidget());
-    this->ensureWidgetVisible(view->itemAt(index), 0, 0);
+    this->ensureWidgetVisible(view->item_at(index), 0, 0);
 }
 
 void ViewScrollArea::keyReleaseEvent(QKeyEvent *)

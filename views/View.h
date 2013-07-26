@@ -21,18 +21,18 @@ class View : public QWidget
 public:
     explicit View(QWidget *parent = 0);
 
+    ListViewItem *item_at(int index);
+    int index_of(ListViewItem *item);
+    void add_item(ListViewItem *item);
+    void remove_item(int index);
+    int item_count() const;
+
     ViewWidget* w;
     ViewScrollArea *s;
     DirController *ctrl;
     QVBoxLayout *l;
 
     AsyncFileOperation *op;
-
-    ListViewItem *itemAt(int index);
-    int indexOf(ListViewItem *item);
-    void addItem(ListViewItem *item);
-    void removeItem(int index);
-    int itemCount() const;
 
 protected:
     virtual void paintEvent(QPaintEvent *);

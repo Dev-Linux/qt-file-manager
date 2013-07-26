@@ -22,26 +22,30 @@ class ListViewItem : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ListViewItem(const FileInfo &fileInfo);
-    FileInfo fileInfo;
-    QLabel* l;
-    void setSelected(bool selected);
-    void setHighlighted(bool set);
-    bool isSelected();
-    bool isHighlighted();
+    explicit ListViewItem(const FileInfo &file_info);
+
+    void set_selected(bool selected);
+    void set_highlighted(bool set);
+    bool is_selected();
+    bool is_highlighted();
+
+    FileInfo file_info;
+    QLabel* label;
 
     //static QThread *thread;
     //static Worker worker;
+
 protected:
     virtual void enterEvent(QEvent *);
     virtual void leaveEvent(QEvent *);
     virtual void paintEvent(QPaintEvent *);
     virtual void mousePressEvent(QMouseEvent *);
     virtual void mouseDoubleClickEvent(QMouseEvent *);
+
 signals:
     void clicked(const Qt::KeyboardModifiers &modifiers);
-    void rightClicked(const QPoint &globalPos);
-    void doubleClicked();
+    void right_clicked(const QPoint &globalPos);
+    void double_clicked();
 
 public slots:
 };

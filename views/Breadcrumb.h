@@ -10,12 +10,12 @@ class Breadcrumb : public QWidget
 {
     Q_OBJECT
 public:
-    explicit Breadcrumb(DockModel *dockModel);
-    void setPath(QString path);
+    explicit Breadcrumb(DockModel *dock_model);
+    void set_path(QString path);
     
 signals:
     void clicked();
-    void pathChanged(QString);
+    void path_changed(QString);
 
 protected:
     virtual void mousePressEvent(QMouseEvent *event);
@@ -23,12 +23,12 @@ protected:
 public slots:
 
 private slots:
-    void buttonClicked();
+    void button_clicked();
     
 private:
-    QHBoxLayout *hbox;
-    QString path;
-    DockModel *dockModel;
+    QHBoxLayout *m_hbox;
+    QString m_path;
+    DockModel *m_dock_model;
 };
 
 #endif // BREADCRUMB_H

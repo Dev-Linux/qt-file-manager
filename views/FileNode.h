@@ -20,27 +20,29 @@ public:
     explicit FileNode(const FileInfo &info,
                       RootItem::Layout layout,
                       int line_height);
-    FileInfo fileInfo;
-    QPixmap icon;
-    void setSelected(bool selected);
-    void setLayout(RootItem::Layout l);
-    void setListWidth(qreal w);
-    //void setListHeight(qreal h);
-    qreal listHeight() const;
-    bool isSelected() const;
-    bool isHighlighted() const;
+
+    void set_selected(bool selected);
+    bool is_selected() const;
+
+    bool is_highlighted() const;
+    void set_layout(RootItem::Layout layout);
+
+    void set_list_width(qreal w);
+    qreal list_height() const;
 
     static QSize node_size;
+    FileInfo file_info;
+    QPixmap icon;
 
-    QRectF boundingRect() const;
-    void paint(QPainter *painter,
+    virtual QRectF boundingRect() const;
+    virtual void paint(QPainter *painter,
                const QStyleOptionGraphicsItem *option,
                QWidget *widget);
 
 signals:
-    void doubleClicked();
-    void leftClicked(const Qt::KeyboardModifiers &modifiers);
-    void rightClicked(const Qt::KeyboardModifiers &modifiers);
+    void double_clicked();
+    void left_clicked(const Qt::KeyboardModifiers &modifiers);
+    void right_clicked(const Qt::KeyboardModifiers &modifiers);
 
 protected:
     virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
@@ -51,20 +53,21 @@ protected:
                                 const QVariant &value);
 
 public slots:
-    void setHighlighted(bool set = true);
+    void set_highlighted(bool set = true);
 
 private:
-    bool must_update_icon;
-    RootItem::Layout layout;
-    static const QFont iconLabelFont;
-    int padding = 6;
-    int spacing = 5;
     void update_icon_size();
 
-    QSize list_size;
-    QSize icon_size;
-    mutable QRectF bounding_rect_cache; // cache
-    static QSize node_icon_size;
+    QSize m_list_size;
+    QSize m_icon_size;
+    mutable QRectF m_bounding_rect_cache; // cache
+    bool m_must_update_icon;
+    RootItem::Layout m_layout;
+    int m_padding = 6;
+    int m_spacing = 5;
+
+    static const QFont m_icon_label_font;
+    static QSize m_node_icon_size;
 };
 
 #endif // FILENODE_H

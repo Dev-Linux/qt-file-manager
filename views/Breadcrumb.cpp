@@ -4,11 +4,11 @@
 
 Breadcrumb::Breadcrumb(DockModel *dockModel) : QWidget()
 {
-    this->dockModel = dockModel;
+    this->m_dock_model = dockModel;
 
-    hbox = new QHBoxLayout();
-    hbox->setSpacing(2);
-    hbox->setContentsMargins(0, 0, 0, 0);
+    m_hbox = new QHBoxLayout();
+    m_hbox->setSpacing(2);
+    m_hbox->setContentsMargins(0, 0, 0, 0);
 
     QIcon icon(":/root.png");
     QPushButton* root = new QPushButton(icon, "");
@@ -21,22 +21,22 @@ Breadcrumb::Breadcrumb(DockModel *dockModel) : QWidget()
 #endif
 
     connect(root, &QPushButton::clicked,
-            this, &Breadcrumb::buttonClicked);
+            this, &Breadcrumb::button_clicked);
 
-    hbox->addWidget(root);
-    hbox->addSpacerItem(
+    m_hbox->addWidget(root);
+    m_hbox->addSpacerItem(
                 new QSpacerItem(0, 0, QSizePolicy::Expanding,
                                 QSizePolicy::Fixed));
-    this->setLayout(hbox);
+    this->setLayout(m_hbox);
 }
 
-void Breadcrumb::setPath(QString path)
+void Breadcrumb::set_path(QString path)
 {
-    this->path = path;
+    this->m_path = path;
 
     QLayoutItem* item;
-    while (hbox->count() > 2) {
-        item = hbox->takeAt(1);
+    while (m_hbox->count() > 2) {
+        item = m_hbox->takeAt(1);
         delete item->widget();
         delete item;
     }
@@ -59,15 +59,15 @@ void Breadcrumb::setPath(QString path)
 
         button = new QPushButton(*i);
 
-        if (dockModel->containsPath(sum)) {
+        if (m_dock_model->contains_path(sum)) {
             button->setProperty("highlighted", true);
         }
 
         button->setProperty("path", sum);
         connect(button, &QPushButton::clicked,
-                this, &Breadcrumb::buttonClicked);
+                this, &Breadcrumb::button_clicked);
 
-        hbox->insertWidget(i - bi + 1, button);
+        m_hbox->insertWidget(i - bi + 1, button);
     }
 }
 
@@ -80,9 +80,9 @@ void Breadcrumb::mousePressEvent(QMouseEvent *event)
     }
 }
 
-void Breadcrumb::buttonClicked()
+void Breadcrumb::button_clicked()
 {
     QPushButton *b = dynamic_cast<QPushButton*>(sender());
-    this->path = b->property("path").toString();
-    emit pathChanged(this->path);
+    this->m_path = b->property("path").toString();
+    emit path_changed(this->m_path);
 }

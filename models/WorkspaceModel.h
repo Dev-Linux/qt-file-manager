@@ -8,7 +8,7 @@ class WorkspaceModel : public QObject
 {
     Q_OBJECT
 public:
-    explicit WorkspaceModel(QObject *parent = 0);
+    explicit WorkspaceModel();
     
 signals:
     

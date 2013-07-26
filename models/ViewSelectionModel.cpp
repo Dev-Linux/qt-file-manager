@@ -1,7 +1,7 @@
 #include "ViewSelectionModel.h"
 
-ViewSelectionModel::ViewSelectionModel(QObject *parent) :
-    QObject(parent)
+ViewSelectionModel::ViewSelectionModel() :
+    QObject()
 {
 }
 
@@ -20,14 +20,14 @@ void ViewSelectionModel::clear()
     this->set.clear();
 }
 
-bool ViewSelectionModel::isEmpty()
+bool ViewSelectionModel::is_empty()
 {
     return this->set.isEmpty();
 }
 
 bool ViewSelectionModel::contains(int index)
 {
-    return this->savedSet.contains(index);
+    return this->saved_set.contains(index);
 }
 
 int ViewSelectionModel::one()
@@ -44,9 +44,9 @@ int ViewSelectionModel::count()
 void ViewSelectionModel::save()
 {
     QSet<int> added(this->set);
-    QSet<int> removed(this->savedSet);
-    added.subtract(this->savedSet);
+    QSet<int> removed(this->saved_set);
+    added.subtract(this->saved_set);
     removed.subtract(this->set);
-    this->savedSet = this->set;
+    this->saved_set = this->set;
     emit changed(added, removed);
 }

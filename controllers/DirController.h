@@ -19,44 +19,44 @@ public:
     View *view;
     DirModel *model;
 
-    void setModel(DirModel *m);
-    bool hasModel();
+    void set_model(DirModel *m);
+    bool has_model();
 
-    void setPath(const QString &path);
-    QSet<int> &savedSelectedIndices();
-    QList<FileInfo> &fileInfoList();
-    void openIndex(int index);
-    bool reduceAndTranslateSelectionBy(int x);
+    void set_path(const QString &path);
+    QSet<int> &saved_selected_indices();
+    QList<FileInfo> &file_info_list();
+    void open_index(int index);
+    bool reduce_and_translate_sel_by(int x);
 
-    void refreshView();
+    void refresh_view();
 
 signals:
-    void pathChanged(const QString &path);
-    void searchStarted(const QString &str);
+    void path_changed(const QString &path);
+    void search_started(const QString &str);
 
 protected:
 
     /**
-     * @todo keyboard smooth scrolling (with a secondary cursor to which I can
-     * switch... that would help me (search the web)
+     * @todo keyboard smooth scrolling (with a secondary cursor to
+     * which I can switch... that would help me (search the web)
      */
 public slots:
-    void itemClicked(const Qt::KeyboardModifiers &modifiers);
-    void itemRightClicked();
-    void itemDoubleClicked();
+    void item_clicked(const Qt::KeyboardModifiers &modifiers);
+    void item_right_clicked();
+    void item_double_clicked();
 
-    void selectionModelChanged(QSet<int> added,
-                               QSet<int> removed);
+    void sel_model_changed(QSet<int> added,
+                           QSet<int> removed);
 
-    void addItem(const FileInfo &info);
-    void clearView();
+    void add_item(const FileInfo &info);
+    void clear_view();
 
-    void addTag(int index, const QString &tag);
+    void add_tag(int index, const QString &tag);
 
-    void contextMenuTriggered(QAction *action);
+    void context_menu_triggered(QAction *action);
 
     void search(const QString& str);
-    void modelNameFiltersChanged(const QStringList& nf);
+    void model_name_filters_changed(const QStringList& nf);
 };
 
 #endif // DIRCONTROLLER_H

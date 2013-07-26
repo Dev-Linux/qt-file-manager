@@ -4,11 +4,11 @@
 #include <typeinfo>
 
 /**
- * \class BoostGraph
- * \brief A small wrapper for Boost Graphs.
+ * @class BoostGraph
+ * @brief A small wrapper for Boost Graphs.
  *
  * **Small BGL doc**
- * \code
+ * @code
  * // g - Graph, adjacency_list etc.
  *
  * VertexID vid = boost::add_vertex(g); // vertex_descriptor vid;
@@ -36,7 +36,7 @@
  * }
  *
  * Graph(int x); // ctor - graph with x nodes
- * \endcode
+ * @endcode
  */
 
 /**
@@ -46,7 +46,7 @@
 BoostGraph::BoostGraph(int vertices) :
     QObject()
 {
-    g = new Graph(vertices);
+    m_g = new Graph(vertices);
 }
 
 /**
@@ -57,10 +57,10 @@ BoostGraph::BoostGraph(int vertices) :
  * @param width
  * @param height
  */
-void BoostGraph::setRectangle(qreal x, qreal y,
-                              qreal width, qreal height)
+void BoostGraph::set_rect(qreal x, qreal y,
+                          qreal width, qreal height)
 {
-    topology = new rectangle_topology<>(x, y, width, height);
+    m_topology = new boost::rectangle_topology<>(x, y, width, height);
 }
 
 /** @brief Returns the position map of the graph.
@@ -88,9 +88,9 @@ void BoostGraph::setRectangle(qreal x, qreal y,
  * @endcode
  * And so I `typedef`'d it as `position_map`.
  */
-position_map BoostGraph::getPos()
+position_map BoostGraph::get_pos()
 {
-    return get(vertex_position, *g);
+    return boost::get(vertex_position, *m_g);
 }
 
 /**
@@ -112,11 +112,11 @@ position_map BoostGraph::getPos()
  BGL_FORALL_EDGES(e, g, Graph) { }
  @endcode
  */
-void BoostGraph::doLayout(position_map pos)
+void BoostGraph::do_layout(position_map pos)
 {
-    Q_ASSERT(topology != nullptr);
+    Q_ASSERT(m_topology != nullptr);
 
-    gursoy_atun_layout(*g, *topology, pos);
+    boost::gursoy_atun_layout(*m_g, *m_topology, pos);
 }
 
 /**
@@ -124,9 +124,9 @@ void BoostGraph::doLayout(position_map pos)
  * @param v A vertex descriptor.
  * @return Index of the vertex @a v.
  */
-int BoostGraph::vertexIndex(vertex_descriptor v)
+int BoostGraph::vertex_index(vertex_descriptor v)
 {
-    return get(vertex_index, *g, v);
+    return get(boost::vertex_index, *m_g, v);
 }
 
 /**
@@ -134,11 +134,11 @@ int BoostGraph::vertexIndex(vertex_descriptor v)
  * @param v A vertex descriptor
  * @param index The index to set for @a v.
  */
-void BoostGraph::setVertexIndex(vertex_descriptor v, int index)
+void BoostGraph::set_vertex_index(vertex_descriptor v, int index)
 {
     // setez proprietatea vertex_index a elementului *vi
     // din graful g la i
-    boost::put(vertex_index, *g, v, index);
+    boost::put(boost::vertex_index, *m_g, v, index);
 }
 
 /**
@@ -146,9 +146,9 @@ void BoostGraph::setVertexIndex(vertex_descriptor v, int index)
  * @param index The index of the requested vertex descriptor.
  * @return The vertex descriptor at @a index.
  */
-vertex_descriptor BoostGraph::descriptorAt(int index)
+vertex_descriptor BoostGraph::descriptor_at(int index)
 {
-    return boost::vertex(index, *g);
+    return boost::vertex(index, *m_g);
 }
 
 /**
@@ -159,15 +159,15 @@ vertex_descriptor BoostGraph::descriptorAt(int index)
  */
 std::pair<vertex_iterator, vertex_iterator> &BoostGraph::vertices()
 {
-    this->iterators = boost::vertices(*g);
-    return this->iterators;
+    this->m_iterators = boost::vertices(*m_g);
+    return this->m_iterators;
 }
 
 /**
  * @brief Returns the number of vertices in the graph.
  * @return The number of vertices in the graph.
  */
-vertices_size_type BoostGraph::verticesCount()
+vertices_size_type BoostGraph::vertices_count()
 {
-    return boost::num_vertices(*g);
+    return boost::num_vertices(*m_g);
 }

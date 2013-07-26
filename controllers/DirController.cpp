@@ -35,72 +35,72 @@ DirController::DirController(QObject *parent) :
     connect(view, &View::search,
             this, &DirController::search);
 
-    setModel(new DirModel());
+    set_model(new DirModel());
 }
 
-void DirController::setModel(DirModel *m)
+void DirController::set_model(DirModel *m)
 {
-    bool re = hasModel();
+    bool re = has_model();
     if (re) {
         disconnect(model->sel, &ViewSelectionModel::changed,
-                this, &DirController::selectionModelChanged);
+                this, &DirController::sel_model_changed);
         disconnect(model, &DirModel::added,
-                this, &DirController::addItem);
+                this, &DirController::add_item);
         disconnect(model, &DirModel::cleared,
-                this, &DirController::clearView);
-        disconnect(model, &DirModel::tagAdded,
-                this, &DirController::addTag);
+                this, &DirController::clear_view);
+        disconnect(model, &DirModel::tag_added,
+                this, &DirController::add_tag);
 
-        disconnect(model, &DirModel::pathChanged,
-                this, &DirController::pathChanged);
-        disconnect(model, &DirModel::nameFiltersChanged,
-                this, &DirController::modelNameFiltersChanged);
+        disconnect(model, &DirModel::path_changed,
+                this, &DirController::path_changed);
+        disconnect(model, &DirModel::name_filters_changed,
+                this, &DirController::model_name_filters_changed);
     }
     model = m;
     if (m != 0) {
         connect(model->sel, &ViewSelectionModel::changed,
-                this, &DirController::selectionModelChanged);
+                this, &DirController::sel_model_changed);
         connect(model, &DirModel::added,
-                this, &DirController::addItem);
+                this, &DirController::add_item);
         connect(model, &DirModel::cleared,
-                this, &DirController::clearView);
-        connect(model, &DirModel::tagAdded,
-                this, &DirController::addTag);
+                this, &DirController::clear_view);
+        connect(model, &DirModel::tag_added,
+                this, &DirController::add_tag);
 
-        connect(model, &DirModel::pathChanged,
-                this, &DirController::pathChanged);
-        connect(model, &DirModel::nameFiltersChanged,
-                this, &DirController::modelNameFiltersChanged);
+        connect(model, &DirModel::path_changed,
+                this, &DirController::path_changed);
+        connect(model, &DirModel::name_filters_changed,
+                this, &DirController::model_name_filters_changed);
     }
     if (re) {
-        refreshView();
+        refresh_view();
     }
 }
 
-bool DirController::hasModel()
+bool DirController::has_model()
 {
     return model != 0;
 }
 
-void DirController::setPath(const QString &path)
+void DirController::set_path(const QString &path)
 {
-    model->setPath(path);
+    model->set_path(path);
 }
 
-QSet<int> &DirController::savedSelectedIndices()
+QSet<int> &DirController::saved_selected_indices()
 {
-    return model->sel->savedSet;
+    return model->sel->saved_set;
 }
 
-QList<FileInfo> &DirController::fileInfoList()
+QList<FileInfo> &DirController::file_info_list()
 {
     return model->list;
 }
 
-void DirController::itemClicked(const Qt::KeyboardModifiers &modifiers)
+void DirController::item_clicked(const Qt::KeyboardModifiers &modifiers)
 {
     auto clickedItem = qobject_cast<ListViewItem*>(sender());
-    int index = view->indexOf(clickedItem);
+    int index = view->index_of(clickedItem);
 
     if (!modifiers.testFlag(Qt::ControlModifier)) {
         bool clickedItemWasSelected = model->selected(index);
@@ -120,10 +120,10 @@ void DirController::itemClicked(const Qt::KeyboardModifiers &modifiers)
     model->sel->save();
 }
 
-void DirController::itemRightClicked()
+void DirController::item_right_clicked()
 {
     ListViewItem* clickedItem = qobject_cast<ListViewItem*>(sender());
-    int index = view->indexOf(clickedItem);
+    int index = view->index_of(clickedItem);
     bool clickedItemWasSelected = model->selected(index);
 
     if (!clickedItemWasSelected) {
@@ -152,7 +152,7 @@ void DirController::itemRightClicked()
 #endif
 
     connect(&menu, &QMenu::triggered,
-            this, &DirController::contextMenuTriggered);
+            this, &DirController::context_menu_triggered);
     menu.exec(QCursor::pos());
 
     /*if (!init) {
@@ -160,10 +160,10 @@ void DirController::itemRightClicked()
     }*/
 }
 
-void DirController::itemDoubleClicked()
+void DirController::item_double_clicked()
 {
     ListViewItem* item = qobject_cast<ListViewItem*>(sender());
-    int index = view->indexOf(item);
+    int index = view->index_of(item);
     bool clickedItemWasSelected = model->selected(index);
 
     if (!clickedItemWasSelected) {
@@ -172,81 +172,81 @@ void DirController::itemDoubleClicked()
         model->sel->save();
     }
 
-    openIndex(index);
+    open_index(index);
 }
 
-void DirController::addItem(const FileInfo &info)
+void DirController::add_item(const FileInfo &info)
 {
     auto item = new ListViewItem(info);
 
     connect(item, &ListViewItem::clicked,
-            this, &DirController::itemClicked);
+            this, &DirController::item_clicked);
 
-    connect(item, &ListViewItem::doubleClicked,
-            this, &DirController::itemDoubleClicked);
+    connect(item, &ListViewItem::double_clicked,
+            this, &DirController::item_double_clicked);
 
-    connect(item, &ListViewItem::rightClicked,
-            this, &DirController::itemRightClicked);
+    connect(item, &ListViewItem::right_clicked,
+            this, &DirController::item_right_clicked);
 
-    view->addItem(item);
+    view->add_item(item);
 }
 
-void DirController::clearView()
+void DirController::clear_view()
 {
-    misc::clearQLayout(view->w->layout());
+    misc::clear_QLayout(view->w->layout());
 }
 
-void DirController::selectionModelChanged(QSet<int> added,
+void DirController::sel_model_changed(QSet<int> added,
                                           QSet<int> removed)
 {
     int lastAdded = -1;
     foreach (const int &x, added) {
-        view->itemAt(x)->setSelected(true);
+        view->item_at(x)->set_selected(true);
         lastAdded = x;
     }
     foreach (const int &x, removed) {
-        view->itemAt(x)->setSelected(false);
+        view->item_at(x)->set_selected(false);
     }
     if (lastAdded != -1) {
-        view->s->scrollTo(lastAdded);
+        view->s->scroll_to(lastAdded);
     }
 }
 
-void DirController::refreshView()
+void DirController::refresh_view()
 {
-    clearView();
-    if (hasModel()) {
+    clear_view();
+    if (has_model()) {
         foreach (const FileInfo &info, model->list) {
-            addItem(info);
+            add_item(info);
         }
-        foreach (const int &x, savedSelectedIndices()) {
-            view->itemAt(x)->setSelected(true);
+        foreach (const int &x, saved_selected_indices()) {
+            view->item_at(x)->set_selected(true);
         }
     }
 }
 
-void DirController::addTag(int index, const QString &tag)
+void DirController::add_tag(int index, const QString &tag)
 {
     if (tag == "recent") {
-        auto item = view->itemAt(index);
-        item->setHighlighted(true);
+        auto item = view->item_at(index);
+        item->set_highlighted(true);
     }
 }
 
-void DirController::contextMenuTriggered(QAction *action)
+void DirController::context_menu_triggered(QAction *action)
 {
     MainWindowController *main_win_ctrl = MainWindowController::instance();
     if (action->text() == "It's important") {
-        foreach (const int &x, model->sel->savedSet) {
-            auto path = view->itemAt(x)->fileInfo.absoluteFilePath();
-            main_win_ctrl->markPathAsImportant(path);
+        foreach (const int &x, model->sel->saved_set) {
+            auto path = view->item_at(x)->file_info.abs_file_path();
+            main_win_ctrl->mark_path_as_important(path);
         }
     } else if (action->text() == "Delete this" ||
                action->text() == "Recycle this") {
-        auto list = model->sel->savedSet;
+        auto list = model->sel->saved_set;
         QStringList pathList;
         foreach (const int& index, list) {
-            QString path = model->list[index].absoluteFilePath();
+            QString path = model->list[index].abs_file_path();
             pathList << QDir::toNativeSeparators(path);
         }
 
@@ -257,36 +257,36 @@ void DirController::contextMenuTriggered(QAction *action)
         //s = p.fontMetrics().elidedText(s, Qt::ElideRight, 300);
         //item->setLabel("<strong>" + s + "</strong>.");
         auto s = pathList.join(",<br>");
-        main_win_ctrl->view->fileOperationsMenu->addItem(item);
-        view->op->doAsync(data, item);
+        main_win_ctrl->view->file_ops_menu->add_item(item);
+        view->op->do_async(data, item);
     }
 }
 
 void DirController::search(const QString &str)
 {
-    emit searchStarted(str);
+    emit search_started(str);
 }
 
-void DirController::modelNameFiltersChanged(const QStringList &nf)
+void DirController::model_name_filters_changed(const QStringList &nf)
 {
     Q_UNUSED(nf);
 }
 
-void DirController::openIndex(int index)
+void DirController::open_index(int index)
 {
-    auto item = view->itemAt(index);
-    QString path = item->fileInfo.filePath();
+    auto item = view->item_at(index);
+    QString path = item->file_info.file_path();
 
-    if (item->fileInfo.isDir()) {
-        setPath(path);
+    if (item->file_info.is_dir()) {
+        set_path(path);
     } else {
-        if (misc::openLocalFile(path)) {
-            model->addTag(index, "recent");
+        if (misc::open_local_file(path)) {
+            model->add_tag(index, "recent");
         }
     }
 }
 
-bool DirController::reduceAndTranslateSelectionBy(int x)
+bool DirController::reduce_and_translate_sel_by(int x)
 {
     auto sel = model->sel;
 

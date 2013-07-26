@@ -11,14 +11,16 @@ class DockModel : public QObject
     Q_OBJECT
 public:
     explicit DockModel(QObject *parent = 0);
+
+    bool reading_settings;
+    void read_settings();
+    void write_settings();
+    bool add_path(const QString &path);
+    void remove_path(const QString &path);
+    bool contains_path(const QString &path);
+
     QList<FileInfo> list;
     QSettings *s;
-    bool readingSettings;
-    void readSettings();
-    void writeSettings();
-    bool addPath(const QString &path);
-    void removePath(const QString &path);
-    bool containsPath(const QString &path);
     
 signals:
     void added(FileInfo &info);

@@ -16,7 +16,7 @@ class WorkspaceController : public QObject
     Q_OBJECT
 public:
     explicit WorkspaceController(DirModel *model,
-                                 DockModel *dockModel);
+                                 DockModel *dock_model);
     //! The WorkspaceView which contains the RootItem.
     WorkspaceView *view = nullptr;
     void set_layout(RootItem::Layout layout);

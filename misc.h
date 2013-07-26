@@ -25,21 +25,17 @@ QDebug operator<<(QDebug dbg, const COMError &com_err);
 #endif
 
 namespace misc {
-    void clearQLayout(QLayout *layout);
-
-    void updateWithStyle(QWidget *w, QStyle *s);
-
-    bool openLocalFile(QString path);
-
-    QRect padRectangle(int padding, const QRect &r);
-
-    QRectF unpadRect(const QRectF &r, qreal padding);
-
-    QString escapeQDirNameFilter(const QString &nf);
-    QList<FileInfo> filterByDirAbsPath(const QList<FileInfo> list,
-                                       const QString& absDirPath);
-    QList<QGraphicsItem *> filterByAncestor(const QList<QGraphicsItem *> items,
-                                            const QGraphicsItem *anc);
+    void clear_QLayout(QLayout *layout);
+    void update_with_style(QWidget *w, QStyle *s);
+    bool open_local_file(QString path);
+    QRect pad_rect(int padding, const QRect &r);
+    QRectF unpad_rect(const QRectF &r, qreal padding);
+    QString escape_QDir_name_filter(const QString &nf);
+    QList<FileInfo> filter_by_dir_abs_path(const QList<FileInfo> list,
+                                           const QString& absDirPath);
+    QList<QGraphicsItem *>
+    filter_by_ancestor(const QList<QGraphicsItem *> items,
+                       const QGraphicsItem *anc);
     QString func_name_from_func_str(const QString &func_str);
 
     template<typename Graph, typename PositionMap, typename Topology>
@@ -51,7 +47,7 @@ namespace misc {
 }
 
 /**
- * \todo integrate DebugFilter and MessageHandler
+ * @todo integrate DebugFilter and MessageHandler
  */
 
 class DebugFilter {
@@ -60,18 +56,20 @@ public:
     static void clear();
 
 private:
-    DebugFilter() {}
+    DebugFilter() { }
+
     static QString filter_func_name;
+
     friend class MessageHandler;
 };
 
 class MessageHandler {
 public:
-    static void msgHandler(QtMsgType type,
-                           const QMessageLogContext &context,
-                           const QString &msg);
+    static void msg_handler(QtMsgType type,
+                            const QMessageLogContext &context,
+                            const QString &msg);
 private:
-    MessageHandler() {} // prevent creation of instances
+    MessageHandler() { } // prevent creation of instances
     static QString last_func_name;
 };
 

@@ -46,30 +46,30 @@ View::View(QWidget *parent) :
     //setFocusProxy(s);
 }
 
-ListViewItem *View::itemAt(int index)
+ListViewItem *View::item_at(int index)
 {
     //qDebug() << "index" << index;
     auto widget = w->layout()->itemAt(index)->widget();
     return qobject_cast<ListViewItem *>(widget);
 }
 
-int View::indexOf(ListViewItem *item)
+int View::index_of(ListViewItem *item)
 {
     return w->layout()->indexOf(item);
 }
 
-void View::addItem(ListViewItem *item)
+void View::add_item(ListViewItem *item)
 {
     w->layout()->addWidget(item);
     w->layout()->setAlignment(item, Qt::AlignTop);
 }
 
-void View::removeItem(int index)
+void View::remove_item(int index)
 {
     delete w->layout()->takeAt(index)->widget();
 }
 
-int View::itemCount() const
+int View::item_count() const
 {
     return w->layout()->count();
 }
@@ -107,8 +107,8 @@ void View::keyPressEvent(QKeyEvent *event)
         event->ignore();
 
         if (event->key() == Qt::Key_Down || event->key() == Qt::Key_Up) {
-            if (sel->isEmpty()) {
-                if (!ctrl->model->isEmpty()) {
+            if (sel->is_empty()) {
+                if (!ctrl->model->is_empty()) {
                     sel->clear();
                     if (event->key() == Qt::Key_Down) {
                         sel->add(0);
@@ -128,7 +128,7 @@ void View::keyPressEvent(QKeyEvent *event)
                 Q_ASSERT(event->key() == Qt::Key_Up);
                 x = -1;
             }
-            if (ctrl->reduceAndTranslateSelectionBy(x)) {
+            if (ctrl->reduce_and_translate_sel_by(x)) {
                 event->accept();
             }
         } else if (event->key() == Qt::Key_Return) {
@@ -151,7 +151,7 @@ void View::keyPressEvent(QKeyEvent *event)
                 }
                 if (act) {
                     foreach (const int &x, sel->set) {
-                        ctrl->openIndex(x);
+                        ctrl->open_index(x);
                     }
                 }
             }

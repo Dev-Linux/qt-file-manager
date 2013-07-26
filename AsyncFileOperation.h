@@ -15,12 +15,13 @@ public:
     explicit AsyncFileOperation(QObject *parent = 0);
     ~AsyncFileOperation();
 
-    void doAsync(FileOperationData* data, FileOperationItem* item);
+    void do_async(FileOperationData* data,
+                  FileOperationItem* item);
 
 public slots:
 
 signals:
-    void operationRequested(FileOperationData* data);
+    void operation_requested(FileOperationData* data);
     void done(FileOperationData *data);
     void progress(FileOperationData *data);
 
@@ -28,7 +29,7 @@ protected:
     void run();
 
 private:
-    bool threadIsReady;
+    bool m_thread_is_ready;
 };
 
 #endif // ASYNCFILEOPERATION_H

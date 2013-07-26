@@ -29,12 +29,13 @@ public slots:
     void workspace_view_resized();
 
 private:
+    void refresh_tags();
+
     //! The DockModel which stores the items marked as important.
     DockModel *m_dock_model;
     DirModel *m_dir_model;
     WorkspaceController *m_workspace_ctrl;
 
-    void refresh_tags();
     //! The context menu.
     QMenu *m_context_menu = nullptr;
     qreal m_viewport_height, m_y;

@@ -72,14 +72,14 @@ RootItem::~RootItem()
  *
  * @param l The new layout.
  */
-void RootItem::setLayout(RootItem::Layout l)
+void RootItem::set_layout(RootItem::Layout l)
 {
-    this->layout = l;
+    this->m_layout = l;
 
     FileNode *fn;
-    for (auto i = fileNodes.begin(); i != fileNodes.end(); ++i) {
+    for (auto i = file_nodes.begin(); i != file_nodes.end(); ++i) {
         fn = *i; // current file node
-        fn->setLayout(l);
+        fn->set_layout(l);
     }
 
     update_layout();
@@ -109,8 +109,8 @@ QVariant RootItem::itemChange(QGraphicsItem::GraphicsItemChange change,
 }
 
 void RootItem::update_layout() {
-    emit before_layout_update(layout);
-    if (layout == GRAPH) {
+    emit before_layout_update(m_layout);
+    if (m_layout == GRAPH) {
         // do layout specific jobs
         this->refresh_graph_positions(); // call even if the layout has not changed
 
@@ -118,10 +118,10 @@ void RootItem::update_layout() {
         //view->scene->setSceneRect(QRectF());
     } else {
         // update layout-dependant sizes
-        if (fileNodes.isEmpty()) {
-            setHeight(0);
+        if (file_nodes.isEmpty()) {
+            set_height(0);
         } else {
-            setHeight(fileNodes.last()->y() + fileNodes.last()->listHeight());
+            set_height(file_nodes.last()->y() + file_nodes.last()->list_height());
 
             // do layout specific jobs
             this->refresh_list_pos_and_sizes(); // call only if the layout or the w has changed
@@ -135,17 +135,17 @@ void RootItem::update_layout() {
  * sets height to 0 and calls prepareGeometryChange() which usually
  * calls update().
  */
-void RootItem::clearView()
+void RootItem::clear_view()
 {
     m_future_count = 0;
     // remove the file nodes from the previous calls to setPath
-    for (int i = 0; i < fileNodes.length(); i++) {
-        delete fileNodes.at(i); // this also destroys the node
+    for (int i = 0; i < file_nodes.length(); i++) {
+        delete file_nodes.at(i); // this also destroys the node
         //scene->removeItem(fileNodes[i]);
     }
     // this should also 'delete's the elements but crashes the app
     // (I don't know why)
-    fileNodes.clear();
+    file_nodes.clear();
 
     update_layout();
 }
@@ -157,15 +157,15 @@ void RootItem::clearView()
  * @param info FileInfo corresponding to the file to be represented by
  * the created FileNode.
  */
-void RootItem::addNode(const FileInfo &info)
+void RootItem::add_node(const FileInfo &info)
 {
-    auto node = new FileNode(info, this->layout, 40);
+    auto node = new FileNode(info, this->m_layout, 40);
     node->setParentItem(this);
-    connectNode(node);
-    fileNodes << node;
+    connect_node(node);
+    file_nodes << node;
 
-    if (layout == LIST) {
-        setHeight(height() + node->listHeight());
+    if (m_layout == LIST) {
+        set_height(height() + node->list_height());
         //update_layout();
     }
 }
@@ -177,25 +177,25 @@ void RootItem::addNode(const FileInfo &info)
  */
 void RootItem::refresh_list_pos_and_sizes() // LIST only
 {
-    int count = fileNodes.size();
+    int count = file_nodes.size();
 
     if (count > 0) {
         QPointF cp(0, 0); // current position
         FileNode *fn; // current file node
-        for (auto i = fileNodes.begin();
-             i != fileNodes.end(); ++i) {
+        for (auto i = file_nodes.begin();
+             i != file_nodes.end(); ++i) {
             fn = *i;
             fn->setPos(cp);
-            fn->setListWidth(width());
-            cp.setY(cp.y() + fn->listHeight());
+            fn->set_list_width(width());
+            cp.setY(cp.y() + fn->list_height());
         }
     }
 }
 
 void RootItem::refresh_graph_positions()
 {
-    initGraph();
-    int count = g->verticesCount();
+    init_graph();
+    int count = m_g->vertices_count();
 
     if (count > 0) {
         position_map pos;
@@ -207,20 +207,20 @@ void RootItem::refresh_graph_positions()
         right = width() - FileNode::node_size.width();
         bottom = height() - FileNode::node_size.height();
 
-        g->setRectangle(left, top, right, bottom);
-        pos = g->getPos();
-        g->doLayout(pos);
+        m_g->set_rect(left, top, right, bottom);
+        pos = m_g->get_pos();
+        m_g->do_layout(pos);
 
-        boost::tie(vi, ve) = g->vertices();
+        boost::tie(vi, ve) = m_g->vertices();
 
         while (vi != ve) {
             v = *vi;
 
             x = pos[v][0];
             y = pos[v][1];
-            index = g->vertexIndex(v);
+            index = m_g->vertex_index(v);
 
-            auto node = fileNodes[index];
+            auto node = file_nodes[index];
             node->setPos(x, y);
 
             vi++;
@@ -228,7 +228,7 @@ void RootItem::refresh_graph_positions()
     }
 }
 /** @todo grid layout */
-void RootItem::setWidth(qreal w)
+void RootItem::set_width(qreal w)
 {
     if (m_width != w) {
         prepareGeometryChange();
@@ -236,7 +236,7 @@ void RootItem::setWidth(qreal w)
     }
 }
 
-void RootItem::setHeight(qreal h)
+void RootItem::set_height(qreal h)
 {
     if (m_height != h) {
         prepareGeometryChange();
@@ -322,18 +322,18 @@ void RootItem::set_future_count(int n)
  * @brief Connects FileNode signals to RootItem slots.
  * @param node The node to connect with the RootItem.
  */
-void RootItem::connectNode(FileNode *node)
+void RootItem::connect_node(FileNode *node)
 {
     // inefficient signal forwarding and inline creation of slots
-    connect(node, &FileNode::doubleClicked,
+    connect(node, &FileNode::double_clicked,
             [=] () {
         emit this->node_dbl_clicked(node);
     });
-    connect(node, &FileNode::leftClicked,
+    connect(node, &FileNode::left_clicked,
             [=] (const Qt::KeyboardModifiers &modifiers) {
         emit this->node_left_clicked(node, modifiers);
     });
-    connect(node, &FileNode::rightClicked,
+    connect(node, &FileNode::right_clicked,
             [=] (const Qt::KeyboardModifiers &modifiers) {
         emit this->node_right_clicked(node, modifiers);
     });
@@ -358,18 +358,18 @@ void RootItem::paint(QPainter *painter,
  * @pre m_model valid
  * @post m_model->count() == g->verticesCount()
  */
-void RootItem::initGraph()
+void RootItem::init_graph()
 {
     bool graphRebuilt;
     vertices_size_type count;
-    if (g.isNull()) {
+    if (m_g.isNull()) {
         count = m_future_count;
-        g.reset(new BoostGraph(count));
+        m_g.reset(new BoostGraph(count));
         graphRebuilt = true;
     } else {
         count = m_future_count;
-        if (g->verticesCount() != count) {
-            g.reset(new BoostGraph(count));
+        if (m_g->vertices_count() != count) {
+            m_g.reset(new BoostGraph(count));
             graphRebuilt = true;
         } else {
             graphRebuilt = false;
@@ -377,10 +377,10 @@ void RootItem::initGraph()
     }
     if (graphRebuilt) {
         vertex_iterator vi, ve;
-        boost::tie(vi, ve) = g->vertices();
+        boost::tie(vi, ve) = m_g->vertices();
         vertices_size_type s;
         for (s = 0; s < count; ++s, ++vi) {
-            g->setVertexIndex(*vi, s);
+            m_g->set_vertex_index(*vi, s);
         }
     }
 }

@@ -38,26 +38,26 @@ RootItemController::RootItemController(DirModel* dir_model,
     connect(dock_model, &DockModel::removed,
             this, &RootItemController::important_removed);
 
-    connect(dir_model, &DirModel::pathChanged,
+    connect(dir_model, &DirModel::path_changed,
             this, &RootItemController::path_changed);
-    connect(dir_model, &DirModel::nameFiltersChanged,
+    connect(dir_model, &DirModel::name_filters_changed,
             this, &RootItemController::name_filters_changed);
 
     connect(dir_model->sel, &ViewSelectionModel::changed,
             this, &RootItemController::sel_model_changed);
 
     connect(dir_model, &DirModel::cleared,
-            view, &RootItem::clearView);
+            view, &RootItem::clear_view);
     connect(dir_model, &DirModel::added,
-            view, &RootItem::addNode);
+            view, &RootItem::add_node);
     connect(dir_model, &DirModel::file_system_change,
             this, &RootItemController::file_system_change);
     connect(dir_model, &DirModel::before_adding_n,
             this, &RootItemController::before_adding_n);
 
-    connect(dir_model, &DirModel::tagAdded,
+    connect(dir_model, &DirModel::tag_added,
             this, &RootItemController::dir_model_tag_added);
-    connect(dir_model, &DirModel::tagRemoved,
+    connect(dir_model, &DirModel::tag_removed,
             this, &RootItemController::dir_model_tag_removed);
 
     connect(view, &RootItem::node_dbl_clicked,
@@ -82,7 +82,7 @@ void RootItemController::refresh_tags()
 {
     // dock FileInfos in the current folder
     QList<FileInfo> list =
-            misc::filterByDirAbsPath(m_dock_model->list,
+            misc::filter_by_dir_abs_path(m_dock_model->list,
                             m_dir_model->dir.absolutePath());
 
     QList<FileInfo>::iterator it, ei, bi, i;
@@ -96,7 +96,7 @@ void RootItemController::refresh_tags()
 
         const int index = i - bi;
 
-        m_dir_model->addTag(index, "important");
+        m_dir_model->add_tag(index, "important");
     }
 }
 
@@ -121,7 +121,7 @@ void RootItemController::path_changed(const QString &path)
  */
 void RootItemController::name_filters_changed()
 {
-    view->clearView();
+    view->clear_view();
     //loadAllFilesInModel();
     Q_ASSERT_X(false, "RootItemController::name_filters_changed",
                "not sure I should call loadAllFilesInModel");
@@ -146,11 +146,11 @@ void RootItemController::file_system_change()
 void RootItemController::important_added(FileInfo &info)
 {
     // NOTE: also compares sort and filter settings
-    if (info.absoluteDir().absolutePath() ==
+    if (info.abs_dir().absolutePath() ==
             m_dir_model->dir.absolutePath()) { //! @todo drives on Win?
         for (int i = 0; i < m_dir_model->count(); i++) {
             if (m_dir_model->list[i] == info) {
-                m_dir_model->addTag(i, "important");
+                m_dir_model->add_tag(i, "important");
                 break;
             }
         }
@@ -166,11 +166,11 @@ void RootItemController::important_added(FileInfo &info)
 void RootItemController::important_removed(FileInfo &info)
 {
     // NOTE: also compares sort and filter settings
-    if (info.absoluteDir().absolutePath() ==
+    if (info.abs_dir().absolutePath() ==
             m_dir_model->dir.absolutePath()) { //! @todo drives on Win?
         for (int i = 0; i < m_dir_model->count(); i++) {
             if (m_dir_model->list[i] == info) {
-                m_dir_model->removeTag(i, "important");
+                m_dir_model->remove_tag(i, "important");
                 break;
             }
         }
@@ -181,8 +181,8 @@ void RootItemController::dir_model_tag_added(int index,
                                              const QString &tag)
 {
     if (tag == "important") {
-        auto node = view->fileNodes[index];
-        node->setHighlighted();
+        auto node = view->file_nodes[index];
+        node->set_highlighted();
     }
 }
 
@@ -190,8 +190,8 @@ void RootItemController::dir_model_tag_removed(int index,
                                                const QString &tag)
 {
     if (tag == "important") {
-        auto node = view->fileNodes[index];
-        node->setHighlighted(false);
+        auto node = view->file_nodes[index];
+        node->set_highlighted(false);
     }
 }
 
@@ -201,7 +201,7 @@ void RootItemController::dir_model_tag_removed(int index,
  */
 void RootItemController::node_dbl_clicked(FileNode *node)
 {
-    int index = view->fileNodes.indexOf(node);
+    int index = view->file_nodes.indexOf(node);
 
     bool clickedItemWasSelected = m_dir_model->selected(index);
 
@@ -211,13 +211,13 @@ void RootItemController::node_dbl_clicked(FileNode *node)
         m_dir_model->sel->save();
     }
 
-    if (node->fileInfo.isDir()) {
-        const QString &path = node->fileInfo.absoluteFilePath();
-        m_dir_model->setPath(path);
+    if (node->file_info.is_dir()) {
+        const QString &path = node->file_info.abs_file_path();
+        m_dir_model->set_path(path);
     } else {
-        if (misc::openLocalFile(node->fileInfo.absoluteFilePath())) {
+        if (misc::open_local_file(node->file_info.abs_file_path())) {
             // not implemented actually...
-            m_dir_model->addTag(index, "recent");
+            m_dir_model->add_tag(index, "recent");
         }
     }
 }
@@ -239,9 +239,9 @@ void RootItemController::node_left_clicked(FileNode *node,
                             const Qt::KeyboardModifiers &modifiers)
 {
     FileNode * const clickedItem = node;
-    metaDebug(clickedItem->fileInfo.absoluteFilePath());
+    metaDebug(clickedItem->file_info.abs_file_path());
 
-    int index = view->fileNodes.indexOf(clickedItem);
+    int index = view->file_nodes.indexOf(clickedItem);
 
     if (!modifiers.testFlag(Qt::ControlModifier)) {
         bool clickedItemWasSelected = m_dir_model->selected(index);
@@ -279,7 +279,7 @@ void RootItemController::node_right_clicked(FileNode *node,
                             const Qt::KeyboardModifiers &modifiers)
 { Q_UNUSED(modifiers)
     FileNode * const clickedItem = node;
-    int index = view->fileNodes.indexOf(clickedItem);
+    int index = view->file_nodes.indexOf(clickedItem);
     bool clickedItemWasSelected = m_dir_model->selected(index);
 
     if (!clickedItemWasSelected) {
@@ -344,16 +344,16 @@ void RootItemController::context_menu_triggered(QAction *action)
     auto main_win_ctrl = MainWindowController::instance();
     auto main_win = main_win_ctrl->view;
     if (action->text() == "It's important") {
-        auto list = m_dir_model->selectedAbsolutePaths(false);
+        auto list = m_dir_model->selected_abs_paths(false);
         m_dir_model->sel->clear();
         m_dir_model->sel->save();
 
         for (auto i = list.begin(); i != list.end(); ++i) {
-            main_win_ctrl->markPathAsImportant(*i);
+            main_win_ctrl->mark_path_as_important(*i);
         }
     } else if (action->text() == "Delete this") {
         QStringList pathList = m_dir_model->
-                selectedAbsolutePaths(true);
+                selected_abs_paths(true);
         auto data = new FileOperationData("delete", pathList);
 
         // item handling:
@@ -363,12 +363,12 @@ void RootItemController::context_menu_triggered(QAction *action)
         //auto s = pathList.join(", ");
         //s = p.fontMetrics().elidedText(s, Qt::ElideRight, 300);
         auto s = pathList.join(",<br>");
-        item->setLabel("<strong>" + s + "</strong>.");
-        main_win->fileOperationsMenu->addItem(item);
-        main_win_ctrl->async_file_op->doAsync(data, item);
+        item->set_label("<strong>" + s + "</strong>.");
+        main_win->file_ops_menu->add_item(item);
+        main_win_ctrl->async_file_op->do_async(data, item);
     } else if (action->text() == "Recycle this") {
         QStringList pathList = m_dir_model->
-                selectedAbsolutePaths(false); // true? this WILL be X-OS
+                selected_abs_paths(false); // true? this WILL be X-OS
 
         auto data = new FileOperationData("recycle", pathList);
 
@@ -385,9 +385,9 @@ void RootItemController::context_menu_triggered(QAction *action)
         // native separator is the one provided by TrashModel anyway.
         // auto s = pathList.join(",<br>");
 
-        item->setLabel("<strong>" + s + "</strong>.");
-        main_win->fileOperationsMenu->addItem(item);
-        main_win_ctrl->async_file_op->doAsync(data, item);
+        item->set_label("<strong>" + s + "</strong>.");
+        main_win->file_ops_menu->add_item(item);
+        main_win_ctrl->async_file_op->do_async(data, item);
     }
 }
 
@@ -403,7 +403,7 @@ void RootItemController::sel_rect_changed(QRectF sel_rect)
     auto items = m_workspace_ctrl->items_intersecting_rect(sel_rect);
 
     // nodes itersecting sel rect (RootItem contains only nodes)
-    items = misc::filterByAncestor(items, this->view);
+    items = misc::filter_by_ancestor(items, this->view);
 
     if (!items.isEmpty()) {
         if (!mod.testFlag(Qt::ControlModifier)) {
@@ -411,7 +411,7 @@ void RootItemController::sel_rect_changed(QRectF sel_rect)
         }
         for (auto i = items.begin(); i != items.end(); ++i) {
             auto node = static_cast<FileNode*>(*i);
-            int index = view->fileNodes.indexOf(node);
+            int index = view->file_nodes.indexOf(node);
             m_dir_model->sel->add(index);
         }
         m_dir_model->sel->save();
@@ -428,7 +428,7 @@ void RootItemController::workspace_view_resized()
 {
     // update always needed sizes
     m_viewport_height = m_workspace_ctrl->viewport_height();
-    view->setWidth(m_workspace_ctrl->viewport_width());
+    view->set_width(m_workspace_ctrl->viewport_width());
 
     view->update_layout();
 }
@@ -453,7 +453,7 @@ void RootItemController::before_layout_update(RootItem::Layout layout)
 {
     if (layout == RootItem::GRAPH) {
         // update layout-dependant sizes
-        view->setHeight(m_viewport_height - m_y);
+        view->set_height(m_viewport_height - m_y);
     }
 }
 
@@ -469,16 +469,16 @@ void RootItemController::sel_model_changed(QSet<int> added,
 {
     int lastAdded = -1;
     foreach (const int &x, added) {
-        view->fileNodes[x]->setSelected(true);
+        view->file_nodes[x]->set_selected(true);
         lastAdded = x;
     }
     foreach (const int &x, removed) {
-        view->fileNodes[x]->setSelected(false);
+        view->file_nodes[x]->set_selected(false);
     }
     // now that only one type of layout is maintained and is visible
     // at a given moment, I think I could remove the visibility
     // check
     if (view->isVisible() && lastAdded != -1) {
-        m_workspace_ctrl->ensure_visible(view->fileNodes[lastAdded]);
+        m_workspace_ctrl->ensure_visible(view->file_nodes[lastAdded]);
     }
 }

@@ -12,7 +12,7 @@ class DockController : public QObject
 {
     Q_OBJECT
 public:
-    explicit DockController(QObject *parent = 0);
+    explicit DockController();
     Dock *view;
     DockModel *model;
 signals:

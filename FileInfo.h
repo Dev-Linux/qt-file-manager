@@ -9,34 +9,34 @@
 class FileInfo
 {
 public:
-    mutable QFileInfo fileInfo;
-
     explicit FileInfo();
     FileInfo(const QString &path);
-    FileInfo(const QFileInfo &fileInfo);
+    FileInfo(const QFileInfo &file_info);
 
     QIcon icon() const;
-    bool isDrive() const;
+    bool is_drive() const;
     void init() const;
 
     // from QFileInfo (some un-const-ed)
-    const QString &fileName() const;
-    const QString &filePath() const;
-    const QString &absoluteFilePath() const;
-    bool isDir() const;
-    QDir absoluteDir() const;
+    const QString &file_name() const;
+    const QString &file_path() const;
+    const QString &abs_file_path() const;
+    bool is_dir() const;
+    QDir abs_dir() const;
     bool operator ==(const FileInfo &info) const;
 
+    mutable QFileInfo file_info;
+
 private:
-    static QFileIconProvider fileIconProvider;
-    static QHash<const QString, QIcon> iconCache;
+    static QFileIconProvider m_file_icon_provider;
+    static QHash<const QString, QIcon> m_icon_cache;
 
     mutable QString m_ctor_path;
-    mutable QString m_absoluteFilePath;
-    mutable QString m_fileName;
-    mutable QString m_filePath;
+    mutable QString m_abs_file_path;
+    mutable QString m_file_name;
+    mutable QString m_file_path;
 
-    mutable bool isLoaded;
+    mutable bool m_is_loaded;
 };
 
 QDebug operator<<(QDebug dbg, const FileInfo &info);

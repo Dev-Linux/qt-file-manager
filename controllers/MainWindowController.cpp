@@ -89,12 +89,12 @@ MainWindowController::MainWindowController(const QString &initial_path) :
 
     connect(m_breadcrumb_ctrl, &Breadcrumb::clicked,
             this, &MainWindowController::breadcrumb_clicked);
-    connect(m_breadcrumb_ctrl, &Breadcrumb::pathChanged,
+    connect(m_breadcrumb_ctrl, &Breadcrumb::path_changed,
             this, &MainWindowController::breadcrumb_path_changed);
 
-    connect(m_dir_ctrl, &DirController::pathChanged,
+    connect(m_dir_ctrl, &DirController::path_changed,
             this, &MainWindowController::dir_ctrl_path_changed);
-    connect(m_dir_ctrl, &DirController::searchStarted,
+    connect(m_dir_ctrl, &DirController::search_started,
             this, &MainWindowController::dir_search_started);
 
     connect(view, &MainWindow::layout_button_clicked,
@@ -123,7 +123,7 @@ MainWindowController::MainWindowController(const QString &initial_path) :
     connect(view, &MainWindow::zoom_out_requested,
             m_workspace_ctrl, &WorkspaceController::zoom_out);
 
-    view->locationEdit->setText(initial_path);
+    view->location_edit->setText(initial_path);
     location_edit_changed();
 }
 
@@ -138,14 +138,14 @@ MainWindowController::~MainWindowController()
     delete async_file_op;
 }
 
-bool MainWindowController::isShowingDrives() const
+bool MainWindowController::is_showing_drives() const
 {
     return m_dir_ctrl->model->drives;
 }
 
-void MainWindowController::markPathAsImportant(const QString &path)
+void MainWindowController::mark_path_as_important(const QString &path)
 {
-    m_dock_ctrl->model->addPath(path);
+    m_dock_ctrl->model->add_path(path);
 }
 
 /**
@@ -176,8 +176,8 @@ void MainWindowController::layout_button_clicked()
  */
 void MainWindowController::breadcrumb_clicked()
 {
-    view->stackedWidget->setCurrentWidget(view->locationEdit);
-    view->locationEdit->setFocus();
+    view->stacked_widget->setCurrentWidget(view->location_edit);
+    view->location_edit->setFocus();
 }
 
 /**
@@ -186,7 +186,7 @@ void MainWindowController::breadcrumb_clicked()
  */
 void MainWindowController::breadcrumb_path_changed(const QString &path)
 {
-    view->locationEdit->setText(path);
+    view->location_edit->setText(path);
     location_edit_changed();
 }
 
@@ -197,9 +197,9 @@ void MainWindowController::breadcrumb_path_changed(const QString &path)
  */
 void MainWindowController::dir_ctrl_path_changed(const QString &path)
 {
-    view->locationEdit->setText(path);
-    m_breadcrumb_ctrl->setPath(path);
-    view->stackedWidget->setCurrentWidget(m_breadcrumb_ctrl);
+    view->location_edit->setText(path);
+    m_breadcrumb_ctrl->set_path(path);
+    view->stacked_widget->setCurrentWidget(m_breadcrumb_ctrl);
 }
 
 /**
@@ -208,8 +208,8 @@ void MainWindowController::dir_ctrl_path_changed(const QString &path)
  */
 void MainWindowController::dir_search_started(const QString &str)
 {
-    view->searchLineEdit->setText(str);
-    view->searchLineEdit->setFocus();
+    view->search_line_edit->setText(str);
+    view->search_line_edit->setFocus();
 }
 
 /**
@@ -219,8 +219,8 @@ void MainWindowController::dir_search_started(const QString &str)
  */
 void MainWindowController::location_edit_focused(bool focused)
 {
-    if (!focused && !view->locationEdit->contextMenuOpen) {
-        view->stackedWidget->setCurrentWidget(m_breadcrumb_ctrl);
+    if (!focused && !view->location_edit->context_menu_open) {
+        view->stacked_widget->setCurrentWidget(m_breadcrumb_ctrl);
     }
 }
 
@@ -231,14 +231,14 @@ void MainWindowController::location_edit_focused(bool focused)
  */
 void MainWindowController::location_edit_changed()
 {
-    QString path = view->locationEdit->text().trimmed();
+    QString path = view->location_edit->text().trimmed();
     if (path.isEmpty() && path != ROOT_PATH) {
         path = ROOT_PATH;
     } else if (path.isEmpty() && path == ROOT_PATH) {
         // windows, QDir::drives....
-        view->locationEdit->setText(path);
+        view->location_edit->setText(path);
 
-        m_dir_ctrl->setPath(path);
+        m_dir_ctrl->set_path(path);
         m_dir_ctrl->view->setFocus();
         return;
     }
@@ -247,19 +247,19 @@ void MainWindowController::location_edit_changed()
 
     if (file.exists()) {
         if (file.isFile()) {
-            misc::openLocalFile(path);
+            misc::open_local_file(path);
             path = file.absolutePath();
         } else {
             path = file.absoluteFilePath();
         }
-        view->locationEdit->setText(path);
+        view->location_edit->setText(path);
 
-        m_dir_ctrl->setPath(path);
+        m_dir_ctrl->set_path(path);
         m_dir_ctrl->view->setFocus();
     } else {
         QMessageBox::information(view, "Error",
             QString("\"%1\" does not exist.").arg(path));
-        view->locationEdit->selectAll();
+        view->location_edit->selectAll();
     }
 }
 
@@ -282,12 +282,12 @@ void MainWindowController::search_text_edited(const QString &text)
 void MainWindowController::search_timeout()
 {
     // why this if exists? backspace => the same text => useless computation
-    if (m_search_buf == view->searchLineEdit->text()) {
+    if (m_search_buf == view->search_line_edit->text()) {
         QStringList l;
         QString pat = m_search_buf;
-        pat = misc::escapeQDirNameFilter(pat);
+        pat = misc::escape_QDir_name_filter(pat);
         l << QString("*%1*").arg(pat);
-        m_dir_ctrl->model->setNameFilters(l);
+        m_dir_ctrl->model->set_name_filters(l);
     }
 }
 
@@ -319,7 +319,7 @@ void MainWindowController::file_op_done(FileOperationData *data)
     }
     FileOperationItem *item = file_ops->value(data);
 
-    if (data->anyOperationsAborted) {
+    if (data->any_ops_aborted) {
         item->verb = "Aborted " + item->verb.toLower();
     } else {
         if (data->type() == "copy") {
@@ -333,7 +333,7 @@ void MainWindowController::file_op_done(FileOperationData *data)
         }
     }
 
-    item->setDateTime(QDateTime::currentDateTime());
-    item->dateLabel->show();
-    item->updateView();
+    item->set_date_time(QDateTime::currentDateTime());
+    item->date_label->show();
+    item->update_view();
 }

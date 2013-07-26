@@ -15,10 +15,10 @@
 #endif
 
 AsyncFileOperation::AsyncFileOperation(QObject *parent) :
-    QThread(parent), threadIsReady(false)
+    QThread(parent), m_thread_is_ready(false)
 {
     start();
-    while (!threadIsReady) {
+    while (!m_thread_is_ready) {
         msleep(50);
     }
 }
@@ -30,11 +30,11 @@ AsyncFileOperation::~AsyncFileOperation()
 #endif
 }
 
-void AsyncFileOperation::doAsync(FileOperationData *data,
+void AsyncFileOperation::do_async(FileOperationData *data,
                                  FileOperationItem *item)
 {
     MainWindowController::instance()->file_ops->insert(data, item);
-    emit operationRequested(data);
+    emit operation_requested(data);
 }
 
 void AsyncFileOperation::run()
@@ -51,13 +51,13 @@ void AsyncFileOperation::run()
 
     AsyncFileOperationWorker worker;
 
-    connect(this, &AsyncFileOperation::operationRequested,
+    connect(this, &AsyncFileOperation::operation_requested,
             &worker, &AsyncFileOperationWorker::operate);
     connect(&worker, &AsyncFileOperationWorker::progress,
             this, &AsyncFileOperation::progress);
     connect(&worker, &AsyncFileOperationWorker::done,
             this, &AsyncFileOperation::done);
 
-    threadIsReady = true;
+    m_thread_is_ready = true;
     exec();
 }

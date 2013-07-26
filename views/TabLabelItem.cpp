@@ -8,7 +8,7 @@ TabLabelItem::TabLabelItem(const QString &label) :
     QGraphicsObject()
 {
     if (!label.isEmpty()) {
-        this->label = label;
+        this->m_label = label;
     }
     setAcceptHoverEvents(true);
 }
@@ -22,7 +22,7 @@ void TabLabelItem::paint(QPainter *painter,
     Q_UNUSED(widget)
 
     QBrush bgBrush;
-    if (isActive()) {
+    if (is_active()) {
         if (property("hovered").toBool()) {
             bgBrush = QBrush("lightblue");
         } else {
@@ -37,21 +37,21 @@ void TabLabelItem::paint(QPainter *painter,
     }
     painter->setBrush(bgBrush);
     painter->setPen(QPen(QBrush("gray"), 0.5));
-    painter->drawRect(misc::unpadRect(option->rect, 0.5));
+    painter->drawRect(misc::unpad_rect(option->rect, 0.5));
 
     painter->setPen(QPen(option->palette.text(), 1));
-    painter->drawText(this->padding,
-                      this->padding + option->fontMetrics.ascent(),
-                      label);
+    painter->drawText(this->m_padding,
+                      this->m_padding + option->fontMetrics.ascent(),
+                      m_label);
 }
 
 QRectF TabLabelItem::boundingRect() const
 {
     const auto fm = QApplication::fontMetrics();
     const int ascent = fm.ascent();
-    const qreal dp = 2 * padding;
+    const qreal dp = 2 * m_padding;
 
-    auto rect = fm.boundingRect(this->label);
+    auto rect = fm.boundingRect(this->m_label);
 
     rect.setTop(rect.top() + ascent);
     rect.setWidth(rect.width() + dp);
@@ -60,27 +60,27 @@ QRectF TabLabelItem::boundingRect() const
     return rect;
 }
 
-void TabLabelItem::setLabel(const QString &label)
+void TabLabelItem::set_label(const QString &label)
 {
-    this->label = label;
+    this->m_label = label;
     update();
 }
 
-void TabLabelItem::setActive(bool active)
+void TabLabelItem::set_active(bool active)
 {
     setProperty("active", active);
     update();
 }
 
-bool TabLabelItem::isActive() const
+bool TabLabelItem::is_active() const
 {
     return property("active").toBool();
 }
 
-int TabLabelItem::expectedHeight()
+int TabLabelItem::expected_height()
 {
     const auto fm = QApplication::fontMetrics();
-    const int dp = 2 * padding;
+    const int dp = 2 * m_padding;
     const int fh = fm.height();
 
     return fh + dp;
@@ -103,6 +103,6 @@ void TabLabelItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 void TabLabelItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton) {
-        emit leftClicked();
+        emit left_clicked();
     }
 }

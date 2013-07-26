@@ -4,19 +4,19 @@ LocationEdit::LocationEdit(QWidget *parent) :
     QLineEdit(parent)
 {
     int frameWidth = style()->pixelMetric(QStyle::PM_DefaultFrameWidth);
-    button = new QToolButton(this);
+    m_button = new QToolButton(this);
 
-    contextMenuOpen = false;
-    button->setText("⇒");
-    button->setCursor(Qt::ArrowCursor);
-    button->setStyleSheet(QString("QToolButton { padding: 0px; }"));
-    setStyleSheet(QString("QLineEdit { padding-right: %1px } ").arg(button->sizeHint().width() + frameWidth + 1));
+    context_menu_open = false;
+    m_button->setText("⇒");
+    m_button->setCursor(Qt::ArrowCursor);
+    m_button->setStyleSheet(QString("QToolButton { padding: 0px; }"));
+    setStyleSheet(QString("QLineEdit { padding-right: %1px } ").arg(m_button->sizeHint().width() + frameWidth + 1));
     QSize msz = minimumSizeHint();
-    setMinimumSize(qMax(msz.width(), button->sizeHint().height() + frameWidth * 2 + 2),
-                   qMax(msz.height(), button->sizeHint().height() + frameWidth * 2 + 2));
+    setMinimumSize(qMax(msz.width(), m_button->sizeHint().height() + frameWidth * 2 + 2),
+                   qMax(msz.height(), m_button->sizeHint().height() + frameWidth * 2 + 2));
 
-    connect(button, &QToolButton::clicked,
-            this, &LocationEdit::buttonClicked);
+    connect(m_button, &QToolButton::clicked,
+            this, &LocationEdit::button_clicked);
 }
 
 
@@ -39,19 +39,19 @@ void LocationEdit::mouseDoubleClickEvent(QMouseEvent *)
 
 void LocationEdit::resizeEvent(QResizeEvent *)
 {
-    QSize sz = button->sizeHint();
+    QSize sz = m_button->sizeHint();
     int frameWidth = style()->pixelMetric(QStyle::PM_DefaultFrameWidth);
 
-    button->move(rect().right() - sz.width(), rect().top());
-    button->resize(sz.width() + frameWidth, this->height());
+    m_button->move(rect().right() - sz.width(), rect().top());
+    m_button->resize(sz.width() + frameWidth, this->height());
 }
 
 void LocationEdit::contextMenuEvent(QContextMenuEvent *event)
 {
-    contextMenuOpen = true;
+    context_menu_open = true;
     QMenu *menu = createStandardContextMenu();
     //menu->addAction(tr("Test"));
     menu->exec(event->globalPos());
-    contextMenuOpen = false;
+    context_menu_open = false;
     delete menu;
 }

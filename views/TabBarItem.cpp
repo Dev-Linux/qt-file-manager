@@ -14,18 +14,18 @@
 
 TabBarItem::TabBarItem(WorkspaceView *view) : QGraphicsObject()
 {
-    this->view = view;
+    this->m_view = view;
 
-    addButton.reset(new TabLabelItem("+"));
-    addButton->setParentItem(this);
-    connect(addButton.data(), &TabLabelItem::leftClicked,
+    m_add_button.reset(new TabLabelItem("+"));
+    m_add_button->setParentItem(this);
+    connect(m_add_button.data(), &TabLabelItem::left_clicked,
             [this] () {
         // open new tab with some directory
     });
 
-    addTabLabel(QString(), true);
+    add_tab_label(QString(), true);
 
-    repositionTabLabels();
+    reposition_tab_labels();
 }
 
 TabBarItem::~TabBarItem()
@@ -47,60 +47,60 @@ void TabBarItem::paint(QPainter *painter,
 
 QRectF TabBarItem::boundingRect() const
 {
-    return QRectF(0, 0, view->viewport()->width(),
-                  2 * padding + TabLabelItem::expectedHeight());
+    return QRectF(0, 0, m_view->viewport()->width(),
+                  2 * m_padding + TabLabelItem::expected_height());
 }
 
-void TabBarItem::addTabLabel(const QString &path,
+void TabBarItem::add_tab_label(const QString &path,
                              bool active)
 {
     TabLabelItem *tl = new TabLabelItem();
-    tabLabels.insert(tabLabels.end() - 1, tl);
+    m_tab_labels.insert(m_tab_labels.end() - 1, tl);
 
     if (!path.isEmpty()) {
-        const QString label = FileInfo(path).fileName();
-        tl->setLabel(label);
+        const QString label = FileInfo(path).file_name();
+        tl->set_label(label);
     }
 
     if (active) {
-        setActiveIndex(tabLabels.size() - 1);
+        set_active_index(m_tab_labels.size() - 1);
     }
 
     tl->setParentItem(this);
 
-    repositionTabLabels();
+    reposition_tab_labels();
 }
 
-void TabBarItem::setActiveIndex(int index)
+void TabBarItem::set_active_index(int index)
 {
-    if (activeIndex != -1) {
-        tabLabels[activeIndex]->setActive(false);
+    if (m_active_index != -1) {
+        m_tab_labels[m_active_index]->set_active(false);
     }
-    tabLabels[index]->setActive();
-    activeIndex = index;
+    m_tab_labels[index]->set_active();
+    m_active_index = index;
 }
 
-void TabBarItem::modelPathChanged(const QString &path)
+void TabBarItem::model_path_changed(const QString &path)
 {
-    auto tl = tabLabels[activeIndex];
+    auto tl = m_tab_labels[m_active_index];
 
-    const QString label = FileInfo(path).fileName();
-    tl->setLabel(label);
+    const QString label = FileInfo(path).file_name();
+    tl->set_label(label);
 
-    repositionTabLabels();
+    reposition_tab_labels();
 }
 
-void TabBarItem::repositionTabLabels()
+void TabBarItem::reposition_tab_labels()
 {
-    QPointF pos(padding, padding);
-    if (!tabLabels.isEmpty()) {
-        for (auto i = tabLabels.begin();
-             i != tabLabels.end(); ++i) {
+    QPointF pos(m_padding, m_padding);
+    if (!m_tab_labels.isEmpty()) {
+        for (auto i = m_tab_labels.begin();
+             i != m_tab_labels.end(); ++i) {
             TabLabelItem &tl = **i;
             tl.setPos(pos);
-            pos.setX(pos.x() + tl.boundingRect().width() + spacing);
+            pos.setX(pos.x() + tl.boundingRect().width() + m_spacing);
         }
     }
-    addButton->setPos(pos);
+    m_add_button->setPos(pos);
     update();
 }

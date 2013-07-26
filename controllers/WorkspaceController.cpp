@@ -22,8 +22,8 @@ WorkspaceController::WorkspaceController(DirModel *model,
 
     m_root_item_ctrl->workspace_view_resized();
 
-    connect(m_dir_model, &DirModel::pathChanged,
-            view->tabBarItem, &TabBarItem::modelPathChanged);
+    connect(m_dir_model, &DirModel::path_changed,
+            view->tab_bar_item, &TabBarItem::model_path_changed);
     connect(view, &WorkspaceView::resized,
             this, &WorkspaceController::view_resized);
     connect(view, &WorkspaceView::sel_rect_changed,
@@ -38,7 +38,7 @@ WorkspaceController::WorkspaceController(DirModel *model,
 
 void WorkspaceController::set_layout(RootItem::Layout layout)
 {
-    view->root_item_view->setLayout(layout);
+    view->root_item_view->set_layout(layout);
 }
 
 void WorkspaceController::set_scene_rect_to_items_bounding_rect()
@@ -87,7 +87,7 @@ void WorkspaceController::view_resized()
 
 void WorkspaceController::clicked_on_empty_space()
 {
-    if (!m_dir_model->sel->isEmpty()) {
+    if (!m_dir_model->sel->is_empty()) {
         m_dir_model->sel->clear();
         m_dir_model->sel->save();
     }
@@ -102,7 +102,7 @@ void WorkspaceController::before_drag(FileNode *drag_start_node)
 {
     // change drag selection
     int index = m_root_item_ctrl->view->
-            fileNodes.indexOf(drag_start_node);
+            file_nodes.indexOf(drag_start_node);
     bool draggedNodeWasSelected = m_dir_model->selected(index);
 
     if (!draggedNodeWasSelected) {
@@ -111,7 +111,7 @@ void WorkspaceController::before_drag(FileNode *drag_start_node)
         m_dir_model->sel->save();
     }
 
-    view->nodes_to_drag = m_dir_model->sel->savedSet;
+    view->nodes_to_drag = m_dir_model->sel->saved_set;
 }
 
 /**

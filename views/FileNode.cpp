@@ -3,18 +3,18 @@
 #include "misc.h"
 #include "RootItem.h" // just for enum Layout?...
 
-const QFont FileNode::iconLabelFont("sans-serif", 12);
+const QFont FileNode::m_icon_label_font("sans-serif", 12);
 QSize FileNode::node_size(100, 100);
-QSize FileNode::node_icon_size(50, 50);
+QSize FileNode::m_node_icon_size(50, 50);
 
 FileNode::FileNode(const FileInfo &info,
                    RootItem::Layout layout,
                    int list_height)
     : QGraphicsObject()
 {
-    this->layout = layout;
-    this->list_size.setHeight(list_height);
-    this->fileInfo = info;
+    this->m_layout = layout;
+    this->m_list_size.setHeight(list_height);
+    this->file_info = info;
     setProperty("selected", false);
     setProperty("hovered", false);
 
@@ -28,25 +28,25 @@ FileNode::FileNode(const FileInfo &info,
     update_icon_size();
 }
 
-void FileNode::setSelected(bool selected)
+void FileNode::set_selected(bool selected)
 {
     setProperty("selected", selected);
     qDebug() << "update";
     update();
 }
 
-void FileNode::setLayout(RootItem::Layout l)
+void FileNode::set_layout(RootItem::Layout l)
 {
-    this->layout = l;
+    this->m_layout = l;
     update_icon_size();
     qDebug() << "update";
     update();
 }
 
-void FileNode::setListWidth(qreal w)
+void FileNode::set_list_width(qreal w)
 {
-    if (list_size.width() != w) {
-        list_size.setWidth(w);
+    if (m_list_size.width() != w) {
+        m_list_size.setWidth(w);
         update_icon_size();
     }
 }
@@ -60,54 +60,54 @@ void FileNode::setListWidth(qreal w)
     }
 }*/
 
-qreal FileNode::listHeight() const
+qreal FileNode::list_height() const
 {
-    return list_size.height();
+    return m_list_size.height();
 }
 
-bool FileNode::isSelected() const
+bool FileNode::is_selected() const
 {
     return property("selected").toBool();
 }
 
-bool FileNode::isHighlighted() const
+bool FileNode::is_highlighted() const
 {
     return property("highlighted").toBool();
 }
 
 QRectF FileNode::boundingRect() const
 {
-    if (layout == RootItem::GRAPH) { // && br.size() != node_size) {
-        bounding_rect_cache.setSize(node_size);
+    if (m_layout == RootItem::GRAPH) { // && br.size() != node_size) {
+        m_bounding_rect_cache.setSize(node_size);
     } else { //if (br.size() != list_size) { // LIST
-        bounding_rect_cache.setSize(list_size);
+        m_bounding_rect_cache.setSize(m_list_size);
     }
-    return bounding_rect_cache;
+    return m_bounding_rect_cache;
 }
 
 void FileNode::paint(QPainter *p,
                      const QStyleOptionGraphicsItem *option,
                      QWidget *widget)
 { Q_UNUSED(widget)
-    const int iw = icon_size.width();
-    const int ih = icon_size.height();
+    const int iw = m_icon_size.width();
+    const int ih = m_icon_size.height();
     const int x = option->rect.x();
     const int y = option->rect.y();
     const int w = option->rect.width();
     const int h = option->rect.height();
     const QFontMetrics &fm = option->fontMetrics;
-    const bool is_graph = layout == RootItem::GRAPH;
+    const bool is_graph = m_layout == RootItem::GRAPH;
 
-    if (must_update_icon) {
-        icon = fileInfo.icon().pixmap(icon_size).scaled(icon_size);
+    if (m_must_update_icon) {
+        icon = file_info.icon().pixmap(m_icon_size).scaled(m_icon_size);
         // would be ok for drives too, but floppy disk makes great noise on counting entries
         // and on Win 7 I also have some strange "disk not available" error boxes for all disks
         /**
          * @todo if drive (floppy, especially), don't count directly, but check if
          * available first, somehow
          */
-        if (fileInfo.isDir() && !fileInfo.isDrive()) {
-            const int c = QDir(fileInfo.absoluteFilePath())
+        if (file_info.is_dir() && !file_info.is_drive()) {
+            const int c = QDir(file_info.abs_file_path())
                     .entryList(QDir::AllEntries |
                      QDir::NoDotAndDotDot).count();
             if (c == 0) {
@@ -131,7 +131,7 @@ void FileNode::paint(QPainter *p,
                 //qDebug() << "'0' boundingRect" << r;
 
                 const int pad = h / 9;
-                const QRect rr = misc::padRectangle(pad, r);
+                const QRect rr = misc::pad_rect(pad, r);
 
                 QColor col(Qt::white);
                 col.setAlphaF(0.35);
@@ -145,15 +145,15 @@ void FileNode::paint(QPainter *p,
                 ip.end();
             }
         }
-        must_update_icon = false;
+        m_must_update_icon = false;
     }
 
     p->setRenderHint(QPainter::Antialiasing);
 
     QBrush bg_brush, pen_brush;
-    if (!isSelected()) {
+    if (!is_selected()) {
         if (!property("hovered").toBool()) {
-            if (!isHighlighted()) {
+            if (!is_highlighted()) {
                 bg_brush = option->palette.light();
             } else {
                 bg_brush = QBrush("lightyellow");
@@ -196,14 +196,14 @@ void FileNode::paint(QPainter *p,
         iconPos.setX(x + (w - iw) / 2);
         iconPos.setY(y + 8);
     } else { // LIST
-        iconPos.setX(padding); // just a padding
+        iconPos.setX(m_padding); // just a padding
         iconPos.setY(y + (h - ih) / 2);
     }
     p->drawImage(iconPos, icon.toImage());
 
-    p->setFont(iconLabelFont);
+    p->setFont(m_icon_label_font);
 
-    QString text = fileInfo.fileName();
+    QString text = file_info.file_name();
     text = fm.elidedText(text, Qt::ElideRight, w);
 
     const QSize text_size = fm.boundingRect(text).size();
@@ -213,7 +213,7 @@ void FileNode::paint(QPainter *p,
         text_pos.setX(x + (w - text_size.width()) / 2);
         text_pos.setY(y + 8 + ih + fm.ascent());
     } else { // LIST
-        text_pos.setX(x + iconPos.x() + iw + spacing);
+        text_pos.setX(x + iconPos.x() + iw + m_spacing);
         text_pos.setY(y + (h - text_size.height()) / 2 + fm.ascent());
     }
 
@@ -223,7 +223,7 @@ void FileNode::paint(QPainter *p,
 void FileNode::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *evt)
 {
     if (evt->button() == Qt::LeftButton) {
-        emit doubleClicked();
+        emit double_clicked();
     }
     //QGraphicsObject::mouseDoubleClickEvent(evt);
     // default implementation calls mousePressEvent
@@ -241,10 +241,10 @@ void FileNode::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
     // and accept it if one of the handled buttons is pressed
     if (event->button() == Qt::LeftButton) {
-        emit leftClicked(event->modifiers());
+        emit left_clicked(event->modifiers());
         event->accept();
     } else if (event->button() == Qt::RightButton) {
-        emit rightClicked(event->modifiers());
+        emit right_clicked(event->modifiers());
         event->accept();
     }
 }
@@ -275,7 +275,7 @@ QVariant FileNode::itemChange(QGraphicsItem::GraphicsItemChange change,
     return QGraphicsObject::itemChange(change, value);
 }
 
-void FileNode::setHighlighted(bool set)
+void FileNode::set_highlighted(bool set)
 {
     setProperty("highlighted", set);
     update();
@@ -284,18 +284,18 @@ void FileNode::setHighlighted(bool set)
 void FileNode::update_icon_size()
 {
     //DebugFilter::set("FileNode::updateIconSize");
-    const int dp = 2 * padding; // double padding
+    const int dp = 2 * m_padding; // double padding
 
     QSize new_icon_size;
-    if (layout == RootItem::GRAPH) {
-        new_icon_size = node_icon_size;
+    if (m_layout == RootItem::GRAPH) {
+        new_icon_size = m_node_icon_size;
     } else { // LIST
-        new_icon_size = icon_size.scaled(list_size - QSize(dp, dp),
+        new_icon_size = m_icon_size.scaled(m_list_size - QSize(dp, dp),
                                          Qt::KeepAspectRatio);
     }
-    if (new_icon_size != icon_size || icon_size.isNull()) {
-        icon_size = new_icon_size;
-        must_update_icon = true;
+    if (new_icon_size != m_icon_size || m_icon_size.isNull()) {
+        m_icon_size = new_icon_size;
+        m_must_update_icon = true;
         qDebug() << "prepareGeometryChange (update)";
         prepareGeometryChange();
         metaDebug(new_icon_size);

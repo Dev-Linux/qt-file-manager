@@ -9,42 +9,43 @@ class FileOperationData
 public:
     explicit FileOperationData();
     explicit FileOperationData(const QString &type,
-                               const QStringList &sourceList,
+                               const QStringList &source_list,
                                const QString& destination = QString(),
-                               const QStringList &destNames = QStringList(),
-                               const QDateTime &dateTime = QDateTime::currentDateTime());
+                               const QStringList &dest_names =
+                                    QStringList(),
+                               const QDateTime &date_time =
+                                    QDateTime::currentDateTime());
     explicit FileOperationData(const FileOperationData& data);
 
-    void setDateTime(const QDateTime &dateTime);
-    const QDateTime& dateTime() const;
+    void set_date_time(const QDateTime &date_time);
+    const QDateTime& date_time() const;
 
-    void setType(const QString &type);
+    void set_type(const QString &type);
     const QString& type() const;
 
-    void setSourceList(const QStringList &sourceList);
-    const QStringList& sourceList() const;
+    void set_source_list(const QStringList &source_list);
+    const QStringList& source_list() const;
 
-    void setDestNames(const QStringList &destNames);
-    const QStringList& destNames() const;
+    void set_dest_names(const QStringList &dest_names);
+    const QStringList& dest_names() const;
 
-    void setDestination(const QString &destination);
+    void set_destination(const QString &destination);
     const QString& destination() const;
 
-    bool anyOperationsAborted;
+    bool any_ops_aborted;
 
-    qint64 workTotal;
-    qint64 workSoFar;
-    qint64 bytesTotal;
-    qint64 bytesSoFar;
+    qint64 work_total;
+    qint64 work_so_far;
+    qint64 bytes_total;
+    qint64 bytes_so_far;
 
-signals:
-    
-public slots:
+private:
     QString m_type;
-    QDateTime m_dateTime;
-    QStringList m_sourceList;
-    QStringList m_destNames;
+    QDateTime m_date_time;
+    QStringList m_source_list;
+    QStringList m_dest_names;
     QString m_destination;
+
 };
 
 #endif // FILEOPERATIONDATA_H

@@ -8,20 +8,23 @@ class ViewSelectionModel : public QObject
 {
     Q_OBJECT
 public:
-    explicit ViewSelectionModel(QObject *parent = 0);
+    explicit ViewSelectionModel();
 
-    QSet<int> savedSet;
-    QSet<int> set;
     void add(int index);
     void remove(int index);
     void clear();
-    bool isEmpty();
+    bool is_empty();
     bool contains(int index);
     int one();
     int count();
     void save();
+
+    QSet<int> saved_set;
+    QSet<int> set;
+
 signals:
     void changed(QSet<int> added, QSet<int> removed);
+
 public slots:
     
 };

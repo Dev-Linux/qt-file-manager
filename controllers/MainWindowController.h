@@ -19,14 +19,15 @@ class MainWindowController : public QObject
 {
     Q_OBJECT
 public:
-    static MainWindowController *instance(const QString &initial_path = QString());
+    static MainWindowController *instance(const QString &initial_path =
+                                            QString());
     explicit MainWindowController(const QString &initial_path);
     ~MainWindowController();
     AsyncFileOperation *async_file_op;
     QHash<const FileOperationData *, FileOperationItem *> *file_ops;
     MainWindow *view;
-    bool isShowingDrives() const;
-    void markPathAsImportant(const QString &path);
+    bool is_showing_drives() const;
+    void mark_path_as_important(const QString &path);
     
 signals:
     

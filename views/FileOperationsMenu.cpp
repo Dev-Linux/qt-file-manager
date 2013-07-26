@@ -10,24 +10,24 @@
 FileOperationsMenu::FileOperationsMenu(QWidget *parent) :
     QMenu(parent)
 {
-    widget = new QWidget(this);
-    layout = new QVBoxLayout(widget);
-    action = new QWidgetAction(this);
+    m_widget = new QWidget(this);
+    m_layout = new QVBoxLayout(m_widget);
+    m_action = new QWidgetAction(this);
 
-    widget->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
-    widget->setContentsMargins(0, 0, 0, 0);
+    m_widget->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
+    m_widget->setContentsMargins(0, 0, 0, 0);
     setContentsMargins(0, 0, 0, 0);
 
-    action->setDefaultWidget(widget);
-    widget->setLayout(layout);
-    emptyListLabel = new QLabel("Empty list");
-    layout->addWidget(emptyListLabel);
-    addAction(action);
+    m_action->setDefaultWidget(m_widget);
+    m_widget->setLayout(m_layout);
+    m_empty_list_label = new QLabel("Empty list");
+    m_layout->addWidget(m_empty_list_label);
+    addAction(m_action);
 }
 
 QSize FileOperationsMenu::sizeHint() const
 {
-    return widget->sizeHint();
+    return m_widget->sizeHint();
 }
 
 void FileOperationsMenu::showEvent(QShowEvent *event)
@@ -37,16 +37,16 @@ void FileOperationsMenu::showEvent(QShowEvent *event)
      * left aligned.
      */
     QPushButton *button = MainWindowController::instance()->
-            view->fileOperationsButton;
+            view->file_ops_button;
     move(button->mapToGlobal(QPoint(0, 0)).x() + button->width() - width(), this->pos().y());
     QMenu::showEvent(event);
 }
 
-FileOperationItem *FileOperationsMenu::addItem(FileOperationItem* item)
+FileOperationItem *FileOperationsMenu::add_item(FileOperationItem* item)
 {
-    layout->insertWidget(0, item);
-    if (layout->indexOf(emptyListLabel) != -1) {
-        delete emptyListLabel;
+    m_layout->insertWidget(0, item);
+    if (m_layout->indexOf(m_empty_list_label) != -1) {
+        delete m_empty_list_label;
     }
     return item;
 }

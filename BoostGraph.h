@@ -22,12 +22,10 @@
 
 #endif // Q_MOC_RUN
 
-using namespace boost;
-
 /**
  * @brief Point type of the square topology.
  */
-typedef square_topology<>::point_type point;
+typedef boost::square_topology<>::point_type point;
 /**
  * @brief Enum-based type for vertices position property map.
  */
@@ -53,7 +51,7 @@ typedef boost::adjacency_list<
     boost::property<boost::vertex_index_t, int,
     boost::property<vertex_position_t, point> >,
     // edge properties
-    boost::property<edge_weight_t, double> /*,
+    boost::property<boost::edge_weight_t, double> /*,
     Vertex,
     Edge*/
 > Graph;
@@ -68,25 +66,30 @@ typedef Graph::vertex_descriptor VertexID;
 typedef Graph::edge_descriptor EdgeID;
 
 /**
- * \brief Trait-based type name for Graph vertex descriptor.
+ * @brief Trait-based type name for Graph vertex descriptor.
  */
-typedef graph_traits<Graph>::vertex_descriptor vertex_descriptor;
+typedef boost::graph_traits<Graph>::vertex_descriptor
+        vertex_descriptor;
 /**
- * \brief Trait-based type name for Graph vertex iterator.
+ * @brief Trait-based type name for Graph vertex iterator.
  */
-typedef graph_traits<Graph>::vertex_iterator vertex_iterator;
+typedef boost::graph_traits<Graph>::vertex_iterator
+        vertex_iterator;
 /**
- * \brief Trait-based type name for Graph vertices size type.
+ * @brief Trait-based type name for Graph vertices size type.
  */
-typedef graph_traits<Graph>::vertices_size_type vertices_size_type;
+typedef boost::graph_traits<Graph>::vertices_size_type
+        vertices_size_type;
 /**
- * \brief Trait-based type name for Graph edges size type.
+ * @brief Trait-based type name for Graph edges size type.
  */
-typedef graph_traits<Graph>::edges_size_type edges_size_type;
+typedef boost::graph_traits<Graph>::edges_size_type
+        edges_size_type;
 /**
- * \brief Trait-based type name for Graph edge descriptor.
+ * @brief Trait-based type name for Graph edge descriptor.
  */
-typedef graph_traits<Graph>::edge_descriptor edge_descriptor;
+typedef boost::graph_traits<Graph>::edge_descriptor
+        edge_descriptor;
 
 /**
  * @brief Position map type name for Graph.
@@ -100,24 +103,27 @@ class BoostGraph : public QObject
     Q_OBJECT
 public:
     explicit BoostGraph(int vertices);
-    void setRectangle(qreal x, qreal y,
-                      qreal width, qreal height);
-    position_map getPos();
-    void doLayout(position_map pos);
-    int vertexIndex(vertex_descriptor v);
-    void setVertexIndex(vertex_descriptor v, int index);
-    vertex_descriptor descriptorAt(int index);
+
+    void set_rect(qreal x, qreal y,
+                  qreal width, qreal height);
+    position_map get_pos();
+    void do_layout(position_map pos);
+    int vertex_index(vertex_descriptor v);
+    void set_vertex_index(vertex_descriptor v, int index);
+    vertex_descriptor descriptor_at(int index);
     std::pair<vertex_iterator, vertex_iterator> &vertices();
-    vertices_size_type verticesCount();
+    vertices_size_type vertices_count();
     //void eachVertex(std::function<void()>);
 
-    Graph *g;
+    Graph *m_g;
+
 signals:
     
 public slots:
+
 private:
-    std::pair<vertex_iterator, vertex_iterator> iterators;
-    rectangle_topology<> *topology = nullptr;
+    std::pair<vertex_iterator, vertex_iterator> m_iterators;
+    boost::rectangle_topology<> *m_topology = nullptr;
 };
 
 #endif // BOOSTGRAPH_H

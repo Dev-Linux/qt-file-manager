@@ -5,7 +5,6 @@
 ZoneItem::ZoneItem() :
     QGraphicsObject()
 {
-
 }
 
 QRectF ZoneItem::boundingRect() const
@@ -16,17 +15,11 @@ QRectF ZoneItem::boundingRect() const
 void ZoneItem::paint(QPainter *painter,
                      const QStyleOptionGraphicsItem *option,
                      QWidget *widget)
-{
-    Q_UNUSED(widget)
-    Q_UNUSED(option)
-    Q_UNUSED(painter)
-
-
-
-    borderPen.setBrush(option->palette.dark());
-    painter->setPen(borderPen);
+{ Q_UNUSED(widget)
+    border_pen.setBrush(option->palette.dark());
+    painter->setPen(border_pen);
 
     painter->setBrush(option->palette.light());
-    painter->drawRect(misc::unpadRect(option->rect,
-                                      borderPen.widthF() / 2));
+    painter->drawRect(misc::unpad_rect(option->rect,
+                                      border_pen.widthF() / 2));
 }

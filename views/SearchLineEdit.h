@@ -13,12 +13,13 @@ public:
 protected:
     virtual void keyPressEvent(QKeyEvent *);
     virtual void keyReleaseEvent(QKeyEvent *);
+
 signals:
     
 public slots:
 
 private:
-    QString beforeKey;
+    QString m_before_key;
 };
 
 #endif // SEARCHLINEEDIT_H

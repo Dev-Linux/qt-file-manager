@@ -16,37 +16,37 @@ DockModel::DockModel(QObject *parent) :
 {
     s = Application::instance()->settings;
     Q_ASSERT(s != 0);
-    readingSettings = false;
+    reading_settings = false;
 }
 
-void DockModel::readSettings()
+void DockModel::read_settings()
 {
-    readingSettings = true;
+    reading_settings = true;
     int c = s->beginReadArray("important");
     for (int i = 0; i < c; i++) {
         s->setArrayIndex(i);
         auto path = s->value("path").toString();
-        addPath(path);
+        add_path(path);
     }
     s->endArray();
-    readingSettings = false;
+    reading_settings = false;
 }
 
-void DockModel::writeSettings()
+void DockModel::write_settings()
 {
     s->beginWriteArray("important");
     s->remove(""); // reset array
     for (int i = 0; i < list.size(); i++) {
         s->setArrayIndex(i);
-        s->setValue("path", list[i].absoluteFilePath());
+        s->setValue("path", list[i].abs_file_path());
     }
     s->endArray();
 }
 
-bool DockModel::addPath(const QString &path)
+bool DockModel::add_path(const QString &path)
 {
     for (int i = 0; i < list.size(); i++) {
-        if (list[i].absoluteFilePath() == path) {
+        if (list[i].abs_file_path() == path) {
             return false;
         }
     }
@@ -54,8 +54,8 @@ bool DockModel::addPath(const QString &path)
     FileInfo info(path);
     list << info;
 
-    if (!readingSettings) {
-        writeSettings();
+    if (!reading_settings) {
+        write_settings();
     }
 
     emit added(info);
@@ -63,12 +63,12 @@ bool DockModel::addPath(const QString &path)
     return true;
 }
 
-void DockModel::removePath(const QString &path)
+void DockModel::remove_path(const QString &path)
 {
     FileInfo info;
     int index = -1;
     for (int i = 0; i < list.size(); i++) {
-        if (list[i].absoluteFilePath() == path) {
+        if (list[i].abs_file_path() == path) {
             index = i;
             info = list[i];
             break;
@@ -81,17 +81,15 @@ void DockModel::removePath(const QString &path)
 
     list.removeAt(index);
 
-    writeSettings();
+    write_settings();
 
     emit removed(info);
 }
 
-bool DockModel::containsPath(const QString &path)
+bool DockModel::contains_path(const QString &path)
 {
     FileInfo info(path);
-    qDebug() << info.absoluteFilePath();
-    for (auto i = list.begin(); i != list.end(); i++) {
-        qDebug() << "|" << i->absoluteFilePath();
+    for (auto i = list.begin(); i != list.end(); ++i) {
         if (*i == info) {
             return true;
         }

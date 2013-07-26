@@ -13,35 +13,35 @@ class DirModel : public QObject
     Q_OBJECT
 public:
     explicit DirModel(QObject *parent = 0);
-    QDir dir;
-    void setPath(const QString &path);
-    QString path;
-    void setNameFilters(const QStringList &nf);
+    ~DirModel();
+    void set_path(const QString &path);
+    void set_name_filters(const QStringList &nf);
     void clear();
     int count();
-    bool isEmpty();
+    bool is_empty();
+
+    void add_tag(int index, QString tag);
+    void remove_tag(int index, QString tag);
+
+    bool selected(int index);
+    QStringList selected_abs_paths(bool nativeSeparators);
+
+    QDir dir;
     bool drives;
-    QList<FileInfo> drivesList;
+    QString path;
+    QList<FileInfo> drives_list;
     QList<FileInfo> list;
     QHash<int, QSet<QString>> tags;
-
     ViewSelectionModel *sel;
     QFileSystemWatcher *watcher;
 
-    void addTag(int index, QString tag);
-    void removeTag(int index, QString tag);
-
-    bool selected(int index);
-    QStringList selectedAbsolutePaths(
-            bool nativeSeparators);
-
 signals:
     void added(const FileInfo &info);
-    void tagAdded(int index, const QString &tag);
-    void tagRemoved(int index, const QString &tag);
+    void tag_added(int index, const QString &tag);
+    void tag_removed(int index, const QString &tag);
     void cleared();
-    void pathChanged(const QString &path);
-    void nameFiltersChanged(const QStringList &nf);
+    void path_changed(const QString &path);
+    void name_filters_changed(const QStringList &nf);
 
     /**
      * @brief Emitted before n continuous emissions of the added()
@@ -54,11 +54,11 @@ signals:
      * @brief Emitted after the cleared() and added() signals.
      */
     void file_system_change();
+
 public slots:
 
 private:
-    void loadEntries();
-    
+    void load_entries();
 };
 
 #endif // DIRMODEL_H

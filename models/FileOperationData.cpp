@@ -11,42 +11,42 @@ FileOperationData::FileOperationData(const QString &type,
                                      const QStringList &destNames,
                                      const QDateTime &dateTime)
 {
-    setType(type);
-    setDateTime(dateTime);
-    setSourceList(sourceList);
-    setDestNames(destNames);
-    setDestination(destination);
+    set_type(type);
+    set_date_time(dateTime);
+    set_source_list(sourceList);
+    set_dest_names(destNames);
+    set_destination(destination);
 
-    anyOperationsAborted = false;
-    workTotal = workSoFar = 0;
-    bytesTotal = bytesSoFar = 0;
+    any_ops_aborted = false;
+    work_total = work_so_far = 0;
+    bytes_total = bytes_so_far = 0;
 }
 
 FileOperationData::FileOperationData(const FileOperationData &data)
 {
-    setType(data.type());
-    setDateTime(data.dateTime());
-    setSourceList(data.sourceList());
-    setDestNames(data.destNames());
-    setDestination(data.destination());
-    anyOperationsAborted = data.anyOperationsAborted;
-    workTotal = data.workTotal;
-    workSoFar = data.workSoFar;
-    bytesTotal = data.bytesTotal;
-    bytesSoFar = data.bytesSoFar;
+    set_type(data.type());
+    set_date_time(data.date_time());
+    set_source_list(data.source_list());
+    set_dest_names(data.dest_names());
+    set_destination(data.destination());
+    any_ops_aborted = data.any_ops_aborted;
+    work_total = data.work_total;
+    work_so_far = data.work_so_far;
+    bytes_total = data.bytes_total;
+    bytes_so_far = data.bytes_so_far;
 }
 
-void FileOperationData::setDateTime(const QDateTime &dateTime)
+void FileOperationData::set_date_time(const QDateTime &dateTime)
 {
-    m_dateTime = dateTime;
+    m_date_time = dateTime;
 }
 
-const QDateTime& FileOperationData::dateTime() const
+const QDateTime& FileOperationData::date_time() const
 {
-    return m_dateTime;
+    return m_date_time;
 }
 
-void FileOperationData::setType(const QString &type)
+void FileOperationData::set_type(const QString &type)
 {
     m_type = type;
 }
@@ -56,27 +56,27 @@ const QString& FileOperationData::type() const
     return m_type;
 }
 
-void FileOperationData::setSourceList(const QStringList &sourceList)
+void FileOperationData::set_source_list(const QStringList &sourceList)
 {
-    m_sourceList = sourceList;
+    m_source_list = sourceList;
 }
 
-const QStringList& FileOperationData::sourceList() const
+const QStringList& FileOperationData::source_list() const
 {
-    return m_sourceList;
+    return m_source_list;
 }
 
-void FileOperationData::setDestNames(const QStringList &destNames)
+void FileOperationData::set_dest_names(const QStringList &destNames)
 {
-    m_destNames = destNames;
+    m_dest_names = destNames;
 }
 
-const QStringList& FileOperationData::destNames() const
+const QStringList& FileOperationData::dest_names() const
 {
-    return m_destNames;
+    return m_dest_names;
 }
 
-void FileOperationData::setDestination(const QString &destination)
+void FileOperationData::set_destination(const QString &destination)
 {
     m_destination = destination;
 }

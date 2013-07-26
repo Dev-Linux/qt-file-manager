@@ -8,7 +8,7 @@
 ListViewItem::ListViewItem(const FileInfo &info) :
     QWidget()
 {
-    this->fileInfo = info;
+    this->file_info = info;
 
     setMouseTracking(true);
     setAutoFillBackground(true);
@@ -18,13 +18,13 @@ ListViewItem::ListViewItem(const FileInfo &info) :
     auto hbox = new QHBoxLayout();
     hbox->setContentsMargins(0, 1, 0, 1);
 
-    l = new QLabel(this->fileInfo.fileName());
+    label = new QLabel(this->file_info.file_name());
 
     auto iconLabel = new QLabel();
     iconLabel->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     QSize s(50, 50);
 
-    QPixmap original(this->fileInfo.icon().pixmap(s));
+    QPixmap original(this->file_info.icon().pixmap(s));
 
     auto scaled = original.scaled(s);
 
@@ -34,8 +34,8 @@ ListViewItem::ListViewItem(const FileInfo &info) :
      * @todo if drive (floppy, especially), don't count directly, but check if
      * available first, somehow
      */
-    if (fileInfo.isDir() && !fileInfo.isDrive()) {
-        int c = fileInfo.fileInfo.absoluteDir()
+    if (file_info.is_dir() && !file_info.is_drive()) {
+        int c = file_info.file_info.absoluteDir()
                 .entryList(QDir::AllEntries |
                  QDir::NoDotAndDotDot).count();
 
@@ -43,7 +43,7 @@ ListViewItem::ListViewItem(const FileInfo &info) :
             const auto cs = QString::number(c);
 
             QPainter p(&scaled);
-            p.setFont(QFont(l->font().family(), l->font().pointSize() - 2));
+            p.setFont(QFont(label->font().family(), label->font().pointSize() - 2));
             p.setRenderHint(QPainter::Antialiasing);
 
             auto m = p.fontMetrics();
@@ -56,7 +56,7 @@ ListViewItem::ListViewItem(const FileInfo &info) :
             QRect r(x, y, w, h);
 
             int pad = h / 9;
-            QRect rr = misc::padRectangle(pad, r);
+            QRect rr = misc::pad_rect(pad, r);
 
             QColor col(Qt::white);
             col.setAlphaF(0.35);
@@ -72,29 +72,29 @@ ListViewItem::ListViewItem(const FileInfo &info) :
     iconLabel->setPixmap(scaled);
 
     hbox->addWidget(iconLabel);
-    hbox->addWidget(l);
+    hbox->addWidget(label);
 
     this->setLayout(hbox);
 }
 
-void ListViewItem::setSelected(bool selected)
+void ListViewItem::set_selected(bool selected)
 {
     setProperty("selected", selected);
-    misc::updateWithStyle(this, style());
+    misc::update_with_style(this, style());
 }
 
-void ListViewItem::setHighlighted(bool set)
+void ListViewItem::set_highlighted(bool set)
 {
     setProperty("highlighted", set);
-    misc::updateWithStyle(this, style());
+    misc::update_with_style(this, style());
 }
 
-bool ListViewItem::isSelected()
+bool ListViewItem::is_selected()
 {
     return property("selected").toBool();
 }
 
-bool ListViewItem::isHighlighted()
+bool ListViewItem::is_highlighted()
 {
     return property("highlighted").toBool();
 }
@@ -102,13 +102,13 @@ bool ListViewItem::isHighlighted()
 void ListViewItem::enterEvent(QEvent *)
 {
     setProperty("hovered", true);
-    misc::updateWithStyle(this, style());
+    misc::update_with_style(this, style());
 }
 
 void ListViewItem::leaveEvent(QEvent *)
 {
     setProperty("hovered", false);
-    misc::updateWithStyle(this, style());
+    misc::update_with_style(this, style());
 }
 
 void ListViewItem::paintEvent(QPaintEvent *event)
@@ -132,7 +132,7 @@ void ListViewItem::mousePressEvent(QMouseEvent *event)
         emit clicked(event->modifiers());
         event->accept();
     } else if (event->button() == Qt::RightButton) {
-        emit rightClicked(event->globalPos());
+        emit right_clicked(event->globalPos());
         event->accept();
     }
     //QWidget::mousePressEvent(event);
@@ -144,7 +144,7 @@ void ListViewItem::mousePressEvent(QMouseEvent *event)
 void ListViewItem::mouseDoubleClickEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton) {
-        emit doubleClicked();
+        emit double_clicked();
         event->accept();
     } else {
         event->ignore();

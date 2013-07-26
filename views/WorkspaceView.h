@@ -15,12 +15,12 @@ class WorkspaceView : public QGraphicsView
     Q_OBJECT
 public:
     explicit WorkspaceView(RootItem *root_item_view);
-    QGraphicsScene *scene;
-    QPoint dragStartPosition;
 
+    QGraphicsScene *scene;
+    QPoint drag_start_pos;
     RootItem *root_item_view;
-    TabBarItem *tabBarItem;
-    FileNode *draggedNode = nullptr;
+    TabBarItem *tab_bar_item;
+    FileNode *dragged_node = nullptr;
     QDrag *drag;
     QGraphicsRectItem *sel_rect;
     QSet<int> nodes_to_drag;
@@ -48,11 +48,11 @@ protected:
     virtual void scrollContentsBy(int dx, int dy);
 
 private:
-    bool movedWhileDragPossible;
-    bool movedWhileSelRectPossible;
+    bool m_moved_while_drag_possible;
+    bool m_moved_while_sel_rect_possible;
     bool m_last_press_is_dbl_click = false;
-    QHash<int, QPointF> selDeltas;
-    QMouseEvent *mousePressEvt = nullptr;
+    QHash<int, QPointF> m_sel_deltas;
+    QMouseEvent *m_mouse_press_evt = nullptr;
 };
 
 #endif // WORKSPACEVIEW_H

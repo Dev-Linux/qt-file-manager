@@ -22,7 +22,7 @@ SearchLineEdit::SearchLineEdit(QWidget *parent) :
  */
 void SearchLineEdit::keyPressEvent(QKeyEvent *event)
 {
-    beforeKey = text();
+    m_before_key = text();
     QLineEdit::keyPressEvent(event);
 }
 
@@ -35,7 +35,7 @@ void SearchLineEdit::keyPressEvent(QKeyEvent *event)
  */
 void SearchLineEdit::keyReleaseEvent(QKeyEvent *event)
 {
-    if (beforeKey != text()) {
+    if (m_before_key != text()) {
         emit textEdited(text());
     }
     QLineEdit::keyReleaseEvent(event);

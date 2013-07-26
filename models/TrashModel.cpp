@@ -17,23 +17,23 @@ TrashModel::TrashModel() :
     if (!trashDir->exists()) {
         trashDir->mkpath(trashPath);
     }
-    this->filesDir = new QDir(trashPath + "/files");
-    this->infoDir = new QDir(trashPath + "/info");
+    this->files_dir = new QDir(trashPath + "/files");
+    this->info_dir = new QDir(trashPath + "/info");
 
     // a lot of unimplemented things
 }
 
-FileOperationData* TrashModel::moveToTrash(const QString &path)
+FileOperationData* TrashModel::move_to_trash(const QString &path)
 {
     FileInfo info(path);
     info.init();
 
-    if (info.isDrive()) {
+    if (info.is_drive()) {
         qDebug() << "Can't trash/recycle drive:" << path;
         return nullptr;
     }
 
-    if (!info.fileInfo.isWritable()) { // if (can't write) then (can't delete)
+    if (!info.file_info.isWritable()) { // if (can't write) then (can't delete)
         /**
          * @todo read more about these things:
          * - should I also check for execute (explore) permission for folders?
@@ -44,9 +44,9 @@ FileOperationData* TrashModel::moveToTrash(const QString &path)
         return nullptr;
     }
 
-    auto fn = info.fileName();
+    auto fn = info.file_name();
     QString f;
-    if (!filesDir->exists(fn)) {
+    if (!files_dir->exists(fn)) {
         f = fn;
     } else {
         bool ok;
@@ -54,10 +54,10 @@ FileOperationData* TrashModel::moveToTrash(const QString &path)
         do {
             i++;
             f = fn + "." + QString::number(i);
-            ok = !filesDir->exists(f);
+            ok = !files_dir->exists(f);
         } while (!ok);
     }
-    Q_ASSERT(!filesDir->exists(f));
+    Q_ASSERT(!files_dir->exists(f));
 
     auto fi = f + ".trashinfo";
     auto fic = QString("[Trash Info]\n"
@@ -66,23 +66,23 @@ FileOperationData* TrashModel::moveToTrash(const QString &path)
             // RFC 3339: https://www.ietf.org/rfc/rfc3339.txt
             // YYYY-MM-DDThh:mm:ss
             // encode url: http://www.faqs.org/rfcs/rfc2396.html
-        .arg(QUrl(info.absoluteFilePath()).toString(QUrl::FullyEncoded),
+        .arg(QUrl(info.abs_file_path()).toString(QUrl::FullyEncoded),
              QDateTime::currentDateTime().toString("yyyy-MM-ddThh:mm:ss"));
 
     // not atomic :
-    QFile inf(infoDir->absoluteFilePath(fi));
+    QFile inf(info_dir->absoluteFilePath(fi));
     if (inf.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
         QTextStream out(&inf);
         out << fic;
         inf.close();
     } else {
-        qDebug() << "Error writing '" << infoDir->absoluteFilePath(fi)
+        qDebug() << "Error writing '" << info_dir->absoluteFilePath(fi)
                  << "':" << inf.errorString();
         return nullptr;
     }
 
     return new FileOperationData("move",
-                                 QStringList() << info.absoluteFilePath(),
-                                 filesDir->absolutePath(),
+                                 QStringList() << info.abs_file_path(),
+                                 files_dir->absolutePath(),
                                  QStringList() << f);
 }

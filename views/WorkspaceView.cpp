@@ -34,6 +34,8 @@
  * Although better architectured for maintainability, it is not as
  * efficient as before and the slow down can be feeled by resizing the
  * window at a speed expected from normal users.
+ *
+ * @todo Unit testing.
  */
 
 WorkspaceView::WorkspaceView(RootItem *root_item_view) :
@@ -47,7 +49,7 @@ WorkspaceView::WorkspaceView(RootItem *root_item_view) :
     // by default, true:
     //setInteractive(true);
 
-    tabBarItem = new TabBarItem(this);
+    tab_bar_item = new TabBarItem(this);
 
     /**
      * @bug I think that when the current directory contains more than
@@ -56,17 +58,17 @@ WorkspaceView::WorkspaceView(RootItem *root_item_view) :
      */
     // It's a hack but otherwise, when scrolling, RootItem covers
     // TabBarItem.
-    tabBarItem->setZValue(999999);
+    tab_bar_item->setZValue(999999);
 
-    tabBarItem->setPos(0, 0);
+    tab_bar_item->setPos(0, 0);
 
-    scene->addItem(tabBarItem);
+    scene->addItem(tab_bar_item);
 
     this->root_item_view = root_item_view;
-    auto tabBarRect = tabBarItem->boundingRect();
-    auto tabBarSceneRect =
-            tabBarItem->mapToScene(tabBarRect).boundingRect();
-    root_item_view->setPos(QPointF(0, tabBarSceneRect.height()));
+    auto tab_bar_rect = tab_bar_item->boundingRect();
+    auto tab_bar_scene_rect =
+            tab_bar_item->mapToScene(tab_bar_rect).boundingRect();
+    root_item_view->setPos(QPointF(0, tab_bar_scene_rect.height()));
 
     scene->addItem(root_item_view);
     //setWidgetResizable(true);
@@ -101,20 +103,20 @@ void WorkspaceView::mousePressEvent(QMouseEvent *event)
 {
     event->ignore();
     if (event->button() == Qt::LeftButton) {
-        dragStartPosition = event->pos();
+        drag_start_pos = event->pos();
 
-        QPointF scene_drag_start_pos = mapToScene(dragStartPosition);
+        QPointF scene_drag_start_pos = mapToScene(drag_start_pos);
         // items under cursor
         auto items = scene->items(scene_drag_start_pos);
 
         // nodes under cursor (rootItem has only nodes as children)
-        items = misc::filterByAncestor(items, root_item_view);
+        items = misc::filter_by_ancestor(items, root_item_view);
 
         if (items.isEmpty()) {
-            draggedNode = nullptr;
+            dragged_node = nullptr;
 
             // queueing event because of the sel rect posibility
-            movedWhileSelRectPossible = false;
+            m_moved_while_sel_rect_possible = false;
             sel_rect->setRect(scene_drag_start_pos.x(),
                               scene_drag_start_pos.y(),
                               0, 0);
@@ -125,24 +127,24 @@ void WorkspaceView::mousePressEvent(QMouseEvent *event)
             // this event again in this case:
             // Update: Why it's still needed and can't make sel rect
             // without it?
-            mousePressEvt = event;
+            m_mouse_press_evt = event;
         } else {
             // the item directly under the cursor
-            draggedNode = dynamic_cast<FileNode*>(items.first());
+            dragged_node = dynamic_cast<FileNode*>(items.first());
 
-            items = scene->items(draggedNode->
-                                 mapToScene(draggedNode->shape()));
+            items = scene->items(dragged_node->
+                                 mapToScene(dragged_node->shape()));
 
             // items intersecting draggedNode
-            items = misc::filterByAncestor(items, root_item_view);
-            items.removeOne(draggedNode);
+            items = misc::filter_by_ancestor(items, root_item_view);
+            items.removeOne(dragged_node);
 
             // stack draggedNode over intersecting nodes
             if (!items.isEmpty()) {
-                draggedNode->setZValue(items[0]->zValue() + 1);
+                dragged_node->setZValue(items[0]->zValue() + 1);
             }
 
-            movedWhileDragPossible = false;
+            m_moved_while_drag_possible = false;
 
             // calls nodeLeftClicked which unselects any other
             // if !ctrl
@@ -156,7 +158,7 @@ void WorkspaceView::mousePressEvent(QMouseEvent *event)
             //      else
             //          call nodeleftclicked
 
-            mousePressEvt = event;
+            m_mouse_press_evt = event;
         }
         //event->accept();
     } else {
@@ -168,16 +170,16 @@ void WorkspaceView::mouseReleaseEvent(QMouseEvent *event)
 {
     event->ignore();
     if (event->button() == Qt::LeftButton) {
-        if (draggedNode != nullptr) {
+        if (dragged_node != nullptr) {
             // last mouse press was over a FileNode
 
-            if (!movedWhileDragPossible) {
-                if (mousePressEvt != nullptr) {
+            if (!m_moved_while_drag_possible) {
+                if (m_mouse_press_evt != nullptr) {
 //                    if (m_last_press_is_dbl_click) {
 //                        qDebug() << "last press is dbl click";
                         // this will call RootItemController::
                         // node_left_clicked:
-                        QGraphicsView::mousePressEvent(mousePressEvt);
+                        QGraphicsView::mousePressEvent(m_mouse_press_evt);
 //                        m_last_press_is_dbl_click = false;
 //                    } else {
 //                        emit root_item_view->
@@ -189,12 +191,12 @@ void WorkspaceView::mouseReleaseEvent(QMouseEvent *event)
                     Q_ASSERT(false);
                 }
             }
-            draggedNode = nullptr;
+            dragged_node = nullptr;
         } else {
             // last mouse press wasn't over a FileNode, it was over
             // empty space
 
-            if (!movedWhileSelRectPossible) {
+            if (!m_moved_while_sel_rect_possible) {
                 emit clicked_on_empty_space();
             } else {
                 scene->removeItem(sel_rect);
@@ -216,9 +218,9 @@ void WorkspaceView::mouseMoveEvent(QMouseEvent *event)
     event->ignore();
 
     if (!event->buttons().testFlag(Qt::LeftButton)) {
-        if (mousePressEvt != nullptr) {
-            QGraphicsView::mousePressEvent(mousePressEvt);
-            mousePressEvt = nullptr;
+        if (m_mouse_press_evt != nullptr) {
+            QGraphicsView::mousePressEvent(m_mouse_press_evt);
+            m_mouse_press_evt = nullptr;
         }
         // left button not pressed
         QGraphicsView::mouseMoveEvent(event);
@@ -227,17 +229,17 @@ void WorkspaceView::mouseMoveEvent(QMouseEvent *event)
 
     // from now, left button is pressed
 
-    movedWhileSelRectPossible = true;
+    m_moved_while_sel_rect_possible = true;
 
-    if (draggedNode == nullptr) {
-        if (mousePressEvt != nullptr) {
-            QGraphicsView::mousePressEvent(mousePressEvt);
-            mousePressEvt = nullptr;
+    if (dragged_node == nullptr) {
+        if (m_mouse_press_evt != nullptr) {
+            QGraphicsView::mousePressEvent(m_mouse_press_evt);
+            m_mouse_press_evt = nullptr;
         }
 
         // sel rect, drag possible
         QPointF current_pos = mapToScene(event->pos());
-        QPointF origin = mapToScene(dragStartPosition);
+        QPointF origin = mapToScene(drag_start_pos);
         QRectF sel_rect_rect;
 
         if (origin.x() < current_pos.x() ||
@@ -258,15 +260,15 @@ void WorkspaceView::mouseMoveEvent(QMouseEvent *event)
         return;
     }
 
-    movedWhileDragPossible = true;
+    m_moved_while_drag_possible = true;
 
     // from now, I have a dragged node
 
-    if ((event->pos() - dragStartPosition).manhattanLength() <
+    if ((event->pos() - drag_start_pos).manhattanLength() <
             QApplication::startDragDistance()) {
-        if (mousePressEvt != nullptr) {
-            QGraphicsView::mousePressEvent(mousePressEvt);
-            mousePressEvt = nullptr;
+        if (m_mouse_press_evt != nullptr) {
+            QGraphicsView::mousePressEvent(m_mouse_press_evt);
+            m_mouse_press_evt = nullptr;
         }
         QGraphicsView::mouseMoveEvent(event);
         return;
@@ -276,36 +278,37 @@ void WorkspaceView::mouseMoveEvent(QMouseEvent *event)
 
     nodes_to_drag.clear();
 
-    emit before_drag(draggedNode);
+    emit before_drag(dragged_node);
 
     if (nodes_to_drag.isEmpty()) {
         int index = root_item_view->
-                fileNodes.indexOf(draggedNode);
+                file_nodes.indexOf(dragged_node);
         nodes_to_drag.insert(index);
     }
 
     // calculate deltas for all selected nodes
-    selDeltas.clear();
+    m_sel_deltas.clear();
     foreach (int index, nodes_to_drag) {
-        auto node = root_item_view->fileNodes[index];
+        auto node = root_item_view->file_nodes[index];
         auto delta = node->mapFromScene(
-                        mapToScene(dragStartPosition));
-        selDeltas[index] = delta;
+                        mapToScene(drag_start_pos));
+        m_sel_deltas[index] = delta;
     }
 
     // stack selection over all other nodes
-    QHashIterator<int, QPointF> it(selDeltas);
-    qreal z = root_item_view->fileNodes.size() + 5;
-    while (it.hasNext()) {
-        it.next();
+    qreal z = root_item_view->file_nodes.size() + 5;
+
+    for (auto i = m_sel_deltas.begin(); i != m_sel_deltas.end(); ++i) {
         //qDebug() << "z value" << z;
         //! @bug Buggy Z, Buggy.
-        root_item_view->fileNodes[it.key()]->setZValue(z);
+        root_item_view->file_nodes[i.key()]->setZValue(z);
     }
 
     // set drag data
     drag = new QDrag(this);
-    auto mimeData = new QMimeData();
+    auto mime_data = new QMimeData();
+
+    //! @todo make mime data work
 
     //qDebug() << "is loaded" << draggedNode->fileInfo.fileInfo.absoluteFilePath();
     //mimeData->setText(draggedNode->fileInfo.fileName());
@@ -313,9 +316,9 @@ void WorkspaceView::mouseMoveEvent(QMouseEvent *event)
     QList<QUrl> urls;
     //urls << QUrl::fromLocalFile(draggedNode->
     //                            fileInfo.absoluteFilePath());
-    mimeData->setUrls(urls);
+    mime_data->setUrls(urls);
 
-    drag->setMimeData(mimeData);
+    drag->setMimeData(mime_data);
 
     // create drag pixmap
     QPixmap x(1, 1);
@@ -334,10 +337,10 @@ void WorkspaceView::mouseMoveEvent(QMouseEvent *event)
     }
     int width = fm.width(s) + 4, height = fm.height() + 4;
 
-    QPixmap dragPixmap(width, height);
-    painter = new QPainter(&dragPixmap);
+    QPixmap drag_pixmap(width, height);
+    painter = new QPainter(&drag_pixmap);
 
-    painter->fillRect(0,0,width,height, Qt::white);
+    painter->fillRect(0, 0, width, height, Qt::white);
 
     painter->setPen(Qt::black);
     painter->drawText(QPoint(2,2 + fm.ascent()), s);
@@ -348,17 +351,17 @@ void WorkspaceView::mouseMoveEvent(QMouseEvent *event)
     painter->end();
     delete painter;
 
-    drag->setPixmap(dragPixmap);
+    drag->setPixmap(drag_pixmap);
 
     // superclass m.move handler (IMO this creates the sel rect)
     QGraphicsView::mouseMoveEvent(event);
 
-    Qt::DropAction dropAction = drag->exec();
+    Qt::DropAction drop_action = drag->exec();
     // drag finished
 
     event->accept();
 
-    Q_UNUSED(dropAction);
+    Q_UNUSED(drop_action);
     // draggedNode->icon->pixmap(64, 64)
 }
 
@@ -375,15 +378,13 @@ void WorkspaceView::dragMoveEvent(QDragMoveEvent *event)
     QPointF p = event->pos();
     QPointF scenep = mapToScene(p.x(), p.y());
 
-    QHashIterator<int, QPointF> it(selDeltas);
-    while (it.hasNext()) {
-        it.next();
-        int index = it.key();
-        const QPointF &delta = it.value();
+    for (auto i = m_sel_deltas.begin(); i != m_sel_deltas.end(); ++i) {
+        int index = i.key();
+        const QPointF &delta = i.value();
 
         QPointF fin = scenep - delta;
 
-        root_item_view->fileNodes[index]->setPos(fin);
+        root_item_view->file_nodes[index]->setPos(fin);
     }
 }
 
@@ -396,21 +397,21 @@ void WorkspaceView::dropEvent(QDropEvent *event)
 {
     QPointF p = event->pos();
     auto scenep = mapToScene(p.x(), p.y());
-    QHashIterator<int, QPointF> it(selDeltas);
+    QHashIterator<int, QPointF> it(m_sel_deltas);
     while (it.hasNext()) {
         it.next();
         int index = it.key();
         auto delta = it.value();
-        root_item_view->fileNodes[index]->setPos(scenep - delta);
+        root_item_view->file_nodes[index]->setPos(scenep - delta);
     }
 
     setSceneRect(scene->itemsBoundingRect());
 
-    auto items = scene->items(draggedNode->
-                              mapToScene(draggedNode->shape()));
-    items.removeOne(draggedNode);
+    auto items = scene->items(dragged_node->
+                              mapToScene(dragged_node->shape()));
+    items.removeOne(dragged_node);
     if (!items.isEmpty()) {
-        draggedNode->setZValue(items[0]->zValue() + 1);
+        dragged_node->setZValue(items[0]->zValue() + 1);
     }
 
     //draggedNode = nullptr;
@@ -434,5 +435,5 @@ void WorkspaceView::scrollContentsBy(int dx, int dy)
     QGraphicsView::scrollContentsBy(dx, dy);
     QPointF p = this->mapToScene(0, 0);
     //metaDebug(p);
-    tabBarItem->setPos(p);
+    tab_bar_item->setPos(p);
 }

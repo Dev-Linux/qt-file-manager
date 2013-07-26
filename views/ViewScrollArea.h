@@ -11,11 +11,13 @@ class ViewScrollArea : public QScrollArea
     Q_OBJECT
 public:
     explicit ViewScrollArea(View *view);
-    void scrollTo(int index);
+
+    void scroll_to(int index);
+
 protected:
-    //virtual void keyPressEvent(QKeyEvent *);
     virtual void keyReleaseEvent(QKeyEvent *);
     virtual void focusInEvent(QFocusEvent *);
+
 signals:
     
 public slots:

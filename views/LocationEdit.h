@@ -9,11 +9,13 @@ class LocationEdit : public QLineEdit
     Q_OBJECT
 public:
     explicit LocationEdit(QWidget *parent = 0);
-    bool contextMenuOpen;
+
+    bool context_menu_open;
     
 signals:
-    void focused(bool hasFocus);
-    void buttonClicked();
+    void focused(bool has_focus);
+    void button_clicked();
+
 protected:
     virtual void focusInEvent(QFocusEvent *);
     virtual void focusOutEvent(QFocusEvent *);
@@ -24,7 +26,7 @@ protected:
 public slots:
     
 private:
-    QToolButton *button;
+    QToolButton *m_button;
 };
 
 #endif // LOCATIONEDIT_H

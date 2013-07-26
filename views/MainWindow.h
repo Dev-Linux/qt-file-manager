@@ -30,12 +30,13 @@ public:
     MainWindow(Dock *dock_view,
                WorkspaceView *workspace_view,
                Breadcrumb *breadcrumb_view);
-    FileOperationsMenu *fileOperationsMenu;
-    QPushButton *fileOperationsButton;
+
+    FileOperationsMenu *file_ops_menu;
+    QPushButton *file_ops_button;
     QPushButton *layout_button;
-    LocationEdit *locationEdit;
-    QStackedWidget *stackedWidget;
-    SearchLineEdit *searchLineEdit;
+    LocationEdit *location_edit;
+    QStackedWidget *stacked_widget;
+    SearchLineEdit *search_line_edit;
 
 signals:
     void layout_button_clicked();
@@ -53,9 +54,9 @@ signals:
 public slots:
 
 private:
-    QWidget *centralWidget;
-    QVBoxLayout *verticalLayout;
-    QToolBar *toolBar, *searchToolBar;
+    QWidget *m_central_widget;
+    QVBoxLayout *m_vertical_layout;
+    QToolBar *tool_bar, *search_tool_bar;
     QPushButton *zoom_in_button, *zoom_out_button;
     void connect_slots();
 };

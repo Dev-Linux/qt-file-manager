@@ -15,12 +15,6 @@ class RootItem : public QGraphicsObject
 {
     Q_OBJECT
 public:
-    explicit RootItem();
-    ~RootItem();
-
-    //! The file nodes in this RootItem.
-    QList<FileNode *> fileNodes;
-
     /** RootItem and FileNode layout types */
     enum Layout {
         //! List layout
@@ -29,19 +23,26 @@ public:
         GRAPH
     };
 
-    QRectF boundingRect() const;
-    void paint(QPainter *painter,
-               const QStyleOptionGraphicsItem *option,
-               QWidget *widget = 0);
-    void viewResized();
-    void setLayout(Layout l);
+    explicit RootItem();
+    ~RootItem();
+
+    void view_resized();
+    void set_layout(Layout layout);
     void update_layout();
 
-    void setWidth(qreal w);
-    void setHeight(qreal h);
+    void set_width(qreal w);
+    void set_height(qreal h);
     qreal width() const;
     qreal height() const;
     void set_future_count(int n);
+
+    //! The file nodes in this RootItem.
+    QList<FileNode *> file_nodes;
+
+    virtual QRectF boundingRect() const;
+    virtual void paint(QPainter *painter,
+               const QStyleOptionGraphicsItem *option,
+               QWidget *widget = 0);
     
 signals:
     void node_dbl_clicked(FileNode *node);
@@ -50,26 +51,24 @@ signals:
     void node_right_clicked(FileNode *node,
                             const Qt::KeyboardModifiers &modifiers);
     void position_changed(QPointF new_pos);
-    void before_layout_update(Layout layout);
+    void before_layout_update(Layout m_layout);
     void layout_updated();
     
 public slots:
-    void clearView();
-    void addNode(const FileInfo &info);
+    void clear_view();
+    void add_node(const FileInfo &info);
 
 protected:
-    QVariant itemChange(GraphicsItemChange change,
-                        const QVariant &value);
+    virtual QVariant itemChange(GraphicsItemChange change,
+                                const QVariant &value);
 
 private slots:
 
 private:
-    void initGraph();
-    void connectNode(FileNode *node);
-
+    void init_graph();
+    void connect_node(FileNode *node);
     void refresh_list_pos_and_sizes();
     void refresh_graph_positions();
-
     //void loadAllFilesInModel();
 
     //! Caches for bounding rect calculation.
@@ -81,9 +80,9 @@ private:
     //! Cache.
     mutable QRectF m_bounding_rect;
     //! The initial layout is GRAPH.
-    Layout layout = GRAPH;
+    Layout m_layout = GRAPH;
     //! The graph for GRAPH layout.
-    QScopedPointer<BoostGraph> g;
+    QScopedPointer<BoostGraph> m_g;
 };
 
 #endif // ROOTITEM_H

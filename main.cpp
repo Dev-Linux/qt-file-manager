@@ -54,7 +54,7 @@
 int main(int argc, char *argv[])
 {
     //qSetMessagePattern("[%{function}:%{line}] %{message}");
-    qInstallMessageHandler(MessageHandler::msgHandler);
+    qInstallMessageHandler(MessageHandler::msg_handler);
 
     Application app(argc, argv);
 

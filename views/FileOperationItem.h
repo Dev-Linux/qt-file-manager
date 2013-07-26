@@ -17,19 +17,19 @@ public:
 
     QString verb;
     //bool dateVisible = false;
-    QLabel *dateLabel;
-    FileOperationData* fileOperationData;
+    QLabel *date_label;
+    FileOperationData* file_op_data;
 
-    void setLabel(QString str);
+    void set_label(QString str);
     QString label();
 
-    void setDateTime(QDateTime dateTime);
-    QDateTime dateTime();
+    void set_date_time(QDateTime date_time);
+    QDateTime date_time();
 
-    void updateView();
+    void update_view();
 
 protected:
-    void paintEvent(QPaintEvent *event);
+    virtual void paintEvent(QPaintEvent *event);
 
 signals:
     
@@ -38,7 +38,7 @@ public slots:
 private:
     QString m_label;
     QDateTime m_dateTime;
-    QLabel *labelWidget;
+    QLabel *m_label_widget;
 };
 
 #endif // FILEOPERATIONITEM_H

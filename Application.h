@@ -13,8 +13,10 @@ class Application : public QApplication
 public:
     explicit Application(int &argc, char **argv);
     ~Application();
-    QSettings *settings;
+
     static Application *instance();
+
+    QSettings *settings;
     
 signals:
     

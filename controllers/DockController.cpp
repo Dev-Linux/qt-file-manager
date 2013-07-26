@@ -6,8 +6,8 @@
 #include "views/View.h"
 #include "views/ListViewItem.h"
 
-DockController::DockController(QObject *parent) :
-    QObject(parent)
+DockController::DockController() :
+    QObject()
 {
     this->model = new DockModel();
     this->view = new Dock();
@@ -15,27 +15,27 @@ DockController::DockController(QObject *parent) :
     connect(model, &DockModel::added,
             this, &DockController::add_item);
     connect(model, &DockModel::removed,
-            view, &Dock::removeItem);
+            view, &Dock::remove_item);
 
     connect(view, &Dock::remove_action_triggered,
             this, &DockController::remove_action_triggered);
 
-    model->readSettings();
+    model->read_settings();
 }
 
 void DockController::add_item(const FileInfo &info)
 {
     ListViewItem *item = new ListViewItem(info);
 
-    connect(item, &ListViewItem::doubleClicked,
-            view, &Dock::itemDoubleClicked);
-    connect(item, &ListViewItem::rightClicked,
-            view, &Dock::itemRightClicked);
+    connect(item, &ListViewItem::double_clicked,
+            view, &Dock::item_double_clicked);
+    connect(item, &ListViewItem::right_clicked,
+            view, &Dock::item_right_clicked);
 
-    view->view->addItem(item);
+    view->view->add_item(item);
 }
 
 void DockController::remove_action_triggered()
 {
-    model->removePath(view->selectedItem->fileInfo.absoluteFilePath());
+    model->remove_path(view->selected_item->file_info.abs_file_path());
 }

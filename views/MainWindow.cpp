@@ -26,14 +26,14 @@
  */
 void MainWindow::connect_slots()
 {
-    connect(locationEdit, &LocationEdit::focused,
+    connect(location_edit, &LocationEdit::focused,
             this, &MainWindow::location_edit_focused);
-    connect(locationEdit, &LocationEdit::returnPressed,
+    connect(location_edit, &LocationEdit::returnPressed,
             this, &MainWindow::location_edit_return_pressed);
-    connect(locationEdit, &LocationEdit::buttonClicked,
+    connect(location_edit, &LocationEdit::button_clicked,
             this, &MainWindow::location_edit_button_clicked);
 
-    connect(searchLineEdit, &SearchLineEdit::textEdited,
+    connect(search_line_edit, &SearchLineEdit::textEdited,
             this, &MainWindow::search_text_edited);
 
     connect(zoom_in_button, &QPushButton::clicked,
@@ -75,26 +75,26 @@ MainWindow::MainWindow(Dock *dock_view,
     setWindowTitle("Linky Explorer");
     resize(800, 600);
 
-    centralWidget = new QWidget();
+    m_central_widget = new QWidget();
 
-    verticalLayout = new QVBoxLayout();
-    verticalLayout->setContentsMargins(0, 0, 0, 0);
-    verticalLayout->setSpacing(0);
+    m_vertical_layout = new QVBoxLayout();
+    m_vertical_layout->setContentsMargins(0, 0, 0, 0);
+    m_vertical_layout->setSpacing(0);
 
-    toolBar = new QToolBar("Tool bar");
-    searchToolBar = new QToolBar();
-    searchLineEdit = new SearchLineEdit();
+    tool_bar = new QToolBar("Tool bar");
+    search_tool_bar = new QToolBar();
+    search_line_edit = new SearchLineEdit();
 
-    stackedWidget = new QStackedWidget();
-    stackedWidget->setSizePolicy(QSizePolicy::Preferred,
+    stacked_widget = new QStackedWidget();
+    stacked_widget->setSizePolicy(QSizePolicy::Preferred,
                                  QSizePolicy::Maximum);
 
-    locationEdit = new LocationEdit();
+    location_edit = new LocationEdit();
 
-    fileOperationsMenu = new FileOperationsMenu();
+    file_ops_menu = new FileOperationsMenu();
 
-    fileOperationsButton = new QPushButton("File tasks");
-    fileOperationsButton->setMenu(fileOperationsMenu);
+    file_ops_button = new QPushButton("File tasks");
+    file_ops_button->setMenu(file_ops_menu);
 
     layout_button = new QPushButton(" auto");
     layout_button->setObjectName("viewButton");
@@ -106,22 +106,22 @@ MainWindow::MainWindow(Dock *dock_view,
     zoom_out_button = new QPushButton("zoom -");
     zoom_out_button->setAutoRepeat(true);
 
-    addToolBar(Qt::TopToolBarArea, toolBar);
+    addToolBar(Qt::TopToolBarArea, tool_bar);
     addDockWidget(Qt::RightDockWidgetArea, dock_view);
-    setCentralWidget(centralWidget);
-    centralWidget->setLayout(verticalLayout);
-    centralWidget->setParent(this);
-    stackedWidget->addWidget(breadcrumb_view);
-    stackedWidget->addWidget(locationEdit);
-    toolBar->addWidget(stackedWidget);
-    toolBar->addWidget(fileOperationsButton);
-    toolBar->addWidget(layout_button);
-    searchToolBar->addWidget(searchLineEdit);
-    searchToolBar->addWidget(zoom_in_button);
-    searchToolBar->addWidget(zoom_out_button);
+    setCentralWidget(m_central_widget);
+    m_central_widget->setLayout(m_vertical_layout);
+    m_central_widget->setParent(this);
+    stacked_widget->addWidget(breadcrumb_view);
+    stacked_widget->addWidget(location_edit);
+    tool_bar->addWidget(stacked_widget);
+    tool_bar->addWidget(file_ops_button);
+    tool_bar->addWidget(layout_button);
+    search_tool_bar->addWidget(search_line_edit);
+    search_tool_bar->addWidget(zoom_in_button);
+    search_tool_bar->addWidget(zoom_out_button);
     //verticalLayout->addWidget(toolBar);
-    verticalLayout->addWidget(workspace_view);
-    verticalLayout->addWidget(searchToolBar);
+    m_vertical_layout->addWidget(workspace_view);
+    m_vertical_layout->addWidget(search_tool_bar);
 
     connect_slots();
 }

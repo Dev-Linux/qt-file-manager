@@ -17,19 +17,19 @@ FileOperationItem::FileOperationItem(FileOperationData* data,
     QWidget *leftSide = new QWidget();
     QHBoxLayout *hbox = new QHBoxLayout();
     QVBoxLayout *vbox = new QVBoxLayout();
-    labelWidget = new QLabel();
-    dateLabel = new QLabel();
+    m_label_widget = new QLabel();
+    date_label = new QLabel();
     QPushButton *removeButton = new QPushButton("✗");
 
     leftSide->setLayout(vbox);
     leftSide->setSizePolicy(QSizePolicy::MinimumExpanding,
                             QSizePolicy::MinimumExpanding);
     setLayout(hbox);
-    labelWidget->setSizePolicy(QSizePolicy::MinimumExpanding,
+    m_label_widget->setSizePolicy(QSizePolicy::MinimumExpanding,
                                QSizePolicy::MinimumExpanding);
     vbox->setContentsMargins(0, 0, 0, 0);
     hbox->setContentsMargins(0, 0, 0, 0);
-    dateLabel->hide();
+    date_label->hide();
     this->setContentsMargins(4, 4, 4, 4);
 
     /**
@@ -38,22 +38,22 @@ FileOperationItem::FileOperationItem(FileOperationData* data,
       * finished, or otherwise percents and other status info
       */
 
-    vbox->addWidget(labelWidget);
-    vbox->addWidget(dateLabel);
+    vbox->addWidget(m_label_widget);
+    vbox->addWidget(date_label);
     hbox->addWidget(leftSide);
     hbox->addWidget(removeButton);
 
     if (!str.isEmpty()) {
-        setLabel(str);
+        set_label(str);
     }
-    setDateTime(data->dateTime());
+    set_date_time(data->date_time());
 
     if (data->type() == "copy") verb = "Copying";
     else if (data->type() == "move") verb = "Moving";
     else if (data->type() == "delete") verb = "Deleting";
 
-    this->fileOperationData = data;
-    updateView();
+    this->file_op_data = data;
+    update_view();
 }
 
 /**
@@ -61,7 +61,7 @@ FileOperationItem::FileOperationItem(FileOperationData* data,
  * (e.g. 2 minutes ago)
  */
 
-void FileOperationItem::setLabel(QString str)
+void FileOperationItem::set_label(QString str)
 {
     m_label = str;
 }
@@ -71,20 +71,20 @@ QString FileOperationItem::label()
     return m_label;
 }
 
-void FileOperationItem::setDateTime(QDateTime dateTime)
+void FileOperationItem::set_date_time(QDateTime dateTime)
 {
     m_dateTime = dateTime;
 }
 
-QDateTime FileOperationItem::dateTime()
+QDateTime FileOperationItem::date_time()
 {
     return m_dateTime;
 }
 
-void FileOperationItem::updateView()
+void FileOperationItem::update_view()
 {
-    labelWidget->setText(verb + " " + label());
-    dateLabel->setText("<em>" + dateTime().toString() + "</em>");
+    m_label_widget->setText(verb + " " + label());
+    date_label->setText("<em>" + date_time().toString() + "</em>");
 }
 
 void FileOperationItem::paintEvent(QPaintEvent *event)
@@ -98,15 +98,15 @@ void FileOperationItem::paintEvent(QPaintEvent *event)
 
     this->parentWidget()->adjustSize();
 
-    if (fileOperationData->workTotal > 0 &&
-            fileOperationData->workSoFar < fileOperationData->workTotal) {
+    if (file_op_data->work_total > 0 &&
+            file_op_data->work_so_far < file_op_data->work_total) {
         QPainter painter(this);
         painter.setRenderHint(QPainter::Antialiasing);
 
         painter.setPen(QColor(116, 228, 164));
         painter.setBrush(QBrush(QColor(116, 228, 164)));
         //double itemProgress = (double) fileOperationData->workSoFar / fileOperationData->workTotal;
-        double sizeProgress = (double) fileOperationData->bytesSoFar / fileOperationData->bytesTotal;
+        double sizeProgress = (double) file_op_data->bytes_so_far / file_op_data->bytes_total;
         double progress;// = (itemProgress + sizeProgress * 3.0) / 4.0;
         progress = double(qRound(sizeProgress * 100.0)) / 100.0;
         painter.drawRect(0, 0, progress * this->width(), this->height());

@@ -13,27 +13,30 @@ class TabBarItem : public QGraphicsObject
 public:
     explicit TabBarItem(WorkspaceView *view);
     ~TabBarItem();
-    void paint(QPainter *painter,
+
+    void add_tab_label(const QString &path,
+                       bool active);
+    void set_active_index(int index);
+
+    virtual void paint(QPainter *painter,
                const QStyleOptionGraphicsItem *option,
                QWidget *widget);
-    QRectF boundingRect() const;
-    void addTabLabel(const QString &path,
-                     bool active);
-    void setActiveIndex(int index);
+    virtual QRectF boundingRect() const;
 
 signals:
     
 public slots:
-    void modelPathChanged(const QString &path);
-private:
-    WorkspaceView *view;
-    QList<TabLabelItem*> tabLabels;
-    int activeIndex = -1;
-    const int padding = 5;
-    const int spacing = 5;
-    QScopedPointer<TabLabelItem> addButton;
+    void model_path_changed(const QString &path);
 
-    void repositionTabLabels();
+private:
+    WorkspaceView *m_view;
+    QList<TabLabelItem*> m_tab_labels;
+    int m_active_index = -1;
+    const int m_padding = 5;
+    const int m_spacing = 5;
+    QScopedPointer<TabLabelItem> m_add_button;
+
+    void reposition_tab_labels();
 };
 
 #endif // TABBARITEM_H

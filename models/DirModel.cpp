@@ -6,24 +6,29 @@ DirModel::DirModel(QObject *parent) :
     QObject(parent)
 {
     foreach (const QFileInfo &info, QDir::drives()) {
-        drivesList << FileInfo(info);
+        drives_list << FileInfo(info);
     }
 
     drives = false;
     watcher = new QFileSystemWatcher();
     dir.setFilter(QDir::NoDotAndDotDot | QDir::AllEntries);
-    sel = new ViewSelectionModel(this);
+    sel = new ViewSelectionModel();
     connect(watcher, &QFileSystemWatcher::directoryChanged,
             [this] (const QString &path) {
         Q_UNUSED(path)
         //! @todo if { dir | parent dir } { deleted | renamed } then ...
         dir.refresh();
-        loadEntries();
+        load_entries();
         emit file_system_change();
     });
 }
 
-void DirModel::setPath(const QString &path)
+DirModel::~DirModel()
+{
+    delete sel;
+}
+
+void DirModel::set_path(const QString &path)
 {
     this->path = path;
     QString &p = this->path;
@@ -38,7 +43,7 @@ void DirModel::setPath(const QString &path)
         watcher->removePaths(watcher->directories());
         watcher->addPath(p);
 
-        loadEntries();
+        load_entries();
     } else {
         drives = true;
 
@@ -47,20 +52,20 @@ void DirModel::setPath(const QString &path)
 
         watcher->removePaths(watcher->directories());
 
-        loadEntries();
+        load_entries();
     }
 
-    emit pathChanged(p);
+    emit path_changed(p);
 }
 
 //! @todo "accelerated" drag, just like the bug I had in the past.
 
-void DirModel::setNameFilters(const QStringList &nf)
+void DirModel::set_name_filters(const QStringList &nf)
 {
     if (!drives && dir.nameFilters() != nf) {
         dir.setNameFilters(nf);
-        loadEntries();
-        emit nameFiltersChanged(nf);
+        load_entries();
+        emit name_filters_changed(nf);
     }
 }
 
@@ -79,24 +84,24 @@ int DirModel::count()
     return list.count();
 }
 
-bool DirModel::isEmpty()
+bool DirModel::is_empty()
 {
     return list.isEmpty();
 }
 
-void DirModel::addTag(int index, QString tag)
+void DirModel::add_tag(int index, QString tag)
 {
     if (!tags[index].contains(tag)) {
         tags[index] << tag;
-        emit tagAdded(index, tag);
+        emit tag_added(index, tag);
     }
 }
 
-void DirModel::removeTag(int index, QString tag)
+void DirModel::remove_tag(int index, QString tag)
 {
     if (tags[index].contains(tag)) {
         tags[index].remove(tag);
-        emit tagRemoved(index, tag);
+        emit tag_removed(index, tag);
     }
 }
 
@@ -105,27 +110,27 @@ bool DirModel::selected(int index)
     return sel->contains(index);
 }
 
-QStringList DirModel::selectedAbsolutePaths(bool nativeSeparators)
+QStringList DirModel::selected_abs_paths(bool nativeSeparators)
 {
-    auto set = sel->savedSet;
+    auto set = sel->saved_set;
     QStringList paths;
     if (set.isEmpty()) return paths;
     QString path;
     if (nativeSeparators) {
         foreach (const int& index, set) {
-            path = list[index].absoluteFilePath();
+            path = list[index].abs_file_path();
             paths << QDir::toNativeSeparators(path);
         }
     } else {
         foreach (const int& index, set) {
-            path = list[index].absoluteFilePath();
+            path = list[index].abs_file_path();
             paths << path;
         }
     }
     return paths;
 }
 
-void DirModel::loadEntries()
+void DirModel::load_entries()
 {
     clear();
 
@@ -140,7 +145,7 @@ void DirModel::loadEntries()
             emit added(info);
         }
     } else {
-        list = drivesList;
+        list = drives_list;
         emit before_adding_n(list.size());
         foreach (const FileInfo &info, list) {
             emit added(info);

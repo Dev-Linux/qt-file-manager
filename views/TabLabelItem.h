@@ -10,19 +10,19 @@ class TabLabelItem : public QGraphicsObject
 public:
     explicit TabLabelItem(const QString &label = QString());
 
-    void paint(QPainter *painter,
+    void set_label(const QString& label);
+    void set_active(bool active = true);
+    bool is_active() const;
+
+    static int expected_height();
+
+    virtual void paint(QPainter *painter,
                const QStyleOptionGraphicsItem *option,
                QWidget *widget);
-    QRectF boundingRect() const;
-
-    void setLabel(const QString& label);
-    void setActive(bool active = true);
-    bool isActive() const;
-
-    static int expectedHeight();
+    virtual QRectF boundingRect() const;
     
 signals:
-    void leftClicked();
+    void left_clicked();
     
 public slots:
 
@@ -32,8 +32,8 @@ protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
 
 private:
-    QString label;
-    static const int padding = 5;
+    QString m_label;
+    static const int m_padding = 5;
 };
 
 #endif // TABLABELITEM_H

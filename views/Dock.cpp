@@ -21,12 +21,12 @@ Dock::Dock() : QDockWidget()
     this->setWidget(view);
     this->setWindowTitle("Important");
 
-    menu = buildMenu();
+    m_menu = build_menu();
 
     // this->setFeatures(QDockWidget::DockWidgetMovable); ? needed?
 }
 
-QMenu *Dock::buildMenu()
+QMenu *Dock::build_menu()
 {
     auto m = new QMenu();
     QAction *action = m->addAction("Remove");
@@ -35,13 +35,13 @@ QMenu *Dock::buildMenu()
     return m;
 }
 
-void Dock::removeItem(FileInfo &info)
+void Dock::remove_item(FileInfo &info)
 {
     bool found = false;
-    int c = view->itemCount();
+    int c = view->item_count();
     for (int i = 0; i < c; i++) {
-        if (view->itemAt(i)->fileInfo == info) {
-            view->removeItem(i);
+        if (view->item_at(i)->file_info == info) {
+            view->remove_item(i);
             found = true;
             break;
         }
@@ -58,32 +58,32 @@ void Dock::removeItem(FileInfo &info)
  *     std::function<void()>(std::bind(itemDoubleClicked, item)));
  * @endcode
  */
-void Dock::itemRightClicked(const QPoint &globalPos)
+void Dock::item_right_clicked(const QPoint &globalPos)
 { Q_UNUSED(globalPos)
     qDebug() << "begin";
-    selectedItem = qobject_cast<ListViewItem*>(sender());
+    selected_item = qobject_cast<ListViewItem*>(sender());
 
-    if (menu != nullptr) {
-        delete menu;
+    if (m_menu != nullptr) {
+        delete m_menu;
     }
-    menu = buildMenu();
-    menu->popup(QCursor::pos());
+    m_menu = build_menu();
+    m_menu->popup(QCursor::pos());
     qDebug() << "end";
 }
 
-void Dock::itemDoubleClicked()
+void Dock::item_double_clicked()
 {
     qDebug() << "begin";
     auto item = qobject_cast<ListViewItem*>(sender());
-    auto info = item->fileInfo;
-    if (info.isDir()) { // nu exclude isDrive
+    auto info = item->file_info;
+    if (info.is_dir()) { // nu exclude isDrive
         auto p = new QProcess();
         QStringList args;
-        args << info.absoluteFilePath();
+        args << info.abs_file_path();
         p->start(qApp->applicationFilePath(), args);
         qDebug() << p->program();
     } else {
-        misc::openLocalFile(info.absoluteFilePath());
+        misc::open_local_file(info.abs_file_path());
     }
     qDebug() << "end";
 }
