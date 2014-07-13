@@ -6,6 +6,8 @@ A modern file manager based on C++/Qt.
 Notes for developers
 --------------------
 
+In `qt-file-manager/qt-file-manager.pro` file, you should replace "G:\Biblioteci software\boost_1_55_0" with the path to the downloaded Boost directory which contains the "boost" directory. "G:\Proiecte\qt-file-manager\qt-file-manager" should be replaced with the absolute path to the `qt-file-manager` directory in the repository. But please, do not commit these replacements. I did not find a way to stop using these absolute paths. There are also two comments in `qt-file-manager.pro` talking about these two needed absolute paths.
+
 **flag_in_hole** image, used as the root icon in the breadcrumb, is took from
 here: http://www.fileformat.info/info/unicode/char/26f3/browsertest.htm and
 modified to be blue (before, it was black) and then resized to be easily
