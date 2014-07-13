@@ -3,10 +3,17 @@ qt-file-manager
 
 A modern file manager based on C++/Qt.
 
-Notes for developers
---------------------
+
+Build instructions
+------------------
 
 In `qt-file-manager/qt-file-manager.pro` file, you should replace "G:\Biblioteci software\boost_1_55_0" with the path to the downloaded Boost directory which contains the "boost" directory. "G:\Proiecte\qt-file-manager\qt-file-manager" should be replaced with the absolute path to the `qt-file-manager` directory in the repository. But please, do not commit these replacements. I did not find a way to stop using these absolute paths. There are also two comments in `qt-file-manager.pro` talking about these two needed absolute paths.
+
+Build the project in Qt Creator with the MSVC compiler (Qt 5.2 supports only MSVC2012, Qt 5.3 supports MSVC2013). Also read about this bug and how you can avoid it (build in Release mode if you want to see the program's UI): https://github.com/silviubogan/qt-file-manager/issues/3 .
+
+
+Notes for developers
+--------------------
 
 **flag_in_hole** image, used as the root icon in the breadcrumb, is took from
 here: http://www.fileformat.info/info/unicode/char/26f3/browsertest.htm and
