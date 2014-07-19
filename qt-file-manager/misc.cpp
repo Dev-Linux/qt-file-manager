@@ -181,7 +181,8 @@ void misc::print_graph_layout(const Graph& g, PositionMap position,
                               const Topology& topology)
 {
     using namespace boost;
-    typedef typename Topology::point_type Point;
+    // Currently not used, gives compile-time error on Ubuntu with gcc:
+    //typedef typename Topology::point_type Point;
 
     int minx, miny, maxx, maxy;
     min_max_coords(g, position, topology, minx, miny, maxx, maxy);

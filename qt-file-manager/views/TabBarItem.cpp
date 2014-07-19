@@ -55,7 +55,11 @@ void TabBarItem::add_tab_label(const QString &path,
                              bool active)
 {
     TabLabelItem *tl = new TabLabelItem();
-    m_tab_labels.insert(m_tab_labels.end() - 1, tl);
+    if (!m_tab_labels.isEmpty()) {
+        m_tab_labels.insert(m_tab_labels.end() - 1, tl);
+    } else {
+        m_tab_labels.append(tl);
+    }
 
     if (!path.isEmpty()) {
         const QString label = FileInfo(path).file_name();

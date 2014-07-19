@@ -9,7 +9,7 @@
 class FileInfo
 {
 public:
-    explicit FileInfo();
+    FileInfo();
     FileInfo(const QString &path);
     FileInfo(const QFileInfo &file_info);
 
