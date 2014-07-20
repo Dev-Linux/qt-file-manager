@@ -18,6 +18,13 @@ Build the project in Qt Creator with the MSVC compiler (Qt 5.2 supports only MSV
 The project uses Boost Graph Libraries from the Boost Libraries. I tested the program with Boost Libraries 1.54 and 1.55. On Ubuntu, to install the Boost Graph Libraries install the package `libboost-graph-dev` by running the command `sudo apt-get install libboost-graph-dev` in the terminal. Then you can build the project with GCC or another compiler, but I can only guarantee that it works with GCC because this is what I currently use.
 
 
+Contribute
+----------
+
+- Submit issues and bug reports or solve/fix existing issues [here](https://github.com/silviubogan/qt-file-manager/issues);
+- Submit pull requests [here](https://github.com/silviubogan/qt-file-manager/pulls).
+
+
 Notes for developers
 --------------------
 
