@@ -2,3 +2,5 @@
 *.pro.user.*
 build-*
 *~
+Doxyfile
+doxygen-output
